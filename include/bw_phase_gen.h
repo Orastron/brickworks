@@ -296,15 +296,48 @@ static inline void bw_phase_gen_set_portamento_tau(
  *
  *    Default value: `0.f`.
  *
- * XXX (also remember very small inc)
- */
+ *    #### bw_phase_gen_set_phase_inc_min()
+ *  ```>>> */
 static inline void bw_phase_gen_set_phase_inc_min(
 	bw_phase_gen_coeffs * BW_RESTRICT coeffs,
 	float                             value);
+/*! <<<```
+ *    Sets the minimum phase increment `value` in `coeffs`.
+ *
+ *    The algorithm will limit the actual phase increment accordingly, yet if
+ *    the magnitude of the resulting phase increment is less than `6e-8f`, it
+ *    will be rounded to `0.f` and such value will be reported by processing
+ *    functions.
+ *
+ *    Valid range: [`-INFINITY`, `INFINITY`).
+ *
+ *    By the time `bw_phase_gen_reset_\*()`, `bw_phase_gen_update_coeffs_\*()`,
+ *    or `bw_peak_process\*()` is called, phase_inc_min must be less than
+ *    phase_inc_max.
+ *
+ *    Default value: `-INFINITY`.
+ *
+ *    #### bw_phase_gen_set_phase_inc_max()
+ *  ```>>> */
 static inline void bw_phase_gen_set_phase_inc_max(
 	bw_phase_gen_coeffs * BW_RESTRICT coeffs,
 	float                             value);
-/*
+/*! <<<```
+ *    Sets the maximum phase increment `value` in `coeffs`.
+ *
+ *    The algorithm will limit the actual phase increment accordingly, yet if
+ *    the magnitude of the resulting phase increment is less than `6e-8f`, it
+ *    will be rounded to `0.f` and such value will be reported by processing
+ *    functions.
+ *
+ *    Valid range: (`-INFINITY`, `INFINITY`].
+ *
+ *    By the time `bw_phase_gen_reset_\*()`, `bw_phase_gen_update_coeffs_\*()`,
+ *    or `bw_peak_process\*()` is called, phase_inc_min must be less than
+ *    phase_inc_max.
+ *
+ *    Default value: `INFINITY`.
+ *
  *    #### bw_phase_gen_coeffs_is_valid()
  *  ```>>> */
 static inline char bw_phase_gen_coeffs_is_valid(
