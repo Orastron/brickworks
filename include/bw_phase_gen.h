@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.1 }}}
+ *  version {{{ 1.2.0 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Phase generator with portamento and exponential frequency modulation.
@@ -29,8 +29,9 @@
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.1.1</strong>:
+ *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added phase_inc_min and phase_inc_max parameters.</li>
  *          <li>Fixed rounding bug when frequency is tiny (again).</li>
  *          <li>Added debugging check in <code>bw_phase_reset_state()</code> to
  *              ensure that <code>phase_0</code> is in [<code>0.f</code>,
@@ -295,6 +296,15 @@ static inline void bw_phase_gen_set_portamento_tau(
  *
  *    Default value: `0.f`.
  *
+ * XXX (also remember very small inc)
+ */
+static inline void bw_phase_gen_set_phase_inc_min(
+	bw_phase_gen_coeffs * BW_RESTRICT coeffs,
+	float                             value);
+static inline void bw_phase_gen_set_phase_inc_max(
+	bw_phase_gen_coeffs * BW_RESTRICT coeffs,
+	float                             value);
+/*
  *    #### bw_phase_gen_coeffs_is_valid()
  *  ```>>> */
 static inline char bw_phase_gen_coeffs_is_valid(
@@ -367,6 +377,8 @@ struct bw_phase_gen_coeffs {
 
 	// Parameters
 	float				frequency;
+	float				phase_inc_min;
+	float				phase_inc_max;
 	float				frequency_prev;
 };
 
@@ -386,6 +398,8 @@ static inline void bw_phase_gen_init(
 
 	bw_one_pole_init(&coeffs->portamento_coeffs);
 	coeffs->frequency = 1.f;
+	coeffs->phase_inc_min = -INFINITY;
+	coeffs->phase_inc_max = INFINITY;
 
 #ifdef BW_DEBUG_DEEP
 	coeffs->hash = bw_hash_sdbm("bw_phase_gen_coeffs");
@@ -459,7 +473,7 @@ static inline void bw_phase_gen_reset_state(
 	BW_ASSERT(y_0 != y_inc_0);
 
 	state->phase = phase_0;
-	*y_inc_0 = bw_one_pole_get_y_z1(&coeffs->portamento_state);
+	*y_inc_0 = bw_clipf(bw_one_pole_get_y_z1(&coeffs->portamento_state), coeffs->phase_inc_min, coeffs->phase_inc_max);
 	*y_inc_0 = bw_absf(*y_inc_0) < 6e-8f ? 0.f : *y_inc_0; // suppress troublesome tiny frequencies (< 0.06 Hz @ fs = 1 MHz, < 0.003 Hz at @ fs = 44.1 kHz)
 	*y_0 = phase_0;
 
@@ -570,7 +584,7 @@ static inline void bw_phase_gen_process1(
 	BW_ASSERT(y_inc != BW_NULL);
 	BW_ASSERT(y != y_inc);
 
-	*y_inc = bw_one_pole_get_y_z1(&coeffs->portamento_state);
+	*y_inc = bw_clipf(bw_one_pole_get_y_z1(&coeffs->portamento_state), coeffs->phase_inc_min, coeffs->phase_inc_max);
 	*y = bw_phase_gen_update_phase(state, y_inc);
 
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
@@ -597,7 +611,7 @@ static inline void bw_phase_gen_process1_mod(
 	BW_ASSERT(y_inc != BW_NULL);
 	BW_ASSERT(y != y_inc);
 
-	*y_inc = bw_one_pole_get_y_z1(&coeffs->portamento_state) * bw_pow2f(x_mod);
+	*y_inc = bw_clipf(bw_one_pole_get_y_z1(&coeffs->portamento_state) * bw_pow2f(x_mod), coeffs->phase_inc_min, coeffs->phase_inc_max);
 	*y = bw_phase_gen_update_phase(state, y_inc);
 
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
@@ -863,6 +877,36 @@ static inline void bw_phase_gen_set_portamento_tau(
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_init);
 }
 
+static inline void bw_phase_gen_set_phase_inc_min(
+		bw_phase_gen_coeffs * BW_RESTRICT coeffs,
+		float                             value) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_init);
+	BW_ASSERT(bw_is_finite(value));
+	BW_ASSERT(bw_is_finite(value) || value == -INFINITY);
+
+	coeffs->phase_inc_min = value;
+
+	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_init);
+}
+
+static inline void bw_phase_gen_set_phase_inc_max(
+		bw_phase_gen_coeffs * BW_RESTRICT coeffs,
+		float                             value) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_init);
+	BW_ASSERT(bw_is_finite(value));
+	BW_ASSERT(bw_is_finite(value) || value == INFINITY);
+
+	coeffs->phase_inc_max = value;
+
+	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_init);
+}
+
 static inline char bw_phase_gen_coeffs_is_valid(
 		const bw_phase_gen_coeffs * BW_RESTRICT coeffs) {
 	BW_ASSERT(coeffs != BW_NULL);
@@ -878,6 +922,12 @@ static inline char bw_phase_gen_coeffs_is_valid(
 		return 0;
 
 	if (!bw_one_pole_coeffs_is_valid(&coeffs->portamento_coeffs))
+		return 0;
+
+	if (bw_is_nan(coeffs->phase_inc_min) || coeffs->phase_inc_min == INFINITY)
+		return 0;
+
+	if (bw_is_nan(coeffs->phase_inc_max) || coeffs->phase_inc_max == -INFINITY)
 		return 0;
 
 #ifdef BW_DEBUG_DEEP
@@ -982,6 +1032,12 @@ public:
 		float value);
 
 	void setPortamentoTau(
+		float value);
+
+	void setPhaseIncMin(
+		float value);
+
+	void setPhaseIncMax(
 		float value);
 /*! <<<...
  *  }
@@ -1102,6 +1158,18 @@ template<size_t N_CHANNELS>
 inline void PhaseGen<N_CHANNELS>::setPortamentoTau(
 		float value) {
 	bw_phase_gen_set_portamento_tau(&coeffs, value);
+}
+
+template<size_t N_CHANNELS>
+inline void PhaseGen<N_CHANNELS>::setPhaseIncMin(
+		float value) {
+	bw_phase_gen_set_phase_inc_min(&coeffs, value);
+}
+
+template<size_t N_CHANNELS>
+inline void PhaseGen<N_CHANNELS>::setPhaseIncMax(
+		float value) {
+	bw_phase_gen_set_phase_inc_max(&coeffs, value);
 }
 
 }
