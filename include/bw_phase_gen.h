@@ -443,6 +443,7 @@ static inline void bw_phase_gen_reset_coeffs(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_set_sample_rate);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 
 	bw_one_pole_reset_coeffs(&coeffs->portamento_coeffs);
 	bw_phase_gen_do_update_coeffs_ctrl(coeffs, 1);
@@ -465,6 +466,7 @@ static inline void bw_phase_gen_reset_state(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT(bw_is_finite(phase_0));
 	BW_ASSERT(phase_0 >= 0.f && phase_0 < 1.f);
@@ -498,6 +500,7 @@ static inline void bw_phase_gen_reset_state_multi(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
 	for (size_t i = 0; i < n_channels; i++)
@@ -542,6 +545,7 @@ static inline void bw_phase_gen_update_coeffs_ctrl(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 
 	bw_phase_gen_do_update_coeffs_ctrl(coeffs, 0);
 
@@ -554,6 +558,7 @@ static inline void bw_phase_gen_update_coeffs_audio(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 
 	bw_one_pole_process1(&coeffs->portamento_coeffs, &coeffs->portamento_state, coeffs->portamento_target);
 
@@ -578,6 +583,7 @@ static inline void bw_phase_gen_process1(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_state_is_valid(coeffs, state));
 	BW_ASSERT(y != BW_NULL);
@@ -604,6 +610,7 @@ static inline void bw_phase_gen_process1_mod(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_state_is_valid(coeffs, state));
 	BW_ASSERT(bw_is_finite(x_mod));
@@ -632,6 +639,7 @@ static inline void bw_phase_gen_process(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_state_is_valid(coeffs, state));
 	BW_ASSERT_DEEP(x_mod != BW_NULL ? bw_has_only_finite(x_mod, n_samples) : 1);
@@ -712,6 +720,7 @@ static inline void bw_phase_gen_process_multi(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
 	for (size_t i = 0; i < n_channels; i++)
