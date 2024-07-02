@@ -30,6 +30,8 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Added debugging checks from <code>bw_svf_process()</code> to
+ *              <code>bw_svf_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_svf_process_multi()</code> to
  *              ensure that buffers used for both input and output appear at the
  *              same channel indices.</li>
@@ -771,6 +773,10 @@ static inline void bw_svf_process_multi(
 	BW_ASSERT_DEEP(coeffs->state >= bw_svf_coeffs_state_reset_coeffs);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(state[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_svf_state_is_valid(coeffs, state[i]));
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)
 			BW_ASSERT(state[i] != state[j]);
@@ -780,6 +786,10 @@ static inline void bw_svf_process_multi(
 	BW_ASSERT(y_lp == BW_NULL || y_hp == BW_NULL || y_lp != y_hp);
 	BW_ASSERT(y_bp == BW_NULL || y_hp == BW_NULL || y_bp != y_hp);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(x[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x[i], n_samples));
+	}
 	if (y_lp != BW_NULL) {
 		for (size_t i = 0; i < n_channels; i++)
 			for (size_t j = i + 1; j < n_channels; j++)
@@ -922,6 +932,14 @@ static inline void bw_svf_process_multi(
 
 	BW_ASSERT_DEEP(bw_svf_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_svf_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT_DEEP(bw_svf_state_is_valid(coeffs, state[i]));
+		BW_ASSERT_DEEP(y_lp != BW_NULL && y_lp[i] != BW_NULL ? bw_has_only_finite(y_lp[i], n_samples) : 1);
+		BW_ASSERT_DEEP(y_bp != BW_NULL && y_bp[i] != BW_NULL ? bw_has_only_finite(y_bp[i], n_samples) : 1);
+		BW_ASSERT_DEEP(y_hp != BW_NULL && y_hp[i] != BW_NULL ? bw_has_only_finite(y_hp[i], n_samples) : 1);
+	}
+#endif
 }
 
 static inline void bw_svf_set_cutoff(

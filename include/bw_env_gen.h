@@ -40,7 +40,7 @@
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.1.0</strong>:
+ *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
  *          <li>Added debugging checks from <code>bw_env_gen_process()</code> to
  *              <code>bw_env_gen_process_multi()</code>.</li>

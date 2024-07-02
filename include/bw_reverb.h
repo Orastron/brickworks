@@ -37,6 +37,8 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Added debugging checks from <code>bw_reverb_process()</code> to
+ *              <code>bw_reverb_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_reverb_process_multi()</code>
  *              to ensure that buffers used for both input and output appear at
  *              the same channel indices.</li>
@@ -993,6 +995,11 @@ static inline void bw_reverb_process_multi(
 	BW_ASSERT_DEEP(coeffs->state >= bw_reverb_coeffs_state_reset_coeffs);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(state[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_reverb_state_is_valid(coeffs, state[i]));
+		BW_ASSERT_DEEP(state[i]->state >= bw_reverb_state_state_reset_state);
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)
 			BW_ASSERT(state[i] != state[j]);
@@ -1003,6 +1010,15 @@ static inline void bw_reverb_process_multi(
 	BW_ASSERT(y_r != BW_NULL);
 	BW_ASSERT(y_l != y_r);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(x_l[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x_l[i], n_samples));
+		BW_ASSERT(x_r[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x_r[i], n_samples));
+		BW_ASSERT(y_l[i] != BW_NULL);
+		BW_ASSERT(y_r[i] != BW_NULL);
+		BW_ASSERT(y_l[i] != y_r[i]);
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++) {
 			BW_ASSERT(y_l[i] != y_l[j]);
@@ -1029,6 +1045,13 @@ static inline void bw_reverb_process_multi(
 
 	BW_ASSERT_DEEP(bw_reverb_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_reverb_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT_DEEP(bw_reverb_state_is_valid(coeffs, state[i]));
+		BW_ASSERT_DEEP(bw_has_only_finite(y_l[i], n_samples));
+		BW_ASSERT_DEEP(bw_has_only_finite(y_r[i], n_samples));
+	}
+#endif
 }
 
 static inline void bw_reverb_set_predelay(

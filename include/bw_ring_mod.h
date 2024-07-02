@@ -29,6 +29,8 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Added debugging checks from <code>bw_ring_mod_process()</code>
+ *              to <code>bw_ring_mod_process_multi()</code>.</li>
  *          <li>Added debugging checks in
  *              <code>bw_ring_mod_process_multi()</code> to ensure that buffers
  *              used for both input and output appear at the same channel
@@ -367,6 +369,13 @@ static inline void bw_ring_mod_process_multi(
 	BW_ASSERT(x_car != BW_NULL);
 	BW_ASSERT(y != BW_NULL);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(x_mod[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x_mod[i], n_samples));
+		BW_ASSERT(x_car[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x_car[i], n_samples));
+		BW_ASSERT(y[i] != BW_NULL);
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)
 			BW_ASSERT(y[i] != y[j]);
@@ -385,6 +394,10 @@ static inline void bw_ring_mod_process_multi(
 
 	BW_ASSERT_DEEP(bw_ring_mod_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_ring_mod_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++)
+		BW_ASSERT_DEEP(bw_has_only_finite(y[i], n_samples));
+#endif
 }
 
 static inline void bw_ring_mod_set_amount(
