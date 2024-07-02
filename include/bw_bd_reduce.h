@@ -433,6 +433,7 @@ static inline void bw_bd_reduce_process_multi(
 #ifndef BW_NO_DEBUG
 	for (size_t i = 0; i < n_channels; i++)
 		BW_ASSERT_DEEP(bw_has_only_finite(y[i], n_samples));
+#endif
 }
 
 static inline void bw_bd_reduce_set_bit_depth(
