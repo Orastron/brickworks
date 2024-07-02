@@ -10,14 +10,16 @@
 				"direction": "input",
 				"channels": "mono",
 				"name": "Input",
-				"shortName": "Input"
+				"shortName": "Input",
+				"id": "input"
 			},
 			{
 				"type": "audio",
 				"direction": "output",
 				"channels": "mono",
 				"name": "Output",
-				"shortName": "Output"
+				"shortName": "Output",
+				"id": "output"
 			},
 			{
 				"type":	"audio",
@@ -25,6 +27,7 @@
 				"channels": "mono",
 				"name": "Sidechain input",
 				"shortName": "Sidechain in",
+				"id": "sidechain_in",
 				"sidechain": true,
 				"cv": false,
 				"optional": true
@@ -34,6 +37,7 @@
 			{
 				"name": "Threshold",
 				"shortName": "Threshold",
+				"id": "threshold",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": -60.0,
@@ -44,6 +48,7 @@
 			{
 				"name": "Ratio",
 				"shortName": "Ratio",
+				"id": "ratio",
 				"direction": "input",
 				"defaultValue": 1.0,
 				"minimum": 1.0,
@@ -53,6 +58,7 @@
 			{
 				"name": "Attack",
 				"shortName": "Attack",
+				"id": "attack",
 				"direction": "input",
 				"defaultValue": 20.0,
 				"minimum": 1.0,
@@ -63,6 +69,7 @@
 			{
 				"name": "Release",
 				"shortName": "Release",
+				"id": "release",
 				"direction": "input",
 				"defaultValue": 250.0,
 				"minimum": 1.0,
@@ -73,6 +80,7 @@
 			{
 				"name": "Makeup gain",
 				"shortName": "Gain",
+				"id": "gain",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": 0.0,
@@ -83,6 +91,7 @@
 			{
 				"name": "External sidechain",
 				"shortName": "Ext sidechain",
+				"id": "ext_sidechain",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": 0.0,

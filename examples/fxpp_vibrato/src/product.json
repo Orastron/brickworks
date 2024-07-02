@@ -10,20 +10,23 @@
 				"direction": "input",
 				"channels": "mono",
 				"name": "Input",
-				"shortName": "Input"
+				"shortName": "Input",
+				"id": "input"
 			},
 			{
 				"type": "audio",
 				"direction": "output",
 				"channels": "mono",
 				"name": "Output",
-				"shortName": "Output"
+				"shortName": "Output",
+				"id": "output"
 			}
 		],
 		"parameters": [
 			{
 				"name": "Rate",
 				"shortName": "Rate",
+				"id": "rate",
 				"direction": "input",
 				"defaultValue": 3.0,
 				"minimum": 1.0,
@@ -34,6 +37,7 @@
 			{
 				"name": "Amount",
 				"shortName": "Amount",
+				"id": "amount",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": 0.0,

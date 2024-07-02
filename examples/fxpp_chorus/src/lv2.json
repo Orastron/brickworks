@@ -5,8 +5,6 @@
 		},
 		"uri": "@bw_examples:fxpp_chorus",
 		"types": [ "@lv2:ChorusPlugin" ],
-		"version": "0.0",
-		"busSymbols": [ "input", "output" ],
-		"parameterSymbols": [ "rate", "depth", "type" ]
+		"version": "0.0"
 	}
 }

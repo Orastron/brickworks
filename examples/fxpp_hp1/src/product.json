@@ -10,20 +10,23 @@
 				"direction": "input",
 				"channels": "mono",
 				"name": "Input",
-				"shortName": "Input"
+				"shortName": "Input",
+				"id": "input"
 			},
 			{
 				"type": "audio",
 				"direction": "output",
 				"channels": "mono",
 				"name": "Output",
-				"shortName": "Output"
+				"shortName": "Output",
+				"id": "output"
 			}
 		],
 		"parameters": [
 			{
 				"name": "Cutoff",
 				"shortName": "Cutoff",
+				"id": "cutoff",
 				"direction": "input",
 				"defaultValue": 1000.0,
 				"minimum": 20.0,

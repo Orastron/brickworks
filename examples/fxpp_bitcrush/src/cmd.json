@@ -1,6 +1,0 @@
-{
-	"cmd": {
-		"busIds": [ "input", "output" ],
-		"parameterIds": [ "sr_ratio", "bit_depth", "gate" ]
-	}
-}

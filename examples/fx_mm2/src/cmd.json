@@ -1,6 +1,0 @@
-{
-	"cmd": {
-		"busIds": [ "input", "output" ],
-		"parameterIds": [ "cutoff", "q", "in", "lp", "bp", "hp" ]
-	}
-}

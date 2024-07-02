@@ -1,6 +1,0 @@
-{
-	"cmd": {
-		"busIds": [ "input", "output" ],
-		"parameterIds": [ "ff_delay", "fb_delay", "blend", "ff", "fb" ]
-	}
-}

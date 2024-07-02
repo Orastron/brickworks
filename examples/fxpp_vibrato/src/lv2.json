@@ -5,8 +5,6 @@
 		},
 		"uri": "@bw_examples:fxpp_vibrato",
 		"types": [ "@lv2:ModulatorPlugin" ],
-		"version": "0.0",
-		"busSymbols": [ "input", "output" ],
-		"parameterSymbols": [ "rate", "amount" ]
+		"version": "0.0"
 	}
 }

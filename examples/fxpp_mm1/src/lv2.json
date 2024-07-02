@@ -5,8 +5,6 @@
 		},
 		"uri": "@bw_examples:fxpp_mm1",
 		"types": [ "@lv2:FilterPlugin" ],
-		"version": "0.0",
-		"busSymbols": [ "input", "output" ],
-		"parameterSymbols": [ "cutoff", "in", "lp" ]
+		"version": "0.0"
 	}
 }

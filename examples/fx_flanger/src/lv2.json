@@ -5,8 +5,6 @@
 		},
 		"uri": "@bw_examples:fx_flanger",
 		"types": [ "@lv2:FlangerPlugin" ],
-		"version": "0.0",
-		"busSymbols": [ "input", "output" ],
-		"parameterSymbols": [ "rate", "depth", "feedback" ]
+		"version": "0.0"
 	}
 }

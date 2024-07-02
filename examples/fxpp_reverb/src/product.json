@@ -10,20 +10,23 @@
 				"direction": "input",
 				"channels": "stereo",
 				"name": "Input",
-				"shortName": "Input"
+				"shortName": "Input",
+				"id": "input"
 			},
 			{
 				"type": "audio",
 				"direction": "output",
 				"channels": "stereo",
 				"name": "Output",
-				"shortName": "Output"
+				"shortName": "Output",
+				"id": "output"
 			}
 		],
 		"parameters": [
 			{
 				"name": "Predelay",
 				"shortName": "Predelay",
+				"id": "predelay",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": 0.0,
@@ -34,6 +37,7 @@
 			{
 				"name": "Bandwidth",
 				"shortName": "Bandwidth",
+				"id": "bandwidth",
 				"direction": "input",
 				"defaultValue": 20000.0,
 				"minimum": 20.0,
@@ -44,6 +48,7 @@
 			{
 				"name": "Damping cutoff",
 				"shortName": "Damping cutoff",
+				"id": "damping",
 				"direction": "input",
 				"defaultValue": 20000.0,
 				"minimum": 20.0,
@@ -54,6 +59,7 @@
 			{
 				"name": "Decay rate",
 				"shortName": "Decay rate",
+				"id": "decay",
 				"direction": "input",
 				"defaultValue": 50.0,
 				"minimum": 0.0,
@@ -64,6 +70,7 @@
 			{
 				"name": "Wet",
 				"shortName": "Wet",
+				"id": "wet",
 				"direction": "input",
 				"defaultValue": 50.0,
 				"minimum": 0.0,

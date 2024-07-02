@@ -5,8 +5,6 @@
 		},
 		"uri": "@bw_examples:fx_comp",
 		"types": [ "@lv2:CompressorPlugin" ],
-		"version": "0.0",
-		"busSymbols": [ "input", "output", "sidechain_in" ],
-		"parameterSymbols": [ "threshold", "ratio", "attack", "release", "gain", "ext_sidechain" ]
+		"version": "0.0"
 	}
 }

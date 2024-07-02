@@ -1,6 +1,0 @@
-{
-	"cmd": {
-		"busIds": [ "input", "output", "sidechain_in" ],
-		"parameterIds": [ "threshold", "ratio", "attack", "release", "ext_sidechain" ]
-	}
-}

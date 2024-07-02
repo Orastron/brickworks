@@ -5,8 +5,6 @@
 		},
 		"uri": "@bw_examples:fx_reverb",
 		"types": [ "@lv2:ReverbPlugin" ],
-		"version": "0.0",
-		"busSymbols": [ "input", "output" ],
-		"parameterSymbols": [ "predelay", "bandwidth", "damping", "decay", "wet" ]
+		"version": "0.0"
 	}
 }

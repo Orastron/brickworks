@@ -53,8 +53,8 @@ for d in $dirs; do
 		;;
 	esac
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/cmd.json $TIBIA_DIR/templates/cmd cmd && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/cmd.json,../common/src/$make_json,../common/src/cmd-make.json $TIBIA_DIR/templates/cmd-make cmd && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/cmd cmd && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,../common/src/$make_json,../common/src/cmd-make.json $TIBIA_DIR/templates/cmd-make cmd && cd ..
 	echo "include ../../common/cmd/Makefile" > $d/cmd/Makefile
 
 	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/web web && cd ..

@@ -1,6 +1,0 @@
-{
-	"cmd": {
-		"busIds": [ "input", "output" ],
-		"parameterIds": [ "delay" ]
-	}
-}

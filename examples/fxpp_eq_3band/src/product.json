@@ -10,20 +10,23 @@
 				"direction": "input",
 				"channels": "mono",
 				"name": "Input",
-				"shortName": "Input"
+				"shortName": "Input",
+				"id": "input"
 			},
 			{
 				"type": "audio",
 				"direction": "output",
 				"channels": "mono",
 				"name": "Output",
-				"shortName": "Output"
+				"shortName": "Output",
+				"id": "output"
 			}
 		],
 		"parameters": [
 			{
 				"name": "Low shelf cutoff",
 				"shortName": "LS cutoff",
+				"id": "ls_cutoff",
 				"direction": "input",
 				"defaultValue": 112.4682650380698,
 				"minimum": 20.0,
@@ -34,6 +37,7 @@
 			{
 				"name": "Low shelf gain",
 				"shortName": "LS gain",
+				"id": "ls_gain",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": -20.0,
@@ -44,6 +48,7 @@
 			{
 				"name": "Low shelf Q",
 				"shortName": "LS Q",
+				"id": "ls_q",
 				"direction": "input",
 				"defaultValue": 0.5,
 				"minimum": 0.5,
@@ -53,6 +58,7 @@
 			{
 				"name": "Peak cutoff",
 				"shortName": "Peak cutoff",
+				"id": "peak_cutoff",
 				"direction": "input",
 				"defaultValue": 632.4555320336758,
 				"minimum": 20.0,
@@ -63,6 +69,7 @@
 			{
 				"name": "Peak gain",
 				"shortName": "Peak gain",
+				"id": "peak_gain",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": -20.0,
@@ -73,6 +80,7 @@
 			{
 				"name": "Peak bandwidth",
 				"shortName": "Peak bw",
+				"id": "peak_bw",
 				"direction": "input",
 				"defaultValue": 1.0,
 				"minimum": 0.01,
@@ -83,6 +91,7 @@
 			{
 				"name": "High shelf cutoff",
 				"shortName": "HS cutoff",
+				"id": "hs_cutoff",
 				"direction": "input",
 				"defaultValue": 3556.558820077844,
 				"minimum": 20.0,
@@ -93,6 +102,7 @@
 			{
 				"name": "High shelf gain",
 				"shortName": "HS gain",
+				"id": "hs_gain",
 				"direction": "input",
 				"defaultValue": 0.0,
 				"minimum": -20.0,
@@ -103,6 +113,7 @@
 			{
 				"name": "High shelf Q",
 				"shortName": "HS Q",
+				"id": "hs_q",
 				"direction": "input",
 				"defaultValue": 0.5,
 				"minimum": 0.5,

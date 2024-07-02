@@ -5,8 +5,6 @@
 		},
 		"uri": "@bw_examples:fx_noise_gate",
 		"types": [ "@lv2:GatePlugin" ],
-		"version": "0.0",
-		"busSymbols": [ "input", "output", "sidechain_in" ],
-		"parameterSymbols": [ "threshold", "ratio", "attack", "release", "ext_sidechain" ]
+		"version": "0.0"
 	}
 }
