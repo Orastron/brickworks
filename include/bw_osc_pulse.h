@@ -39,6 +39,8 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Added debugging checks from <code>bw_osc_pulse_process()</code>
+ *              to <code>bw_osc_pulse_process_multi()</code>.</li>
  *          <li>Added debugging checks in
  *              <code>bw_osc_pulse_process_multi()</code> to ensure that
  *              <code>x_inc</code> is not <code>BW_NULL</code> when antialiasing
@@ -482,6 +484,13 @@ static inline void bw_osc_pulse_process_multi(
 	BW_ASSERT(coeffs->antialiasing ? x_inc != BW_NULL : 1);
 	BW_ASSERT(y != BW_NULL);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(x[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x[i], n_samples));
+		BW_ASSERT(coeffs->antialiasing ? x_inc[i] != BW_NULL : 1);
+		BW_ASSERT_DEEP(coeffs->antialiasing ? bw_has_only_finite(x_inc[i], n_samples) : 1);
+		BW_ASSERT(y[i] != BW_NULL);
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)
 			BW_ASSERT(y[i] != y[j]);
@@ -509,6 +518,10 @@ static inline void bw_osc_pulse_process_multi(
 
 	BW_ASSERT_DEEP(bw_osc_pulse_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_osc_pulse_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++)
+		BW_ASSERT_DEEP(bw_has_only_finite(y[i], n_samples));
+#endif
 }
 
 static inline void bw_osc_pulse_set_antialiasing(

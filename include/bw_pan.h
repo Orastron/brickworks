@@ -29,6 +29,8 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Added debugging checks from <code>bw_pan_process()</code> to
+ *              <code>bw_pan_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_pan_process_multi()</code> to
  *              ensure that buffers used for both input and output appear at the
  *              same channel indices.</li>
@@ -389,6 +391,13 @@ static inline void bw_pan_process_multi(
 	BW_ASSERT(y_r != BW_NULL);
 	BW_ASSERT(y_l != y_r);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(x[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x[i], n_samples));
+		BW_ASSERT(y_l[i] != BW_NULL);
+		BW_ASSERT(y_r[i] != BW_NULL);
+		BW_ASSERT(y_l[i] != y_r[i]);
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++) {
 			BW_ASSERT(y_l[i] != y_l[j]);
@@ -413,6 +422,12 @@ static inline void bw_pan_process_multi(
 
 	BW_ASSERT_DEEP(bw_pan_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_pan_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT_DEEP(bw_has_only_finite(y_l[i], n_samples));
+		BW_ASSERT_DEEP(bw_has_only_finite(y_r[i], n_samples));
+	}
+#endif
 }
 
 static inline void bw_pan_set_pan(

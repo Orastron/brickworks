@@ -33,6 +33,8 @@
  *        <ul>
  *          <li>Added phase_inc_min and phase_inc_max parameters.</li>
  *          <li>Fixed rounding bug when frequency is tiny (again).</li>
+ *          <li>Added debugging checks from <code>bw_phase_gen_process()</code>
+ *              to <code>bw_phase_gen_process_multi()</code>.</li>
  *          <li>Added debugging check in <code>bw_phase_reset_state()</code> to
  *              ensure that <code>phase_0</code> is in [<code>0.f</code>,
  *              <code>1.f</code>) and indicated such range in the
@@ -756,9 +758,16 @@ static inline void bw_phase_gen_process_multi(
 	BW_ASSERT_DEEP(coeffs->phase_inc_min < coeffs->phase_inc_max);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(state[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_phase_gen_state_is_valid(coeffs, state[i]));
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)
 			BW_ASSERT(state[i] != state[j]);
+	if (x_mod != BW_NULL)
+		for (size_t i = 0; i < n_channels; i++)
+			BW_ASSERT_DEEP(x_mod[i] != BW_NULL ? bw_has_only_finite(x_mod[i], n_samples) : 1);
 	if (y != BW_NULL)
 		for (size_t i = 0; i < n_channels; i++)
 			for (size_t j = i + 1; j < n_channels; j++)
@@ -888,6 +897,13 @@ static inline void bw_phase_gen_process_multi(
 
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT_DEEP(bw_phase_gen_state_is_valid(coeffs, state[i]));
+		BW_ASSERT_DEEP(y != BW_NULL && y[i] != BW_NULL ? bw_has_only_finite(y[i], n_samples) : 1);
+		BW_ASSERT_DEEP(y_inc != BW_NULL && y_inc[i] != BW_NULL ? bw_has_only_finite(y_inc[i], n_samples) : 1);
+	}
+#endif
 }
 
 static inline void bw_phase_gen_set_frequency(
