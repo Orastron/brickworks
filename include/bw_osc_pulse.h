@@ -554,7 +554,7 @@ static inline char bw_osc_pulse_coeffs_is_valid(
 		return 0;
 
 #ifdef BW_DEBUG_DEEP
-	if (coeffs->state >= bw_gain_coeffs_state_reset_coeffs && !bw_one_pole_state_is_valid(&coeffs->smooth_coeffs, &coeffs->smooth_state))
+	if (coeffs->state >= bw_osc_pulse_coeffs_state_reset_coeffs && !bw_one_pole_state_is_valid(&coeffs->smooth_coeffs, &coeffs->smooth_state))
 		return 0;
 #endif
 

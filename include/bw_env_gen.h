@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.0 }}}
+ *  version {{{ 1.1.1 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Linear ADSR envelope generator.
@@ -40,6 +40,12 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.1.0</strong>:
+ *        <ul>
+ *          <li>Added debugging checks from <code>bw_env_gen_process()</code> to
+ *              <code>bw_env_gen_process_multi()</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
  *          <li>Added skip_sustain and always_reach_sustain parameters.</li>
@@ -725,6 +731,10 @@ static inline void bw_env_gen_process_multi(
 	BW_ASSERT_DEEP(coeffs->state >= bw_env_gen_coeffs_state_reset_coeffs);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(state[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_env_gen_state_is_valid(coeffs, state[i]));
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)
 			BW_ASSERT(state[i] != state[j]);
@@ -754,6 +764,12 @@ static inline void bw_env_gen_process_multi(
 
 	BW_ASSERT_DEEP(bw_env_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_env_gen_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT_DEEP(bw_env_gen_state_is_valid(coeffs, state[i]));
+		BW_ASSERT_DEEP(y != BW_NULL && y[i] != BW_NULL ? bw_has_only_finite(y[i], n_samples) : 1);
+	}
+#endif
 }
 
 static inline void bw_env_gen_set_attack(

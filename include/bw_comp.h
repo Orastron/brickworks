@@ -32,7 +32,7 @@
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
  *          <li>Added debugging checks from <code>bw_comp_process()</code> to
- *              <code>bw_comp_process_multi()</code>.
+ *              <code>bw_comp_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_comp_process_multi()</code>
  *              to ensure that buffers used for both input and output appear at
  *              the same channel indices.</li>
