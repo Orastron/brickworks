@@ -32,9 +32,10 @@
  *          <li>Added <code>bw_dry_wet_get_wet()</code> and
  *              <code>bw_dry_wet_get_wet_cur()</code>, and corresponding C++
  *              API.</li>
- *          <li>Added debugging check in <code>bw_dry_wet_process_multi()</code>
- *              to ensure that buffers used for both input and output appear at
- *              the same channel indices.</li>
+ *          <li>Added debugging checks in
+ *              <code>bw_dry_wet_process_multi()</code> to ensure that buffers
+ *              used for both input and output appear at the same channel
+ *              indices.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:

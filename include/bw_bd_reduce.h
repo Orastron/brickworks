@@ -34,8 +34,10 @@
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added gate parameter.</li>
- *          <li>Added debugging check in
- *              <code>bw_balance_bd_reduce_multi()</code> to ensure that buffers
+ *          <li>Added debugging checks from <code>bw_bd_reduce_process()</code>
+ *              to <code>bw_bd_reduce_process_multi()</code>.</li>
+ *          <li>Added debugging checks in
+ *              <code>bw_bd_reduce_process_multi()</code> to ensure that buffers
  *              used for both input and output appear at the same channel
  *              indices.</li>
  *        </ul>
@@ -408,6 +410,11 @@ static inline void bw_bd_reduce_process_multi(
 	BW_ASSERT(x != BW_NULL);
 	BW_ASSERT(y != BW_NULL);
 #ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(x[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x[i], n_samples));
+		BW_ASSERT(y[i] != BW_NULL);
+	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)
 			BW_ASSERT(y[i] != y[j]);
@@ -423,6 +430,9 @@ static inline void bw_bd_reduce_process_multi(
 
 	BW_ASSERT_DEEP(bw_bd_reduce_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_bd_reduce_coeffs_state_reset_coeffs);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++)
+		BW_ASSERT_DEEP(bw_has_only_finite(y[i], n_samples));
 }
 
 static inline void bw_bd_reduce_set_bit_depth(

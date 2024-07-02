@@ -37,7 +37,7 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
- *          <li>Added debugging check in <code>bw_reverb_process_multi()</code>
+ *          <li>Added debugging checks in <code>bw_reverb_process_multi()</code>
  *              to ensure that buffers used for both input and output appear at
  *              the same channel indices.</li>
  *        </ul>

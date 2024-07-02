@@ -34,9 +34,9 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
- *          <li>Added debugging check in <code>bw_dist_process_multi()</code> to
- *              ensure that buffers used for both input and output appear at the
- *              same channel indices.</li>
+ *          <li>Added debugging checks in <code>bw_dist_process_multi()</code>
+ *              to ensure that buffers used for both input and output appear at
+ *              the same channel indices.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:

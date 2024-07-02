@@ -30,7 +30,7 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
- *          <li>Added debugging check in
+ *          <li>Added debugging checks in
  *              <code>bw_env_follow_process_multi()</code> to ensure that
  *              buffers used for both input and output appear at the same
  *              channel indices.</li>

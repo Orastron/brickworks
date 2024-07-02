@@ -37,7 +37,7 @@
  *              ensure that <code>phase_0</code> is in [<code>0.f</code>,
  *              <code>1.f</code>) and indicated such range in the
  *              documentation.</li>
- *          <li>Added debugging check in
+ *          <li>Added debugging checks in
  *              <code>bw_phase_gen_process_multi()</code> to ensure that buffers
  *              used for both input and output appear at the same channel
  *              indices.</li>
