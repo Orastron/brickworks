@@ -30,6 +30,9 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Enforced limits on cutoff and dc_gain also in
+ *              <code>bw_ls2_reset_state*()</code> and clarified
+ *              documentation.</li>
  *          <li>Added debugging checks from <code>bw_ls2_process()</code> to
  *              <code>bw_ls2_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_ls2_process_multi()</code> to
@@ -235,9 +238,8 @@ static inline void bw_ls2_set_cutoff(
  *
  *    `value` must be finite and positive.
  *
- *    By the time `bw_ls2_reset_coeffs()`, `bw_ls2_update_coeffs_ctrl()`,
- *    `bw_ls2_update_coeffs_audio()`, `bw_ls2_process1()`, `bw_ls2_process()`,
- *    or `bw_ls2_process_multi()` is called,
+ *    By the time `bw_ls2_reset_\*()`, `bw_ls2_update_coeffs_\*()`, or
+ *    `bw_ls2_process\*()` is called,
  *    `cutoff * bw_rcpf(bw_sqrtf(bw_sqrtf(dc_gain)))` must be in [`1e-6f`,
  *    `1e12f`].
  *
@@ -291,9 +293,8 @@ static inline void bw_ls2_set_dc_gain_lin(
  *
  *    Valid range: [`1e-30f`, `1e30f`].
  *
- *    By the time `bw_ls2_reset_coeffs()`, `bw_ls2_update_coeffs_ctrl()`,
- *    `bw_ls2_update_coeffs_audio()`, `bw_ls2_process1()`, `bw_ls2_process()`,
- *    or `bw_ls2_process_multi()` is called,
+ *    By the time `bw_ls2_reset_\*()`, `bw_ls2_update_coeffs_\*()`, or
+ *    `bw_ls2_process\*()` is called,
  *    `cutoff * bw_rcpf(bw_sqrtf(bw_sqrtf(dc_gain)))` must be in [`1e-6f`,
  *    `1e12f`].
  *
@@ -309,9 +310,8 @@ static inline void bw_ls2_set_dc_gain_dB(
  *
  *    Valid range: [`-600.f`, `600.f`].
  *
- *    By the time `bw_ls2_reset_coeffs()`, `bw_ls2_update_coeffs_ctrl()`,
- *    `bw_ls2_update_coeffs_audio()`, `bw_ls2_process1()`, `bw_ls2_process()`,
- *    or `bw_ls2_process_multi()` is called,
+ *    By the time `bw_ls2_reset_\*()`, `bw_ls2_update_coeffs_\*()`, or
+ *    `bw_ls2_process\*()` is called,
  *    `cutoff * bw_rcpf(bw_sqrtf(bw_sqrtf(dc_gain)))` must be in [`1e-6f`,
  *    `1e12f`].
  *
@@ -487,6 +487,7 @@ static inline float bw_ls2_reset_state(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_ls2_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_ls2_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->cutoff * bw_rcpf(bw_sqrtf(bw_sqrtf(coeffs->dc_gain))) >= 1e-6f && coeffs->cutoff * bw_rcpf(bw_sqrtf(bw_sqrtf(coeffs->dc_gain))) <= 1e12f);
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT(bw_is_finite(x_0));
 
@@ -513,6 +514,7 @@ static inline void bw_ls2_reset_state_multi(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_ls2_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_ls2_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->cutoff * bw_rcpf(bw_sqrtf(bw_sqrtf(coeffs->dc_gain))) >= 1e-6f && coeffs->cutoff * bw_rcpf(bw_sqrtf(bw_sqrtf(coeffs->dc_gain))) <= 1e12f);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
 	for (size_t i = 0; i < n_channels; i++)

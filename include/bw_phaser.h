@@ -32,6 +32,9 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Enforced limits on center and amount also in
+ *              <code>bw_phaser_reset_state*()</code> and clarified
+ *              documentation.</li>
  *          <li>Added debugging checks from <code>bw_phaser_process()</code> to
  *              <code>bw_phaser_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_phaser_process_multi()</code>
@@ -236,10 +239,9 @@ static inline void bw_phaser_set_center(
  *
  *    Valid range: [`1e-6f`, `1e12f`].
  *
- *    By the time `bw_phaser_reset_coeffs()`, `bw_phaser_update_coeffs_ctrl()`,
- *    `bw_phaser_update_coeffs_audio()`, `bw_phaser_process1()`,
- *    `bw_phaser_process()`, or `bw_phaser_process_multi()` is called,
- *    `center * bw_pow2f(amount)` must be in [`1e-6f`, `1e12f`].
+ *    By the time `bw_phaser_reset_\*()`, `bw_phaser_update_coeffs_\*()`, or
+ *    `bw_phaser_process\*()` is called, `center * bw_pow2f(amount)` must be in
+ *    [`1e-6f`, `1e12f`].
  *
  *    Default value: `1e3f`.
  *
@@ -253,10 +255,9 @@ static inline void bw_phaser_set_amount(
  *
  *    `value` must be finite and non-negative.
  *
- *    By the time `bw_phaser_reset_coeffs()`, `bw_phaser_update_coeffs_ctrl()`,
- *    `bw_phaser_update_coeffs_audio()`, `bw_phaser_process1()`,
- *    `bw_phaser_process()`, or `bw_phaser_process_multi()` is called,
- *    `center * bw_pow2f(amount)` must be in [`1e-6f`, `1e12f`].
+ *    By the time `bw_phaser_reset_\*()`, `bw_phaser_update_coeffs_\*()`, or
+ *    `bw_phaser_process\*()` is called, `center * bw_pow2f(amount)` must be in
+ *    [`1e-6f`, `1e12f`].
  *
  *    Default value: `1.f`.
  *
@@ -407,6 +408,7 @@ static inline float bw_phaser_reset_state(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phaser_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phaser_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->center * bw_pow2f(coeffs->amount) >= 1e-6f && coeffs->center * bw_pow2f(coeffs->amount) <= 1e12f);
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT(bw_is_finite(x_0));
 
@@ -436,6 +438,7 @@ static inline void bw_phaser_reset_state_multi(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_phaser_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phaser_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->center * bw_pow2f(coeffs->amount) >= 1e-6f && coeffs->center * bw_pow2f(coeffs->amount) <= 1e12f);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
 	for (size_t i = 0; i < n_channels; i++)

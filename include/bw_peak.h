@@ -37,6 +37,9 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>Enforced limits on bandwidth and peak_gain also in
+ *              <code>bw_peak_reset_state*()</code> and clarified
+ *              documentation.</li>
  *          <li>Added debugging checks from <code>bw_peak_process()</code> to
  *              <code>bw_peak_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_peak_process_multi()</code>
@@ -290,9 +293,8 @@ static inline void bw_peak_set_peak_gain_lin(
  *    Valid range: [`1e-30f`, `1e30f`].
  *
  *    If actually using the bandwidth parameter to control Q,  by the time
- *    `bw_peak_reset_coeffs()`, `bw_peak_update_coeffs_ctrl()`,
- *    `bw_peak_update_coeffs_audio()`, `bw_peak_process1()`,
- *    `bw_peak_process()`, or `bw_peak_process_multi()` is called,
+ *    `bw_peak_reset_\*()`, `bw_peak_update_coeffs_\*()`, or
+ *    `bw_peak_process\*()`, is called,
  *    `bw_sqrtf(bw_pow2f(bandwidth) * peak_gain) *
  *    bw_rcpf(bw_pow2f(bandwidth) - 1.f)` must be in [`1e-6f`, `1e6f`].
  *
@@ -309,9 +311,8 @@ static inline void bw_peak_set_peak_gain_dB(
  *    Valid range: [`-600.f`, `600.f`].
  *
  *    If actually using the bandwidth parameter to control Q,  by the time
- *    `bw_peak_reset_coeffs()`, `bw_peak_update_coeffs_ctrl()`,
- *    `bw_peak_update_coeffs_audio()`, `bw_peak_process1()`,
- *    `bw_peak_process()`, or `bw_peak_process_multi()` is called,
+ *    `bw_peak_reset_\*()`, `bw_peak_update_coeffs_\*()`, or
+ *    `bw_peak_process\*()`, is called,
  *    `bw_sqrtf(bw_pow2f(bandwidth) * peak_gain) *
  *    bw_rcpf(bw_pow2f(bandwidth) - 1.f)` must be in [`1e-6f`, `1e6f`].
  *
@@ -328,9 +329,8 @@ static inline void bw_peak_set_bandwidth(
  *    Valid range: [`1e-6f`, `90.f`].
  *
  *    If actually using the bandwidth parameter to control Q,  by the time
- *    `bw_peak_reset_coeffs()`, `bw_peak_update_coeffs_ctrl()`,
- *    `bw_peak_update_coeffs_audio()`, `bw_peak_process1()`,
- *    `bw_peak_process()`, or `bw_peak_process_multi()` is called,
+ *    `bw_peak_reset_\*()`, `bw_peak_update_coeffs_\*()`, or
+ *    `bw_peak_process\*()`, is called,
  *    `bw_sqrtf(bw_pow2f(bandwidth) * peak_gain) *
  *    bw_rcpf(bw_pow2f(bandwidth) - 1.f)` must be in [`1e-6f`, `1e6f`].
  *
@@ -525,6 +525,10 @@ static inline float bw_peak_reset_state(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_peak_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_peak_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->use_bandwidth
+		? bw_sqrtf(bw_pow2f(coeffs->bandwidth) * coeffs->peak_gain) * bw_rcpf(bw_pow2f(coeffs->bandwidth) - 1.f) >= 1e-6f
+			&& bw_sqrtf(bw_pow2f(coeffs->bandwidth) * coeffs->peak_gain) * bw_rcpf(bw_pow2f(coeffs->bandwidth) - 1.f) <= 1e6f
+		: 1);
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT(bw_is_finite(x_0));
 
@@ -551,6 +555,10 @@ static inline void bw_peak_reset_state_multi(
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_peak_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_peak_coeffs_state_reset_coeffs);
+	BW_ASSERT_DEEP(coeffs->use_bandwidth
+		? bw_sqrtf(bw_pow2f(coeffs->bandwidth) * coeffs->peak_gain) * bw_rcpf(bw_pow2f(coeffs->bandwidth) - 1.f) >= 1e-6f
+			&& bw_sqrtf(bw_pow2f(coeffs->bandwidth) * coeffs->peak_gain) * bw_rcpf(bw_pow2f(coeffs->bandwidth) - 1.f) <= 1e6f
+		: 1);
 	BW_ASSERT(state != BW_NULL);
 #ifndef BW_NO_DEBUG
 	for (size_t i = 0; i < n_channels; i++)
