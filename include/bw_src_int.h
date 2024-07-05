@@ -267,7 +267,7 @@ struct bw_src_int_state {
 
 static inline void bw_src_int_init(
 		bw_src_int_coeffs * BW_RESTRICT coeffs,
-		int ratio) {
+		int                             ratio) {
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT(ratio < -1 || ratio > 1);
 
