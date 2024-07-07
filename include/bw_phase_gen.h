@@ -25,7 +25,7 @@
  *  description {{{
  *    Phase generator with portamento and exponential frequency modulation.
  *
- *    It outputs a normalized phase signal (range [`0.f`, `1.f`]).
+ *    It outputs a normalized phase signal (range [`0.f`, `1.f`)).
  *  }}}
  *  changelog {{{
  *    <ul>
@@ -46,6 +46,8 @@
  *          <li>Fixed bug in <code>bw_phase_gen_process_multi()</code> by which
  *              debugging code could report false negatives when
  *              <code>BW_NULL</code> buffers are used.</li>
+ *          <li>Fixed typo in the module description regarding output
+ *              range.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:
