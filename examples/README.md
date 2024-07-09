@@ -82,7 +82,7 @@ Android examples are built without the help of Android Studio or Gradle. You'll 
 
 - Android SDK (https://developer.android.com/studio/index.html) \*;
 - Android NDK (https://developer.android.com/ndk/downloads) \*;
-- `.jar`s and `.aar`s (and you'll also need to manually extract the inner `.jar` from each `.aar`, which are just ZIP files) for:
+- `.jar`s and `.aar`s (and you'll also need to manually extract the inner `classes.jar` from each `xxx.aar`, which are just ZIP files, and rename `classes.jar` to `xxx.jar`) for:
   - AndroidX Core (https://mvnrepository.com/artifact/androidx.core/core);
   - AndroidX Lifecycle Common (https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-common)
   - AndroidX VersionedParcelable (https://mvnrepository.com/artifact/androidx.versionedparcelable/versionedparcelable)
