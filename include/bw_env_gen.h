@@ -42,6 +42,10 @@
  *    <ul>
  *      <li>Version <strong>1.1.1</strong>:
  *        <ul>
+ *          <li>More robust implementation.</li>
+ *          <li>Fixed <code>bw_env_reset_state()</code> and
+ *              <code>bw_env_reset_state_multi()</code> to take into account
+ *              skip_sustain parameter value.</li>
  *          <li>Added debugging checks from <code>bw_env_gen_process()</code> to
  *              <code>bw_env_gen_process_multi()</code>.</li>
  *        </ul>
@@ -425,7 +429,7 @@ struct bw_env_gen_coeffs {
 	bw_one_pole_coeffs		smooth_coeffs;
 	
 	// Coefficients
-	float				k_T;
+	float				T;
 
 	uint32_t			attack_inc;
 	uint32_t			decay_dec;
@@ -457,8 +461,6 @@ struct bw_env_gen_state {
 #define BW_ENV_GEN_PARAM_DECAY		(1<<1)
 #define BW_ENV_GEN_PARAM_SUSTAIN	(1<<2)
 #define BW_ENV_GEN_PARAM_RELEASE	(1<<3)
-
-#define BW_ENV_V_MAX			4294967040
 
 static inline void bw_env_gen_init(
 		bw_env_gen_coeffs * BW_RESTRICT coeffs) {
@@ -494,7 +496,7 @@ static inline void bw_env_gen_set_sample_rate(
 
 	bw_one_pole_set_sample_rate(&coeffs->smooth_coeffs, sample_rate);
 	bw_one_pole_reset_coeffs(&coeffs->smooth_coeffs);
-	coeffs->k_T = (float)BW_ENV_V_MAX / sample_rate;
+	coeffs->T = 1.f / sample_rate;
 
 #ifdef BW_DEBUG_DEEP
 	coeffs->state = bw_env_gen_coeffs_state_set_sample_rate;
@@ -506,15 +508,15 @@ static inline void bw_env_gen_set_sample_rate(
 static inline void bw_env_gen_do_update_coeffs_ctrl(
 		bw_env_gen_coeffs * BW_RESTRICT coeffs) {
 	if (coeffs->param_changed) {
-		// 1 ns considered instantaneous
+		// coeffs->T = actual minimum duration
 		if (coeffs->param_changed & BW_ENV_GEN_PARAM_ATTACK)
-			coeffs->attack_inc = coeffs->attack > 1e-9f ? coeffs->k_T * bw_rcpf(coeffs->attack) : UINT32_MAX;
+			coeffs->attack_inc = coeffs->attack > coeffs->T ? (float)UINT32_MAX * (coeffs->T * bw_rcpf(coeffs->attack)) : UINT32_MAX;
 		if (coeffs->param_changed & (BW_ENV_GEN_PARAM_DECAY | BW_ENV_GEN_PARAM_SUSTAIN))
-			coeffs->decay_dec = coeffs->decay > 1e-9f ? (1.f - coeffs->sustain) * (coeffs->k_T * bw_rcpf(coeffs->decay)) : UINT32_MAX;
+			coeffs->decay_dec = (1.f - coeffs->sustain) * (coeffs->decay > coeffs->T ? ((float)UINT32_MAX * (coeffs->T * bw_rcpf(coeffs->decay))) : UINT32_MAX);
 		if (coeffs->param_changed & BW_ENV_GEN_PARAM_SUSTAIN)
-			coeffs->sustain_v = (uint32_t)((float)BW_ENV_V_MAX * coeffs->sustain);
+			coeffs->sustain_v = (float)UINT32_MAX * coeffs->sustain;
 		if (coeffs->param_changed & (BW_ENV_GEN_PARAM_SUSTAIN | BW_ENV_GEN_PARAM_RELEASE))
-			coeffs->release_dec = coeffs->release > 1e-9f ? coeffs->sustain * (coeffs->k_T * bw_rcpf(coeffs->release)) : UINT32_MAX;
+			coeffs->release_dec = coeffs->sustain * (coeffs->release > coeffs->T ? ((float)UINT32_MAX * (coeffs->T * bw_rcpf(coeffs->release))) : UINT32_MAX);
 		coeffs->param_changed = 0;
 	}
 }
@@ -546,14 +548,14 @@ static inline float bw_env_gen_reset_state(
 	BW_ASSERT(state != BW_NULL);
 
 	bw_one_pole_reset_state(&coeffs->smooth_coeffs, &state->smooth_state, coeffs->sustain);
-	if (gate_0) {
+	if (gate_0 && !coeffs->skip_sustain) {
 		state->phase = bw_env_gen_phase_sustain;
 		state->v = coeffs->sustain_v;
 	} else {
 		state->phase = bw_env_gen_phase_off;
 		state->v = 0;
 	}
-	const float y = (1.f / (float)BW_ENV_V_MAX) * state->v;
+	const float y = (1.f / (float)UINT32_MAX) * state->v;
 
 #ifdef BW_DEBUG_DEEP
 	state->hash = bw_hash_sdbm("bw_env_gen_state");
@@ -653,8 +655,8 @@ static inline float bw_env_gen_process1(
 	switch (state->phase) {
 	case bw_env_gen_phase_attack:
 		v = state->v + coeffs->attack_inc;
-		if (v == BW_ENV_V_MAX || v <= state->v) {
-			v = BW_ENV_V_MAX;
+		if (v == UINT32_MAX || v <= state->v) {
+			v = UINT32_MAX;
 			state->phase = bw_env_gen_phase_decay;
 		}
 		break;
@@ -666,7 +668,7 @@ static inline float bw_env_gen_process1(
 		}
 		break;
 	case bw_env_gen_phase_sustain:
-		v = (uint32_t)((float)BW_ENV_V_MAX * bw_one_pole_process1(&coeffs->smooth_coeffs, &state->smooth_state, coeffs->sustain));
+		v = (uint32_t)((float)UINT32_MAX * bw_clipf(bw_one_pole_process1(&coeffs->smooth_coeffs, &state->smooth_state, coeffs->sustain), 0.f, 1.f));
 		if (coeffs->skip_sustain)
 			state->phase = bw_env_gen_phase_release;
 		break;
@@ -682,7 +684,7 @@ static inline float bw_env_gen_process1(
 		break;
 	}
 	state->v = v;
-	const float y = (1.f / (float)BW_ENV_V_MAX) * v;
+	const float y = (1.f / (float)UINT32_MAX) * v;
 	
 	BW_ASSERT_DEEP(bw_env_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_env_gen_coeffs_state_reset_coeffs);
@@ -883,7 +885,7 @@ static inline float bw_env_gen_get_y_z1(
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT_DEEP(bw_env_gen_state_is_valid(BW_NULL, state));
 
-	const float y = (1.f / (float)BW_ENV_V_MAX) * state->v;
+	const float y = (1.f / (float)UINT32_MAX) * state->v;
 
 	BW_ASSERT(bw_is_finite(y));
 
@@ -939,8 +941,6 @@ static inline char bw_env_gen_state_is_valid(
 #undef BW_ENV_GEN_PARAM_DECAY
 #undef BW_ENV_GEN_PARAM_SUSTAIN
 #undef BW_ENV_GEN_PARAM_RELEASE
-
-#undef BW_ENV_V_MAX
 
 #ifdef __cplusplus
 }
