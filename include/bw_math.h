@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.0.1 }}}
+ *  version {{{ 1.1.0 }}}
  *  requires {{{ bw_common }}}
  *  description {{{
  *    A collection of mathematical routines that strive to be better suited to
@@ -44,6 +44,14 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.1.0</strong>:
+ *        <ul>
+ *          <li>Added <code>bw_signfilli64</code>, <code>bw_mini64</code>,
+ *              <code>bw_maxi64</code>, <code>bw_clipi64</code>,
+ *              <code>bw_minu64</code>, <code>bw_maxu64</code>, and
+ *              <code>bw_clipu64</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code>.</li>
@@ -185,6 +193,65 @@ static inline uint32_t bw_clipu32(
 	uint32_t x,
 	uint32_t m,
 	uint32_t M);
+/*! <<<```
+ *    Returns `x` unless it is smaller than `m`, in which case it returns `m`,
+ *    or bigger than `M`, in which case it returns `M`.
+ *
+ *    #### bw_signfilli64()
+ *  ```>>> */
+static inline int64_t bw_signfilli64(
+	int64_t x);
+/*! <<<```
+ *    Returns `~0` if `x` is negative, `0` otherwise.
+ *
+ *    #### bw_mini64()
+ *  ```>>> */
+static inline int64_t bw_mini64(
+	int64_t a,
+	int64_t b);
+/*! <<<```
+ *    Returns the minimum of `a` and `b`.
+ *
+ *    #### bw_maxi64()
+ *  ```>>> */
+static inline int64_t bw_maxi64(
+	int64_t a,
+	int64_t b);
+/*! <<<```
+ *    Returns the maximum of `a` and `b`.
+ *
+ *    #### bw_clipi64()
+ *  ```>>> */
+static inline int64_t bw_clipi64(
+	int64_t x,
+	int64_t m,
+	int64_t M);
+/*! <<<```
+ *    Returns `x` unless it is smaller than `m`, in which case it returns `m`,
+ *    or bigger than `M`, in which case it returns `M`.
+ *
+ *    #### bw_minu32()
+ *  ```>>> */
+static inline uint64_t bw_minu64(
+	uint64_t a,
+	uint64_t b);
+/*! <<<```
+ *    Returns the minimum of `a` and `b`.
+ *
+ *    #### bw_maxu64()
+ *  ```>>> */
+static inline uint64_t bw_maxu64(
+	uint64_t a,
+	uint64_t b);
+/*! <<<```
+ *    Returns the maximum of `a` and `b`.
+ *
+ *    #### bw_clipu64()
+ *  ```>>> */
+static inline uint64_t bw_clipu64(
+	uint64_t x,
+	uint64_t m,
+	uint64_t M);
 /*! <<<```
  *    Returns `x` unless it is smaller than `m`, in which case it returns `m`,
  *    or bigger than `M`, in which case it returns `M`.
@@ -606,6 +673,49 @@ static inline uint32_t bw_clipu32(
 		uint32_t x,
 		uint32_t m,
 		uint32_t M) {
+	return x < m ? m : (x > M ? M : x);
+}
+
+static inline int64_t bw_signfilli64(
+		int64_t x) {
+	return x < 0 ? ~0 : 0;
+}
+
+static inline int64_t bw_mini64(
+		int64_t a,
+		int64_t b) {
+	return a < b ? a : b;
+}
+
+static inline int64_t bw_maxi64(
+		int64_t a,
+		int64_t b) {
+	return a > b ? a : b;
+}
+
+static inline int64_t bw_clipi64(
+		int64_t x,
+		int64_t m,
+		int64_t M) {
+	return x < m ? m : (x > M ? M : x);
+}
+
+static inline uint64_t bw_minu64(
+		uint64_t a,
+		uint64_t b) {
+	return a < b ? a : b;
+}
+
+static inline uint64_t bw_maxu64(
+		uint64_t a,
+		uint64_t b) {
+	return a > b ? a : b;
+}
+
+static inline uint64_t bw_clipu64(
+		uint64_t x,
+		uint64_t m,
+		uint64_t M) {
 	return x < m ? m : (x > M ? M : x);
 }
 
