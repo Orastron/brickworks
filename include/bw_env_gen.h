@@ -48,6 +48,9 @@
  *              skip_sustain parameter value.</li>
  *          <li>Added debugging checks from <code>bw_env_gen_process()</code> to
  *              <code>bw_env_gen_process_multi()</code>.</li>
+ *          <li>Added debugging check in <code>bw_env_gen_process1()</code> to
+ *              ensure that output is in [<code>0.f</code>,
+ *              <code>1.f</code>].</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:
@@ -690,6 +693,7 @@ static inline float bw_env_gen_process1(
 	BW_ASSERT_DEEP(coeffs->state >= bw_env_gen_coeffs_state_reset_coeffs);
 	BW_ASSERT_DEEP(bw_env_gen_state_is_valid(coeffs, state));
 	BW_ASSERT(bw_is_finite(y));
+	BW_ASSERT(y >= 0.f && y <= 1.f);
 
 	return y;
 }
