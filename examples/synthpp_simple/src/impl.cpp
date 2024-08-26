@@ -88,38 +88,38 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_volume:
 	{
 		float v = 0.01f * value;
 		instance->gain.setGainLin(v * v * v);
 	}
 		break;
-	case 1:
+	case plugin_parameter_master_tune:
 		instance->masterTune = value;
 		break;
-	case 2:
+	case plugin_parameter_portamento:
 		// using portamento time 0% -> 90%: tau = portamento time / log(10)
 		instance->phaseGen.setPortamentoTau((0.001f * 0.4342944819032517f) * value);
 		break;
-	case 3:
+	case plugin_parameter_pulse_width:
 		instance->oscPulse.setPulseWidth(0.01f * value);
 		break;
-	case 4:
+	case plugin_parameter_cutoff:
 		instance->svf.setCutoff(value);
 		break;
-	case 5:
+	case plugin_parameter_resonance:
 		instance->svf.setQ(0.5f + (9.5f * 0.01f) * value);
 		break;
-	case 6:
+	case plugin_parameter_attack:
 		instance->envGen.setAttack(0.001f * value);
 		break;
-	case 7:
+	case plugin_parameter_decay:
 		instance->envGen.setDecay(0.001f * value);
 		break;
-	case 8:
+	case plugin_parameter_sustain:
 		instance->envGen.setSustain(0.01f * value);
 		break;
-	case 9:
+	case plugin_parameter_release:
 		instance->envGen.setRelease(0.001f * value);
 		break;
 	}

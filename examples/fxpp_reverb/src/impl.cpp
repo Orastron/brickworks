@@ -50,19 +50,19 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Reverb<1> *instance = reinterpret_cast<Reverb<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_predelay:
 		instance->setPredelay(0.001f * value);
 		break;
-	case 1:
+	case plugin_parameter_bandwidth:
 		instance->setBandwidth(value);
 		break;
-	case 2:
+	case plugin_parameter_damping:
 		instance->setDamping(value);
 		break;
-	case 3:
+	case plugin_parameter_decay:
 		instance->setDecay(0.01f * bw_minf(value, 99.9f));
 		break;
-	case 4:
+	case plugin_parameter_wet:
 		instance->setWet(0.01f * value);
 		break;
 	}

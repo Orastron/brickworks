@@ -57,21 +57,21 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_threshold:
 		bw_noise_gate_set_thresh_dBFS(&instance->noise_gate_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_ratio:
 		bw_noise_gate_set_ratio(&instance->noise_gate_coeffs, value);
 		break;
-	case 2:
+	case plugin_parameter_attack:
 		// using rise time 10% -> 90%: tau = rise time / log(9)
 		bw_noise_gate_set_attack_tau(&instance->noise_gate_coeffs, (0.001f * 0.4551196133134186f) * value);
 		break;
-	case 3:
+	case plugin_parameter_release:
 		// as before
 		bw_noise_gate_set_release_tau(&instance->noise_gate_coeffs, (0.001f * 0.4551196133134186f) * value);
 		break;
-	case 4:
+	case plugin_parameter_ext_sidechain:
 		instance->ext_sidechain = (char)value;
 		break;
 	}

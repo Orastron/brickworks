@@ -56,24 +56,24 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_threshold:
 		instance->comp.setThreshDBFS(value);
 		break;
-	case 1:
+	case plugin_parameter_ratio:
 		instance->comp.setRatio(bw_rcpf(value));
 		break;
-	case 2:
+	case plugin_parameter_attack:
 		// using rise time 10% -> 90%: tau = rise time / log(9)
 		instance->comp.setAttackTau((0.001f * 0.4551196133134186f) * value);
 		break;
-	case 3:
+	case plugin_parameter_release:
 		// as before
 		instance->comp.setReleaseTau((0.001f * 0.4551196133134186f) * value);
 		break;
-	case 4:
+	case plugin_parameter_gain:
 		instance->comp.setGainDB(value);
 		break;
-	case 5:
+	case plugin_parameter_ext_sidechain:
 		instance->extSidechain = value >= 0.5f;
 		break;
 	}

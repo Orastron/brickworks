@@ -70,10 +70,10 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_gain:
 		bw_satur_set_gain(&instance->satur_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_bias:
 		bw_satur_set_bias(&instance->satur_coeffs, value);
 		break;
 	}

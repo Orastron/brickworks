@@ -102,38 +102,38 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_volume:
 	{
 		float v = 0.01f * value;
 		bw_gain_set_gain_lin(&instance->gain_coeffs, v * v * v);
 	}
 		break;
-	case 1:
+	case plugin_parameter_master_tune:
 		instance->master_tune = value;
 		break;
-	case 2:
+	case plugin_parameter_portamento:
 		// using portamento time 0% -> 90%: tau = portamento time / log(10)
 		bw_phase_gen_set_portamento_tau(&instance->phase_gen_coeffs, (0.001f * 0.4342944819032517f) * value);
 		break;
-	case 3:
+	case plugin_parameter_pulse_width:
 		bw_osc_pulse_set_pulse_width(&instance->osc_pulse_coeffs, 0.01f * value);
 		break;
-	case 4:
+	case plugin_parameter_cutoff:
 		bw_svf_set_cutoff(&instance->svf_coeffs, value);
 		break;
-	case 5:
+	case plugin_parameter_resonance:
 		bw_svf_set_Q(&instance->svf_coeffs, 0.5f + (9.5f * 0.01f) * value);
 		break;
-	case 6:
+	case plugin_parameter_attack:
 		bw_env_gen_set_attack(&instance->env_gen_coeffs, 0.001f * value);
 		break;
-	case 7:
+	case plugin_parameter_decay:
 		bw_env_gen_set_decay(&instance->env_gen_coeffs, 0.001f * value);
 		break;
-	case 8:
+	case plugin_parameter_sustain:
 		bw_env_gen_set_sustain(&instance->env_gen_coeffs, 0.01f * value);
 		break;
-	case 9:
+	case plugin_parameter_release:
 		bw_env_gen_set_release(&instance->env_gen_coeffs, 0.001f * value);
 		break;
 	}

@@ -64,11 +64,11 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		instance->chorus.setRate(value);
 		instance->rateK = (1.f / 6.283185307179586f) * bw_rcpf(value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		instance->amountK = bw_pow2f((1.f / 12.f) * value) - 1.f;
 		break;
 	}

@@ -289,16 +289,16 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_volume:
 	{
 		const float v = 0.01f * value;
 		bw_gain_set_gain_lin(&instance->gain_coeffs, v * v * v);
 	}
 		break;
-	case 1:
+	case plugin_parameter_master_tune:
 		instance->master_tune = value;
 		break;
-	case 2:
+	case plugin_parameter_portamento:
 	{
 		// using portamento time 0% -> 90%: tau = portamento time / log(10)
 		const float v = (0.001f * 0.4342944819032517f) * value;
@@ -309,137 +309,137 @@ static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 		}
 		break;
 	}
-	case 3:
+	case plugin_parameter_mod_mix:
 		instance->modulation_mix = 0.01f * value;
 		break;
-	case 4:
+	case plugin_parameter_vco1_mod:
 		instance->vco1_modulation = 0.01f * value;
 		break;
-	case 5:
+	case plugin_parameter_vco1_coarse:
 		instance->vco1_coarse = value;
 		break;
-	case 6:
+	case plugin_parameter_vco1_fine:
 		instance->vco1_fine = value;
 		break;
-	case 7:
+	case plugin_parameter_vco1_wave:
 		instance->vco1_waveform = value;
 		break;
-	case 8:
+	case plugin_parameter_vco1_pw:
 	{
 		const float v = 0.01f * value;
 		bw_osc_pulse_set_pulse_width(&instance->vco1_pulse_coeffs, v);
 		bw_osc_tri_set_slope(&instance->vco1_tri_coeffs, bw_clipf(v, 0.001f, 0.999f));
 		break;
 	}
-	case 9:
+	case plugin_parameter_vco1_level:
 	{
 		const float v = 0.01f * value;
 		bw_gain_set_gain_lin(&instance->vco1_gain_coeffs, v * v * v);
 		break;
 	}
-	case 10:
+	case plugin_parameter_vco2_mod:
 		instance->vco2_modulation = 0.01f * value;
 		break;
-	case 11:
+	case plugin_parameter_vco2_coarse:
 		instance->vco2_coarse = value;
 		break;
-	case 12:
+	case plugin_parameter_vco2_fine:
 		instance->vco2_fine = value;
 		break;
-	case 13:
+	case plugin_parameter_vco2_wave:
 		instance->vco2_waveform = value;
 		break;
-	case 14:
+	case plugin_parameter_vco2_pw:
 	{
 		const float v = 0.01f * value;
 		bw_osc_pulse_set_pulse_width(&instance->vco2_pulse_coeffs, v);
 		bw_osc_tri_set_slope(&instance->vco2_tri_coeffs, bw_clipf(v, 0.001f, 0.999f));
 		break;
 	}
-	case 15:
+	case plugin_parameter_vco2_level:
 	{
 		const float v = 0.01f * value;
 		bw_gain_set_gain_lin(&instance->vco2_gain_coeffs, v * v * v);
 		break;
 	}
-	case 16:
+	case plugin_parameter_vco3_kbd_ctrl:
 		instance->vco3_kbd_ctrl = value >= 0.5f;
 		break;
-	case 17:
+	case plugin_parameter_vco3_coarse:
 		instance->vco3_coarse = value;
 		break;
-	case 18:
+	case plugin_parameter_vco3_fine:
 		instance->vco3_fine = value;
 		break;
-	case 19:
+	case plugin_parameter_vco3_wave:
 		instance->vco3_waveform = value;
 		break;
-	case 20:
+	case plugin_parameter_vco3_pw:
 	{
 		const float v = 0.01f * value;
 		bw_osc_pulse_set_pulse_width(&instance->vco3_pulse_coeffs, v);
 		bw_osc_tri_set_slope(&instance->vco3_tri_coeffs, bw_clipf(v, 0.001f, 0.999f));
 		break;
 	}
-	case 21:
+	case plugin_parameter_vco3_level:
 	{
 		const float v = 0.01f * value;
 		bw_gain_set_gain_lin(&instance->vco3_gain_coeffs, v * v * v);
 		break;
 	}
-	case 22:
+	case plugin_parameter_noise_color:
 		instance->noise_color = value;
 		break;
-	case 23:
+	case plugin_parameter_noise_level:
 	{
 		const float v = 0.01f * value;
 		bw_gain_set_gain_lin(&instance->noise_gain_coeffs, v * v * v);
 		break;
 	}
-	case 24:
+	case plugin_parameter_vcf_mod:
 		instance->vcf_modulation = 0.01f * value;
 		break;
-	case 25:
+	case plugin_parameter_vcf_kbd_ctrl:
 		instance->vcf_kbd_ctrl = value;
 		break;
-	case 26:
+	case plugin_parameter_vcf_cutoff:
 		instance->vcf_cutoff = value;
 		break;
-	case 27:
+	case plugin_parameter_vcf_resonance:
 	{
 		const float v = 0.5f + (0.01f * 9.5f) * value;
 		for (int i = 0; i < N_VOICES; i++)
 			bw_svf_set_Q(&instance->voices[i].vcf_coeffs, v);
 		break;
 	}
-	case 28:
+	case plugin_parameter_vcf_contour:
 		instance->vcf_contour = 0.01f * value;
 		break;
-	case 29:
+	case plugin_parameter_vcf_attack:
 		bw_env_gen_set_attack(&instance->vcf_env_gen_coeffs, 0.001f * value);
 		break;
-	case 30:
+	case plugin_parameter_vcf_decay:
 		bw_env_gen_set_decay(&instance->vcf_env_gen_coeffs, 0.001f * value);
 		break;
-	case 31:
+	case plugin_parameter_vcf_sustain:
 		bw_env_gen_set_sustain(&instance->vcf_env_gen_coeffs, 0.01f * value);
 		break;
-	case 32:
+	case plugin_parameter_vcf_release:
 		bw_env_gen_set_release(&instance->vcf_env_gen_coeffs, 0.001f * value);
 		break;
-	case 33:
+	case plugin_parameter_vca_attack:
 		bw_env_gen_set_attack(&instance->vca_env_gen_coeffs, 0.001f * value);
 		break;
-	case 34:
+	case plugin_parameter_vca_decay:
 		bw_env_gen_set_decay(&instance->vca_env_gen_coeffs, 0.001f * value);
 		break;
-	case 35:
+	case plugin_parameter_vca_sustain:
 		bw_env_gen_set_sustain(&instance->vca_env_gen_coeffs, 0.01f * value);
 		break;
-	case 36:
+	case plugin_parameter_vca_release:
 		bw_env_gen_set_release(&instance->vca_env_gen_coeffs, 0.001f * value);
 		break;
-	case 37:
+	case plugin_parameter_a440:
 		instance->a440 = value >= 0.5f;
 		break;
 	}

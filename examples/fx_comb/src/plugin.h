@@ -54,19 +54,19 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_ff_delay:
 		bw_comb_set_delay_ff(&instance->comb_coeffs, 0.001f * value);
 		break;
-	case 1:
+	case plugin_parameter_fb_delay:
 		bw_comb_set_delay_fb(&instance->comb_coeffs, 0.001f * value);
 		break;
-	case 2:
+	case plugin_parameter_blend:
 		bw_comb_set_coeff_blend(&instance->comb_coeffs, value);
 		break;
-	case 3:
+	case plugin_parameter_ff:
 		bw_comb_set_coeff_ff(&instance->comb_coeffs, value);
 		break;
-	case 4:
+	case plugin_parameter_fb:
 		bw_comb_set_coeff_fb(&instance->comb_coeffs, value);
 		break;
 	}

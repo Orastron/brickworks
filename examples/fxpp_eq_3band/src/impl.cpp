@@ -63,31 +63,31 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_ls_cutoff:
 		instance->ls2.setCutoff(value);
 		break;
-	case 1:
+	case plugin_parameter_ls_gain:
 		instance->ls2.setDcGainDB(value);
 		break;
-	case 2:
+	case plugin_parameter_ls_q:
 		instance->ls2.setQ(value);
 		break;
-	case 3:
+	case plugin_parameter_peak_cutoff:
 		instance->peak.setCutoff(value);
 		break;
-	case 4:
+	case plugin_parameter_peak_gain:
 		instance->peak.setPeakGainDB(value);
 		break;
-	case 5:
+	case plugin_parameter_peak_bw:
 		instance->peak.setBandwidth(value);
 		break;
-	case 6:
+	case plugin_parameter_hs_cutoff:
 		instance->hs2.setCutoff(value);
 		break;
-	case 7:
+	case plugin_parameter_hs_gain:
 		instance->hs2.setHighGainDB(value);
 		break;
-	case 8:
+	case plugin_parameter_hs_q:
 		instance->hs2.setQ(value);
 		break;
 	}

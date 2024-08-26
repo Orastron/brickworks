@@ -215,16 +215,16 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_volume:
 	{
 		const float v = 0.01f * value;
 		instance->gain.setGainLin(v * v * v);
 	}
 		break;
-	case 1:
+	case plugin_parameter_master_tune:
 		instance->masterTune = value;
 		break;
-	case 2:
+	case plugin_parameter_portamento:
 	{
 		// using portamento time 0% -> 90%: tau = portamento time / log(10)
 		const float v = (0.001f * 0.4342944819032517f) * value;
@@ -233,133 +233,133 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 		instance->vco3PhaseGen.setPortamentoTau(v);
 		break;
 	}
-	case 3:
+	case plugin_parameter_mod_mix:
 		instance->modulationMix = 0.01f * value;
 		break;
-	case 4:
+	case plugin_parameter_vco1_mod:
 		instance->vco1Modulation = 0.01f * value;
 		break;
-	case 5:
+	case plugin_parameter_vco1_coarse:
 		instance->vco1Coarse = value;
 		break;
-	case 6:
+	case plugin_parameter_vco1_fine:
 		instance->vco1Fine = value;
 		break;
-	case 7:
+	case plugin_parameter_vco1_wave:
 		instance->vco1Waveform = value;
 		break;
-	case 8:
+	case plugin_parameter_vco1_pw:
 	{
 		const float v = 0.01f * value;
 		instance->vco1OscPulse.setPulseWidth(v);
 		instance->vco1OscTri.setSlope(bw_clipf(v, 0.001f, 0.999f));
 		break;
 	}
-	case 9:
+	case plugin_parameter_vco1_level:
 	{
 		const float v = 0.01f * value;
 		instance->vco1Gain.setGainLin(v * v * v);
 		break;
 	}
-	case 10:
+	case plugin_parameter_vco2_mod:
 		instance->vco2Modulation = 0.01f * value;
 		break;
-	case 11:
+	case plugin_parameter_vco2_coarse:
 		instance->vco2Coarse = value;
 		break;
-	case 12:
+	case plugin_parameter_vco2_fine:
 		instance->vco2Fine = value;
 		break;
-	case 13:
+	case plugin_parameter_vco2_wave:
 		instance->vco2Waveform = value;
 		break;
-	case 14:
+	case plugin_parameter_vco2_pw:
 	{
 		const float v = 0.01f * value;
 		instance->vco2OscPulse.setPulseWidth(v);
 		instance->vco2OscTri.setSlope(bw_clipf(v, 0.001f, 0.999f));
 		break;
 	}
-	case 15:
+	case plugin_parameter_vco2_level:
 	{
 		const float v = 0.01f * value;
 		instance->vco2Gain.setGainLin(v * v * v);
 		break;
 	}
-	case 16:
+	case plugin_parameter_vco3_kbd_ctrl:
 		instance->vco3KbdCtrl = value >= 0.5f;
 		break;
-	case 17:
+	case plugin_parameter_vco3_coarse:
 		instance->vco3Coarse = value;
 		break;
-	case 18:
+	case plugin_parameter_vco3_fine:
 		instance->vco3Fine = value;
 		break;
-	case 19:
+	case plugin_parameter_vco3_wave:
 		instance->vco3Waveform = value;
 		break;
-	case 20:
+	case plugin_parameter_vco3_pw:
 	{
 		const float v = 0.01f * value;
 		instance->vco3OscPulse.setPulseWidth(v);
 		instance->vco3OscTri.setSlope(bw_clipf(v, 0.001f, 0.999f));
 		break;
 	}
-	case 21:
+	case plugin_parameter_vco3_level:
 	{
 		const float v = 0.01f * value;
 		instance->vco3Gain.setGainLin(v * v * v);
 		break;
 	}
-	case 22:
+	case plugin_parameter_noise_color:
 		instance->noiseColor = value;
 		break;
-	case 23:
+	case plugin_parameter_noise_level:
 	{
 		const float v = 0.01f * value;
 		instance->noiseGain.setGainLin(v * v * v);
 		break;
 	}
-	case 24:
+	case plugin_parameter_vcf_mod:
 		instance->vcfModulation = 0.01f * value;
 		break;
-	case 25:
+	case plugin_parameter_vcf_kbd_ctrl:
 		instance->vcfKbdCtrl = value;
 		break;
-	case 26:
+	case plugin_parameter_vcf_cutoff:
 		instance->vcfCutoff = value;
 		break;
-	case 27:
+	case plugin_parameter_vcf_resonance:
 		instance->vcf.setQ(0.5f + (0.01f * 9.5f) * value);
 		break;
-	case 28:
+	case plugin_parameter_vcf_contour:
 		instance->vcfContour = 0.01f * value;
 		break;
-	case 29:
+	case plugin_parameter_vcf_attack:
 		instance->vcfEnvGen.setAttack(0.001f * value);
 		break;
-	case 30:
+	case plugin_parameter_vcf_decay:
 		instance->vcfEnvGen.setDecay(0.001f * value);
 		break;
-	case 31:
+	case plugin_parameter_vcf_sustain:
 		instance->vcfEnvGen.setSustain(0.01f * value);
 		break;
-	case 32:
+	case plugin_parameter_vcf_release:
 		instance->vcfEnvGen.setRelease(0.001f * value);
 		break;
-	case 33:
+	case plugin_parameter_vca_attack:
 		instance->vcaEnvGen.setAttack(0.001f * value);
 		break;
-	case 34:
+	case plugin_parameter_vca_decay:
 		instance->vcaEnvGen.setDecay(0.001f * value);
 		break;
-	case 35:
+	case plugin_parameter_vca_sustain:
 		instance->vcaEnvGen.setSustain(0.01f * value);
 		break;
-	case 36:
+	case plugin_parameter_vca_release:
 		instance->vcaEnvGen.setRelease(0.001f * value);
 		break;
-	case 37:
+	case plugin_parameter_a440:
 		instance->a440 = value >= 0.5f;
 		break;
 	}

@@ -50,13 +50,13 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Cab<1> *instance = reinterpret_cast<Cab<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_cutoff_low:
 		instance->setCutoffLow(0.01f * value);
 		break;
-	case 1:
+	case plugin_parameter_cutoff_high:
 		instance->setCutoffHigh(0.01f * value);
 		break;
-	case 2:
+	case plugin_parameter_tone:
 		instance->setTone(0.01f * value);
 		break;
 	}

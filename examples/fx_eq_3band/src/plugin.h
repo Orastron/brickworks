@@ -70,31 +70,31 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_ls_cutoff:
 		bw_ls2_set_cutoff(&instance->ls2_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_ls_gain:
 		bw_ls2_set_dc_gain_dB(&instance->ls2_coeffs, value);
 		break;
-	case 2:
+	case plugin_parameter_ls_q:
 		bw_ls2_set_Q(&instance->ls2_coeffs, value);
 		break;
-	case 3:
+	case plugin_parameter_peak_cutoff:
 		bw_peak_set_cutoff(&instance->peak_coeffs, value);
 		break;
-	case 4:
+	case plugin_parameter_peak_gain:
 		bw_peak_set_peak_gain_dB(&instance->peak_coeffs, value);
 		break;
-	case 5:
+	case plugin_parameter_peak_bw:
 		bw_peak_set_bandwidth(&instance->peak_coeffs, value);
 		break;
-	case 6:
+	case plugin_parameter_hs_cutoff:
 		bw_hs2_set_cutoff(&instance->hs2_coeffs, value);
 		break;
-	case 7:
+	case plugin_parameter_hs_gain:
 		bw_hs2_set_high_gain_dB(&instance->hs2_coeffs, value);
 		break;
-	case 8:
+	case plugin_parameter_hs_q:
 		bw_hs2_set_Q(&instance->hs2_coeffs, value);
 		break;
 	}

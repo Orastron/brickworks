@@ -56,10 +56,10 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_cutoff:
 		bw_ap2_set_cutoff(&instance->ap2_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_q:
 		bw_ap2_set_Q(&instance->ap2_coeffs, value);
 		break;
 	}

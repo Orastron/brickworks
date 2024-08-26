@@ -55,19 +55,19 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_predelay:
 		bw_reverb_set_predelay(&instance->reverb_coeffs, 0.001f * value);
 		break;
-	case 1:
+	case plugin_parameter_bandwidth:
 		bw_reverb_set_bandwidth(&instance->reverb_coeffs, value);
 		break;
-	case 2:
+	case plugin_parameter_damping:
 		bw_reverb_set_damping(&instance->reverb_coeffs, value);
 		break;
-	case 3:
+	case plugin_parameter_decay:
 		bw_reverb_set_decay(&instance->reverb_coeffs, 0.01f * bw_minf(value, 99.9f));
 		break;
-	case 4:
+	case plugin_parameter_wet:
 		bw_reverb_set_wet(&instance->reverb_coeffs, 0.01f * value);
 		break;
 	}

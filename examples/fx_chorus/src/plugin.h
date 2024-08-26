@@ -55,13 +55,13 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		bw_chorus_set_rate(&instance->chorus_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_depth:
 		bw_chorus_set_amount(&instance->chorus_coeffs, (0.01f * 0.004f) * value);
 		break;
-	case 2:
+	case plugin_parameter_type:
 		// values taken from Dattorro's paper
 		if (value < 1.5f) { // "Industry standard chorus"
 			bw_chorus_set_coeff_x(&instance->chorus_coeffs, 1.f);

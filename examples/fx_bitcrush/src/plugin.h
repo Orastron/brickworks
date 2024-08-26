@@ -62,13 +62,13 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_sr_ratio:
 		bw_sr_reduce_set_ratio(&instance->sr_reduce_coeffs, 0.01f * value);
 		break;
-	case 1:
+	case plugin_parameter_bit_depth:
 		bw_bd_reduce_set_bit_depth(&instance->bd_reduce_coeffs, (char)value);
 		break;
-	case 2:
+	case plugin_parameter_gate:
 		bw_bd_reduce_set_gate_lin(&instance->bd_reduce_coeffs, value);
 		break;
 	}

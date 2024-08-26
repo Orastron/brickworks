@@ -56,21 +56,21 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_threshold:
 		instance->noise_gate.setThreshDBFS(value);
 		break;
-	case 1:
+	case plugin_parameter_ratio:
 		instance->noise_gate.setRatio(value);
 		break;
-	case 2:
+	case plugin_parameter_attack:
 		// using rise time 10% -> 90%: tau = rise time / log(9)
 		instance->noise_gate.setAttackTau((0.001f * 0.4551196133134186f) * value);
 		break;
-	case 3:
+	case plugin_parameter_release:
 		// as before
 		instance->noise_gate.setReleaseTau((0.001f * 0.4551196133134186f) * value);
 		break;
-	case 4:
+	case plugin_parameter_ext_sidechain:
 		instance->extSidechain = value >= 0.5f;
 		break;
 	}

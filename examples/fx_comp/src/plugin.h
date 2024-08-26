@@ -57,24 +57,24 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_threshold:
 		bw_comp_set_thresh_dBFS(&instance->comp_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_ratio:
 		bw_comp_set_ratio(&instance->comp_coeffs, bw_rcpf(value));
 		break;
-	case 2:
+	case plugin_parameter_attack:
 		// using rise time 10% -> 90%: tau = rise time / log(9)
 		bw_comp_set_attack_tau(&instance->comp_coeffs, (0.001f * 0.4551196133134186f) * value);
 		break;
-	case 3:
+	case plugin_parameter_release:
 		// as before
 		bw_comp_set_release_tau(&instance->comp_coeffs, (0.001f * 0.4551196133134186f) * value);
 		break;
-	case 4:
+	case plugin_parameter_gain:
 		bw_comp_set_gain_dB(&instance->comp_coeffs, value);
 		break;
-	case 5:
+	case plugin_parameter_ext_sidechain:
 		instance->ext_sidechain = (char)value;
 		break;
 	}

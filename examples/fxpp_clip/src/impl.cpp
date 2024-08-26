@@ -67,10 +67,10 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_gain:
 		instance->clip.setGain(value);
 		break;
-	case 1:
+	case plugin_parameter_bias:
 		instance->clip.setBias(value);
 		break;
 	}

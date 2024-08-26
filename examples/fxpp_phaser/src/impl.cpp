@@ -50,13 +50,13 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Phaser<1> *instance = reinterpret_cast<Phaser<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		instance->setRate(value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		instance->setAmount(value);
 		break;
-	case 2:
+	case plugin_parameter_center:
 		instance->setCenter(value);
 		break;
 	}

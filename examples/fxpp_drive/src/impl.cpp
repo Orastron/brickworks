@@ -66,13 +66,13 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_drive:
 		instance->drive.setDrive(0.01f * value);
 		break;
-	case 1:
+	case plugin_parameter_tone:
 		instance->drive.setTone(0.01f * value);
 		break;
-	case 2:
+	case plugin_parameter_volume:
 		instance->drive.setVolume(0.01f * value);
 		break;
 	}

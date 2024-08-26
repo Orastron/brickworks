@@ -62,11 +62,11 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		bw_chorus_set_rate(&instance->chorus_coeffs, value);
 		instance->rate_k = (1.f / 6.283185307179586f) * bw_rcpf(value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		instance->amount_k = bw_pow2f((1.f / 12.f) * value) - 1.f;
 		break;
 	}

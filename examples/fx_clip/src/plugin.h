@@ -70,10 +70,10 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_gain:
 		bw_clip_set_gain(&instance->clip_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_bias:
 		bw_clip_set_bias(&instance->clip_coeffs, value);
 		break;
 	}

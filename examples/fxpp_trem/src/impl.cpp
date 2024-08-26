@@ -50,10 +50,10 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Trem<1> *instance = reinterpret_cast<Trem<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		instance->setRate(value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		instance->setAmount(0.01f * value);
 		break;
 	}

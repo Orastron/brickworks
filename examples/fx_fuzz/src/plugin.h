@@ -69,10 +69,10 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_fuzz:
 		bw_fuzz_set_fuzz(&instance->fuzz_coeffs, 0.01f * value);
 		break;
-	case 1:
+	case plugin_parameter_volume:
 		bw_fuzz_set_volume(&instance->fuzz_coeffs, 0.01f * value);
 		break;
 	}

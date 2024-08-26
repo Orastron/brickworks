@@ -50,10 +50,10 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	LS1<1> *instance = reinterpret_cast<LS1<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_cutoff:
 		instance->setCutoff(value);
 		break;
-	case 1:
+	case plugin_parameter_gain:
 		instance->setDcGainDB(value);
 		break;
 	}

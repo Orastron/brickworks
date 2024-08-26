@@ -21,6 +21,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "plugin_api.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

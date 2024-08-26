@@ -60,13 +60,13 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_sr_ratio:
 		instance->sr.setRatio(0.01f * value);
 		break;
-	case 1:
+	case plugin_parameter_bit_depth:
 		instance->bd.setBitDepth((char)value);
 		break;
-	case 2:
+	case plugin_parameter_gate:
 		instance->bd.setGateLin(value);
 		break;
 	}

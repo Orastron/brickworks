@@ -57,10 +57,10 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_cutoff:
 		bw_svf_set_cutoff(&instance->svf_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_q:
 		bw_svf_set_Q(&instance->svf_coeffs, value);
 		break;
 	}

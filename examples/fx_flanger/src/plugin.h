@@ -58,13 +58,13 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		bw_chorus_set_rate(&instance->chorus_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		bw_chorus_set_amount(&instance->chorus_coeffs, (0.01f * 0.001f) * value);
 		break;
-	case 2:
+	case plugin_parameter_feedback:
 		bw_chorus_set_coeff_fb(&instance->chorus_coeffs, 0.01f * value);
 		break;
 	}

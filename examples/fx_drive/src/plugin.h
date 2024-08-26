@@ -69,13 +69,13 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_drive:
 		bw_drive_set_drive(&instance->drive_coeffs, 0.01f * value);
 		break;
-	case 1:
+	case plugin_parameter_tone:
 		bw_drive_set_tone(&instance->drive_coeffs, 0.01f * value);
 		break;
-	case 2:
+	case plugin_parameter_volume:
 		bw_drive_set_volume(&instance->drive_coeffs, 0.01f * value);
 		break;
 	}

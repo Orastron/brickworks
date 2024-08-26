@@ -56,13 +56,13 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		bw_phaser_set_rate(&instance->phaser_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		bw_phaser_set_amount(&instance->phaser_coeffs, value);
 		break;
-	case 2:
+	case plugin_parameter_center:
 		bw_phaser_set_center(&instance->phaser_coeffs, value);
 		break;
 	}

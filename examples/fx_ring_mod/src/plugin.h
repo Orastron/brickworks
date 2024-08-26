@@ -63,10 +63,10 @@ static void plugin_reset(plugin *instance) {
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case 0:
+	case plugin_parameter_frequency:
 		bw_phase_gen_set_frequency(&instance->phase_gen_coeffs, value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		bw_ring_mod_set_amount(&instance->ring_mod_coeffs, 0.01f * value);
 		break;
 	}

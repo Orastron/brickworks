@@ -20,6 +20,8 @@
 
 #include <stddef.h>
 
+#include "plugin_api.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

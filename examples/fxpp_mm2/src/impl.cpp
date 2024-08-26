@@ -50,22 +50,22 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	MM2<1> *instance = reinterpret_cast<MM2<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_cutoff:
 		instance->setCutoff(value);
 		break;
-	case 1:
+	case plugin_parameter_q:
 		instance->setQ(value);
 		break;
-	case 2:
+	case plugin_parameter_in:
 		instance->setCoeffX(value);
 		break;
-	case 3:
+	case plugin_parameter_lp:
 		instance->setCoeffLp(value);
 		break;
-	case 4:
+	case plugin_parameter_bp:
 		instance->setCoeffBp(value);
 		break;
-	case 5:
+	case plugin_parameter_hp:
 		instance->setCoeffHp(value);
 		break;
 	}

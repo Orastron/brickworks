@@ -51,13 +51,13 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Chorus<1> *instance = reinterpret_cast<Chorus<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		instance->setRate(value);
 		break;
-	case 1:
+	case plugin_parameter_depth:
 		instance->setAmount((0.01f * 0.004f) * value);
 		break;
-	case 2:
+	case plugin_parameter_type:
 		// values taken from Dattorro's paper
 		if (value < 1.5f) { // "Industry standard chorus"
 			instance->setCoeffX(1.f);

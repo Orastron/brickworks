@@ -50,19 +50,19 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Comb<1> *instance = reinterpret_cast<Comb<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_ff_delay:
 		instance->setDelayFF(0.001f * value);
 		break;
-	case 1:
+	case plugin_parameter_fb_delay:
 		instance->setDelayFB(0.001f * value);
 		break;
-	case 2:
+	case plugin_parameter_blend:
 		instance->setCoeffBlend(value);
 		break;
-	case 3:
+	case plugin_parameter_ff:
 		instance->setCoeffFF(value);
 		break;
-	case 4:
+	case plugin_parameter_fb:
 		instance->setCoeffFB(value);
 		break;
 	}

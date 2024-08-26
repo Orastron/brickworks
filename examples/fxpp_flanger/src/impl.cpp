@@ -53,13 +53,13 @@ void impl_reset(impl handle) {
 void impl_set_parameter(impl handle, size_t index, float value) {
 	Chorus<1> *instance = reinterpret_cast<Chorus<1> *>(handle);
 	switch (index) {
-	case 0:
+	case plugin_parameter_rate:
 		instance->setRate(value);
 		break;
-	case 1:
+	case plugin_parameter_amount:
 		instance->setAmount((0.01f * 0.001f) * value);
 		break;
-	case 2:
+	case plugin_parameter_feedback:
 		instance->setCoeffFB(0.01f * value);
 		break;
 	}
