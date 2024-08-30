@@ -20,15 +20,17 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.1.1 }}}
+ *  version {{{ 1.2.0 }}}
  *  requires {{{ bw_common }}}
  *  description {{{
  *    Common operations on buffers.
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.1.1</strong>:
+ *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added <code>bw_buf_copy()</code> and
+ *              <code>bw_buf_copy_multi()</code>.</li>
  *          <li>Added debugging check in
  *              <code>bw_buf_{neg,add,scale,mix,mul}_multi()</code> to ensure
  *              that buffers used for both input and output appear at the same
@@ -106,6 +108,15 @@ static inline void bw_buf_fill(
 /*! <<<```
  *    Sets the first `n_elems` in `dest` to `k`.
  *
+ *    #### bw_buf_copy()
+ *  ```>>> */
+static inline void bw_buf_copy(
+	const float * src,
+	float *       dest,
+	size_t        n_elems);
+/*! <<<```
+ *    Copies the first `n_elems` in `src` into the first `n_elems` of `dest`.
+ *
  *    #### bw_buf_neg()
  *  ```>>> */
 static inline void bw_buf_neg(
@@ -170,6 +181,17 @@ static inline void bw_buf_fill_multi(
 /*! <<<```
  *    Sets the first `n_elems` in each of the `n_channels` buffers `dest` to
  *    `k`.
+ *
+ *    #### bw_buf_copy_multi()
+ *  ```>>> */
+static inline void bw_buf_copy_multi(
+	const float * const * src,
+	float * const *       dest,
+	size_t                n_channels,
+	size_t                n_elems);
+/*! <<<```
+ *    Copies the first `n_elems` in each of the `n_channels` buffers `src` into
+ *    the first `n_elems` in each of the `n_channels` buffers `dest`.
  *
  *    #### bw_buf_neg_multi()
  *  ```>>> */
@@ -258,6 +280,20 @@ static inline void bw_buf_fill(
 
 	for (size_t i = 0; i < n_elems; i++)
 		dest[i] = k;
+
+	BW_ASSERT_DEEP(!bw_has_nan(dest, n_elems));
+}
+
+static inline void bw_buf_copy(
+	const float * src,
+	float *       dest,
+	size_t        n_elems) {
+	BW_ASSERT(src != BW_NULL);
+	BW_ASSERT_DEEP(!bw_has_nan(src, n_elems));
+	BW_ASSERT(dest != BW_NULL);
+
+	for (size_t i = 0; i < n_elems; i++)
+		dest[i] = src[i];
 
 	BW_ASSERT_DEEP(!bw_has_nan(dest, n_elems));
 }
@@ -357,6 +393,26 @@ static inline void bw_buf_fill_multi(
 
 	for (size_t i = 0; i < n_channels; i++)
 		bw_buf_fill(k, dest[i], n_elems);
+}
+
+static inline void bw_buf_copy_multi(
+		const float * const * src,
+		float * const *       dest,
+		size_t                n_channels,
+		size_t                n_elems) {
+	BW_ASSERT(src != BW_NULL);
+	BW_ASSERT(dest != BW_NULL);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++)
+		for (size_t j = i + 1; j < n_channels; j++)
+			BW_ASSERT(dest[i] != dest[j]);
+	for (size_t i = 0; i < n_channels; i++)
+		for (size_t j = 0; j < n_channels; j++)
+			BW_ASSERT(i == j || src[i] != dest[j]);
+#endif
+
+	for (size_t i = 0; i < n_channels; i++)
+		bw_buf_copy(src[i], dest[i], n_elems);
 }
 
 static inline void bw_buf_neg_multi(
@@ -500,6 +556,23 @@ inline void bufFill(
 #endif
 /*! <<<```
  *
+ *    ##### Brickworks::bufCopy
+ *  ```>>> */
+template<size_t N_CHANNELS>
+inline void bufCopy(
+	const float * const * src,
+	float * const *       dest,
+	size_t                nSamples);
+
+#ifndef BW_CXX_NO_ARRAY
+template<size_t N_CHANNELS>
+inline void bufCopy(
+	const std::array<const float *, N_CHANNELS> src,
+	const std::array<float *, N_CHANNELS>       dest,
+	size_t                                      nSamples);
+#endif
+/*! <<<```
+ *
  *    ##### Brickworks::bufNeg
  *  ```>>> */
 template<size_t N_CHANNELS>
@@ -614,6 +687,24 @@ inline void bufFill(
 		const std::array<float * BW_RESTRICT, N_CHANNELS> dest,
 		size_t                                            nSamples) {
 	bufFill<N_CHANNELS>(k, dest.data(), nSamples);
+}
+#endif
+
+template<size_t N_CHANNELS>
+inline void bufCopy(
+		const float * const * src,
+		float * const *       dest,
+		size_t                nSamples) {
+	bw_buf_copy_multi(src, dest, N_CHANNELS, nSamples);
+}
+
+#ifndef BW_CXX_NO_ARRAY
+template<size_t N_CHANNELS>
+inline void bufCopy(
+		const std::array<const float *, N_CHANNELS> src,
+		const std::array<float *, N_CHANNELS>       dest,
+		size_t                                      nSamples) {
+	bufCopy<N_CHANNELS>(src.data(), dest.data(), nSamples);
 }
 #endif
 
