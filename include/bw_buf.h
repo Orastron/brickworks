@@ -285,9 +285,9 @@ static inline void bw_buf_fill(
 }
 
 static inline void bw_buf_copy(
-	const float * src,
-	float *       dest,
-	size_t        n_elems) {
+		const float * src,
+		float *       dest,
+		size_t        n_elems) {
 	BW_ASSERT(src != BW_NULL);
 	BW_ASSERT_DEEP(!bw_has_nan(src, n_elems));
 	BW_ASSERT(dest != BW_NULL);
