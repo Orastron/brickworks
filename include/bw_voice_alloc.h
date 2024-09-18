@@ -20,13 +20,19 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.0.1 }}}
+ *  version {{{ 1.0.2 }}}
  *  requires {{{ bw_common bw_note_queue }}}
  *  description {{{
  *    Basic voice allocator with low/high note priority.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.0.2</strong>:
+ *        <ul>
+ *          <li>Added <code>static inline</code> to
+ *              <code>bw_voice_alloc()</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code>.</li>
@@ -123,7 +129,7 @@ typedef struct {
  *
  *    #### bw_voice_alloc()
  *  ```>>> */
-void bw_voice_alloc(
+static inline void bw_voice_alloc(
 	const bw_voice_alloc_opts * BW_RESTRICT opts,
 	bw_note_queue * BW_RESTRICT             queue,
 	void * BW_RESTRICT const * BW_RESTRICT  voices,
@@ -149,7 +155,7 @@ void bw_voice_alloc(
 extern "C" {
 #endif
 
-void bw_voice_alloc(
+static inline void bw_voice_alloc(
 		const bw_voice_alloc_opts * BW_RESTRICT opts,
 		bw_note_queue * BW_RESTRICT             queue,
 		void * BW_RESTRICT const * BW_RESTRICT  voices,
