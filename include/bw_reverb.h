@@ -1248,9 +1248,9 @@ static inline char bw_reverb_state_is_valid(
 
 #if !defined(BW_NO_CXX) && defined(__cplusplus)
 
-#ifndef BW_CXX_NO_ARRAY
-# include <array>
-#endif
+# ifndef BW_CXX_NO_ARRAY
+#  include <array>
+# endif
 
 namespace Brickworks {
 
