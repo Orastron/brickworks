@@ -34,6 +34,9 @@
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added gate parameter.</li>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *              <code>BW_NO_CXX</code>, and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *          <li>Added debugging checks from <code>bw_bd_reduce_process()</code>
  *              to <code>bw_bd_reduce_process_multi()</code>.</li>
  *          <li>Added debugging checks in
@@ -93,9 +96,13 @@
 #ifndef BW_BD_REDUCE_H
 #define BW_BD_REDUCE_H
 
-#include <bw_common.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+#else
+# include <bw_common.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -236,7 +243,7 @@ static inline char bw_bd_reduce_coeffs_is_valid(
  *    than or equal to that of `bw_bd_reduce_coeffs`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -245,9 +252,13 @@ static inline char bw_bd_reduce_coeffs_is_valid(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#include <bw_math.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_math.h"
+#else
+# include <bw_math.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -527,12 +538,15 @@ static inline char bw_bd_reduce_coeffs_is_valid(
 	return 1;
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
-
-#ifndef BW_CXX_NO_ARRAY
-# include <array>
 #endif
+
+#if !defined(BW_NO_CXX) && defined(__cplusplus)
+
+# ifndef BW_CXX_NO_ARRAY
+#  include <array>
+# endif
 
 namespace Brickworks {
 
@@ -556,12 +570,12 @@ public:
 		float * const *       y,
 		size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void process(
 		std::array<const float *, N_CHANNELS> x,
 		std::array<float *, N_CHANNELS>       y,
 		size_t                                nSamples);
-#endif
+# endif
 
 	void setBitDepth(
 		char value);
@@ -612,7 +626,7 @@ inline void BDReduce<N_CHANNELS>::process(
 	bw_bd_reduce_process_multi(&coeffs, x, y, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void BDReduce<N_CHANNELS>::process(
 		std::array<const float *, N_CHANNELS> x,
@@ -620,7 +634,7 @@ inline void BDReduce<N_CHANNELS>::process(
 		size_t                                nSamples) {
 	process(x.data(), y.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void BDReduce<N_CHANNELS>::setBitDepth(

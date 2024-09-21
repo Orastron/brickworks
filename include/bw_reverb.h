@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.1 }}}
+ *  version {{{ 1.2.0 }}}
  *  requires {{{
  *    bw_buf bw_common bw_delay bw_dry_wet bw_gain bw_lp1 bw_math bw_one_pole
  *    bw_osc_sin bw_phase_gen
@@ -35,8 +35,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.1.1</strong>:
+ *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *              <code>BW_NO_CXX</code>, and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *          <li>Added debugging checks from <code>bw_reverb_process()</code> to
  *              <code>bw_reverb_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_reverb_process_multi()</code>
@@ -94,9 +97,13 @@
 #ifndef BW_REVERB_H
 #define BW_REVERB_H
 
-#include <bw_common.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+#else
+# include <bw_common.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -340,7 +347,7 @@ static inline char bw_reverb_state_is_valid(
  *    than or equal to that of `bw_reverb_state`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -349,16 +356,27 @@ static inline char bw_reverb_state_is_valid(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#include <bw_delay.h>
-#include <bw_lp1.h>
-#include <bw_phase_gen.h>
-#include <bw_osc_sin.h>
-#include <bw_gain.h>
-#include <bw_dry_wet.h>
-#include <bw_one_pole.h>
-#include <bw_math.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_delay.h"
+# include "bw_lp1.h"
+# include "bw_phase_gen.h"
+# include "bw_osc_sin.h"
+# include "bw_gain.h"
+# include "bw_dry_wet.h"
+# include "bw_one_pole.h"
+# include "bw_math.h"
+#else
+# include <bw_delay.h>
+# include <bw_lp1.h>
+# include <bw_phase_gen.h>
+# include <bw_osc_sin.h>
+# include <bw_gain.h>
+# include <bw_dry_wet.h>
+# include <bw_one_pole.h>
+# include <bw_math.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -1224,8 +1242,11 @@ static inline char bw_reverb_state_is_valid(
 		&& bw_delay_state_is_valid(coeffs ? &coeffs->delay_d4_coeffs : BW_NULL, &state->delay_d4_state);
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
+#endif
+
+#if !defined(BW_NO_CXX) && defined(__cplusplus)
 
 #ifndef BW_CXX_NO_ARRAY
 # include <array>
@@ -1254,13 +1275,13 @@ public:
 		float * BW_RESTRICT yL0 = nullptr,
 		float * BW_RESTRICT yR0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		float                                       xL0,
 		float                                       xR0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yL0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yR0);
-#endif
+# endif
 
 	void reset(
 		const float * xL0,
@@ -1268,13 +1289,13 @@ public:
 		float *       yL0 = nullptr,
 		float *       yR0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		std::array<float, N_CHANNELS>               xL0,
 		std::array<float, N_CHANNELS>               xR0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yL0 = nullptr,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yR0 = nullptr);
-#endif
+# endif
 
 	void process(
 		const float * const * xL,
@@ -1283,14 +1304,14 @@ public:
 		float * const *       yR,
 		size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void process(
 		std::array<const float *, N_CHANNELS> xL,
 		std::array<const float *, N_CHANNELS> xR,
 		std::array<float *, N_CHANNELS>       yL,
 		std::array<float *, N_CHANNELS>       yR,
 		size_t                                nSamples);
-#endif
+# endif
 
 	void setPredelay(
 		float value);
@@ -1379,7 +1400,7 @@ inline void Reverb<N_CHANNELS>::reset(
 	}
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void Reverb<N_CHANNELS>::reset(
 		float                                       xL0,
@@ -1388,7 +1409,7 @@ inline void Reverb<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS> * BW_RESTRICT yR0) {
 	reset(xL0, xR0, yL0 != nullptr ? yL0->data() : nullptr, yR0 != nullptr ? yR0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void Reverb<N_CHANNELS>::reset(
@@ -1400,7 +1421,7 @@ inline void Reverb<N_CHANNELS>::reset(
 	bw_reverb_reset_state_multi(&coeffs, statesP, xL0, xR0, yL0, yR0, N_CHANNELS);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void Reverb<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS>               xL0,
@@ -1409,7 +1430,7 @@ inline void Reverb<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS> * BW_RESTRICT yR0) {
 	reset(xL0.data(), xR0.data(), yL0 != nullptr ? yL0->data() : nullptr, yR0 != nullptr ? yR0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void Reverb<N_CHANNELS>::process(
@@ -1421,7 +1442,7 @@ inline void Reverb<N_CHANNELS>::process(
 	bw_reverb_process_multi(&coeffs, statesP, xL, xR, yL, yR, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void Reverb<N_CHANNELS>::process(
 		std::array<const float *, N_CHANNELS> xL,
@@ -1431,7 +1452,7 @@ inline void Reverb<N_CHANNELS>::process(
 		size_t                                nSamples) {
 	process(xL.data(), xR.data(), yL.data(), yR.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void Reverb<N_CHANNELS>::setPredelay(

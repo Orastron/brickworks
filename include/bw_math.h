@@ -50,6 +50,8 @@
  *              <code>bw_maxi64</code>, <code>bw_clipi64</code>,
  *              <code>bw_minu64</code>, <code>bw_maxu64</code>, and
  *              <code>bw_clipu64</code>.</li>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code> and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.0.1</strong>:
@@ -129,9 +131,13 @@
 #ifndef BW_MATH_H
 #define BW_MATH_H
 
-#include <bw_common.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+#else
+# include <bw_common.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -618,7 +624,7 @@ static inline float bw_acoshf(
  *    Absolute error < 0.004 or relative error < 0.8%, whatever is worse.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -627,7 +633,7 @@ static inline float bw_acoshf(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -1102,7 +1108,7 @@ static inline float bw_acoshf(
 	return y;
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 

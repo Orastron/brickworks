@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.1 }}}
+ *  version {{{ 1.2.0 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Linear ADSR envelope generator.
@@ -40,8 +40,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.1.1</strong>:
+ *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *              <code>BW_NO_CXX</code>, and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *          <li>More robust implementation.</li>
  *          <li>Fixed <code>bw_env_reset_state()</code> and
  *              <code>bw_env_reset_state_multi()</code> to take into account
@@ -133,9 +136,13 @@
 #ifndef BW_ENV_GEN_H
 #define BW_ENV_GEN_H
 
-#include <bw_common.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+#else
+# include <bw_common.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -396,7 +403,7 @@ static inline char bw_env_gen_state_is_valid(
  *    than or equal to that of `bw_env_gen_state`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -405,10 +412,15 @@ static inline char bw_env_gen_state_is_valid(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#include <bw_math.h>
-#include <bw_one_pole.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_math.h"
+# include "bw_one_pole.h"
+#else
+# include <bw_math.h>
+# include <bw_one_pole.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -949,12 +961,15 @@ static inline char bw_env_gen_state_is_valid(
 #undef BW_ENV_GEN_PARAM_RELEASE
 #undef BW_ENV_GEN_V_MAX
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
-
-#ifndef BW_CXX_NO_ARRAY
-# include <array>
 #endif
+
+#if !defined(BW_NO_CXX) && defined(__cplusplus)
+
+# ifndef BW_CXX_NO_ARRAY
+#  include <array>
+# endif
 
 namespace Brickworks {
 
@@ -975,33 +990,33 @@ public:
 		char                gate0 = 0,
 		float * BW_RESTRICT y0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		char                                        gate0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0);
-#endif
+# endif
 
 	void reset(
 		const char * BW_RESTRICT gate0,
 		float * BW_RESTRICT      y0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		std::array<char, N_CHANNELS>                gate0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = nullptr);
-#endif
+# endif
 
 	void process(
 		const char * BW_RESTRICT                gate,
 		float * BW_RESTRICT const * BW_RESTRICT y,
 		size_t                                  nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void process(
 		std::array<char, N_CHANNELS>                gate,
 		std::array<float * BW_RESTRICT, N_CHANNELS> y,
 		size_t                                      nSamples);
-#endif
+# endif
 
 	void setAttack(
 		float value);
@@ -1068,14 +1083,14 @@ inline void EnvGen<N_CHANNELS>::reset(
 			bw_env_gen_reset_state(&coeffs, states + i, gate0);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void EnvGen<N_CHANNELS>::reset(
 		char                                        gate0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
 	reset(gate0, y0 != nullptr ? y0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void EnvGen<N_CHANNELS>::reset(
@@ -1085,14 +1100,14 @@ inline void EnvGen<N_CHANNELS>::reset(
 	bw_env_gen_reset_state_multi(&coeffs, statesP, gate0, y0, N_CHANNELS);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void EnvGen<N_CHANNELS>::reset(
 		std::array<char, N_CHANNELS>                gate0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
 	reset(gate0.data(), y0 != nullptr ? y0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void EnvGen<N_CHANNELS>::process(
@@ -1102,7 +1117,7 @@ inline void EnvGen<N_CHANNELS>::process(
 	bw_env_gen_process_multi(&coeffs, statesP, gate, y, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void EnvGen<N_CHANNELS>::process(
 		std::array<char, N_CHANNELS>                gate,
@@ -1110,7 +1125,7 @@ inline void EnvGen<N_CHANNELS>::process(
 		size_t                                      nSamples) {
 	process(gate.data(), y.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void EnvGen<N_CHANNELS>::setAttack(

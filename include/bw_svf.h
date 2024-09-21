@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.1 }}}
+ *  version {{{ 1.2.0 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    State variable filter (2nd order, 12 dB/oct) model with separated lowpass,
@@ -28,8 +28,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.1.1</strong>:
+ *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *              <code>BW_NO_CXX</code>, and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *          <li>Added debugging checks from <code>bw_svf_process()</code> to
  *              <code>bw_svf_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_svf_process_multi()</code> to
@@ -115,9 +118,13 @@
 #ifndef BW_SVF_H
 #define BW_SVF_H
 
-#include <bw_common.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+#else
+# include <bw_common.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -334,7 +341,7 @@ static inline char bw_svf_state_is_valid(
  *    than or equal to that of `bw_svf_state`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -343,10 +350,15 @@ static inline char bw_svf_state_is_valid(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#include <bw_math.h>
-#include <bw_one_pole.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_math.h"
+# include "bw_one_pole.h"
+#else
+# include <bw_math.h>
+# include <bw_one_pole.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -1084,12 +1096,15 @@ static inline char bw_svf_state_is_valid(
 	return 1;
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
-
-#ifndef BW_CXX_NO_ARRAY
-# include <array>
 #endif
+
+#if !defined(BW_NO_CXX) && defined(__cplusplus)
+
+# ifndef BW_CXX_NO_ARRAY
+#  include <array>
+# endif
 
 namespace Brickworks {
 
@@ -1112,13 +1127,13 @@ public:
 		float * BW_RESTRICT yBp0 = nullptr,
 		float * BW_RESTRICT yHp0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		float                                       x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yLp0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yBp0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yHp0);
-#endif
+# endif
 
 	void reset(
 		const float * x0,
@@ -1126,13 +1141,13 @@ public:
 		float *       yBp0 = nullptr,
 		float *       yHp0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		std::array<float, N_CHANNELS>               x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yLp0 = nullptr,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yBp0 = nullptr,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yHp0 = nullptr);
-#endif
+# endif
 
 	void process(
 		const float * const * x,
@@ -1141,14 +1156,14 @@ public:
 		float * const *       yHp,
 		size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void process(
 		std::array<const float *, N_CHANNELS> x,
 		std::array<float *, N_CHANNELS>       yLp,
 		std::array<float *, N_CHANNELS>       yBp,
 		std::array<float *, N_CHANNELS>       yHp,
 		size_t                                nSamples);
-#endif
+# endif
 
 	void setCutoff(
 		float value);
@@ -1250,7 +1265,7 @@ inline void SVF<N_CHANNELS>::reset(
 	}
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void SVF<N_CHANNELS>::reset(
 		float                                       x0,
@@ -1259,7 +1274,7 @@ inline void SVF<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS> * BW_RESTRICT yHp0) {
 	reset(x0, yLp0 != nullptr ? yLp0->data() : nullptr, yBp0 != nullptr ? yBp0->data() : nullptr, yHp0 != nullptr ? yHp0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void SVF<N_CHANNELS>::reset(
@@ -1271,7 +1286,7 @@ inline void SVF<N_CHANNELS>::reset(
 	bw_svf_reset_state_multi(&coeffs, statesP, x0, yLp0, yBp0, yHp0, N_CHANNELS);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void SVF<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS>               x0,
@@ -1280,7 +1295,7 @@ inline void SVF<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS> * BW_RESTRICT yHp0) {
 	reset(x0.data(), yLp0 != nullptr ? yLp0->data() : nullptr, yBp0 != nullptr ? yBp0->data() : nullptr, yHp0 != nullptr ? yHp0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void SVF<N_CHANNELS>::process(
@@ -1292,7 +1307,7 @@ inline void SVF<N_CHANNELS>::process(
 	bw_svf_process_multi(&coeffs, statesP, x, yLp, yBp, yHp, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void SVF<N_CHANNELS>::process(
 		std::array<const float *, N_CHANNELS> x,
@@ -1302,7 +1317,7 @@ inline void SVF<N_CHANNELS>::process(
 		size_t                                nSamples) {
 	process(x.data(), yLp.data(), yBp.data(), yHp.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void SVF<N_CHANNELS>::setCutoff(

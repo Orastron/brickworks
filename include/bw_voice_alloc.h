@@ -20,17 +20,19 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.0.2 }}}
+ *  version {{{ 1.1.0 }}}
  *  requires {{{ bw_common bw_note_queue }}}
  *  description {{{
  *    Basic voice allocator with low/high note priority.
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.0.2</strong>:
+ *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
  *          <li>Added <code>static inline</code> to
  *              <code>bw_voice_alloc()</code>.</li>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code> and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.0.1</strong>:
@@ -71,10 +73,15 @@
 #ifndef BW_VOICE_ALLOC_H
 #define BW_VOICE_ALLOC_H
 
-#include <bw_common.h>
-#include <bw_note_queue.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+# include "bw_note_queue.h"
+#else
+# include <bw_common.h>
+# include <bw_note_queue.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -142,7 +149,7 @@ static inline void bw_voice_alloc(
  *    the number of elements in `voices`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -151,7 +158,7 @@ static inline void bw_voice_alloc(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -215,7 +222,7 @@ static inline void bw_voice_alloc(
 	}
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 

@@ -20,15 +20,19 @@
 
 /*!
  *  module_type {{{ foundation }}}
- *  version {{{ 1.1.1 }}}
+ *  version {{{ 1.2.0 }}}
  *  description {{{
  *    A common header to make sure that a bunch of basic definitions are
  *    available and consistent for all Brickworks modules.
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.1.1</strong>:
+ *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *              <code>BW_NO_CXX</code>, and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
+ *          <li>Allowed custom definitions of <code>BW_NULL</code>.</li>
  *          <li>Accomodate MSVC reporting incorrect C++ standard support.</li>
  *        </ul>
  *      <li>Version <strong>1.1.0</strong>:
@@ -98,17 +102,37 @@
 
 /*** Public API ***/
 
-#ifdef __cplusplus
-# if __cplusplus < 201103L
-#  if _MSC_VER
-#   pragma message("Detected MSVC compiler reporting not to support C++11. Please use /Zc:__cplusplus if possible, or otherwise ignore this message if everything works for you. See https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/ for more information.")
-#  else
-#   error Detected C++ compiler that does not support C++11
-#  endif
-# endif
-#endif
-
 /*! api {{{
+ *
+ *    #### BW_INCLUDE_WITH_QUOTES
+ *
+ *    Normally Brickworks modules include other such modules using angle
+ *    brackets.
+ *
+ *    If you would rather prefer that to happen using double quotes, you can
+ *    define `BW_INCLUDE_WITH_QUOTES`.
+ *
+ *    #### BW_NO_CXX
+ *
+ *    If `BW_NO_CXX` is defined, the C++ APIs and implementations in Brickworks
+ *    modules are not included.
+ *
+ *    #### BW_CXX_NO_EXTERN_C
+ *
+ *    Normally, the C APIs and implementations in Brickworks modules are
+ *    included in <code>extern "C"</code> blocks when using a C++ compiler, even
+ *    if <code>BW_NO_CXX</code> is defined.
+ *
+ *    If you don't want to have them included in such blocks, you can define
+ *    `BW_CXX_NO_EXTERN_C`.
+ *
+ *    #### BW_CXX_NO_ARRAY
+ *
+ *    C++ APIs of Brickworks modules typically include overloaded methods that
+ *    use `std::array` arguments, and thus require the `<array>` header file.
+ *
+ *    If this is not wanted, defining `BW_CXX_NO_ARRAY` suppresses such methods
+ *    and the inclusion of said header file.
  *
  *    #### Basic definitions
  *
@@ -129,20 +153,32 @@
  *    * if `BW_NO_STDLIB` or `BW_NO_MATH_H` is defined, then `math.h` is not
  *      `#include`d.
  *
- *    A `BW_NULL` macro is defined whose value is either `NULL` (C) or `nullptr`
- *    (C++).
+ *    If not already defined, a `BW_NULL` macro is defined whose value is either
+ *    `NULL` (C or C++ disabled) or `nullptr` (C++).
  *  >>> */
+#if !defined(BW_NO_CXX) && defined(__cplusplus)
+# if __cplusplus < 201103L
+#  if _MSC_VER
+#   pragma message("Detected MSVC compiler reporting not to support C++11. Please use /Zc:__cplusplus if possible, or otherwise ignore this message if everything works for you. See https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/ for more information.")
+#  else
+#   error Detected C++ compiler that does not support C++11
+#  endif
+# endif
+#endif
+
 #if !defined(BW_NO_STDLIB) && !defined(BW_NO_STDDEF_H)
 # include <stddef.h>
 #endif
 
-#ifdef __cplusplus
-# define BW_NULL nullptr
-#else
-# ifndef NULL
-#  error NULL not defined
+#ifndef BW_NULL
+# if !defined(BW_NO_CXX) && defined(__cplusplus)
+#  define BW_NULL nullptr
+# else
+#  ifndef NULL
+#   error NULL not defined
+#  endif
+#  define BW_NULL NULL
 # endif
-# define BW_NULL NULL
 #endif
 
 #if !defined(BW_NO_STDLIB) && !defined(BW_NO_STDINT_H)
@@ -166,14 +202,6 @@
 # error INFINITY not defined
 #endif
 /*! ...
- *
- *    #### BW_CXX_NO_ARRAY
- *
- *    C++ APIs of Brickworks modules typically include overloaded methods that
- *    use `std::array` arguments, and thus require the `<array>` header file.
- *
- *    If this is not wanted, defining `BW_CXX_NO_ARRAY` suppresses such methods
- *    and the inclusion of said header file.
  *
  *    #### BW_RESTRICT
  *
@@ -238,7 +266,7 @@
 # endif
 #endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -302,7 +330,7 @@ static inline uint32_t bw_hash_sdbm(
  *    Returns the sdbm hash of the given `string`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -311,7 +339,7 @@ static inline uint32_t bw_hash_sdbm(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -371,7 +399,7 @@ static inline uint32_t bw_hash_sdbm(
 	return hash;
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 

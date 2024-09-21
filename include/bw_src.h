@@ -20,13 +20,20 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.0 }}}
+ *  version {{{ 1.2.0 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Aribtrary-ratio IIR sample rate converter.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.0</strong>:
+ *        <ul>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *              <code>BW_NO_CXX</code>, and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> and
@@ -79,9 +86,13 @@
 #ifndef BW_SRC_H
 #define BW_SRC_H
 
-#include <bw_common.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+#else
+# include <bw_common.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -213,7 +224,7 @@ static inline char bw_src_state_is_valid(
  *    than or equal to that of `bw_src_state`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -222,9 +233,13 @@ static inline char bw_src_state_is_valid(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#include <bw_math.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_math.h"
+#else
+# include <bw_math.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -521,12 +536,15 @@ static inline char bw_src_state_is_valid(
 		&& bw_is_finite(state->xz3);
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
-
-#ifndef BW_CXX_NO_ARRAY
-# include <array>
 #endif
+
+#if !defined(BW_NO_CXX) && defined(__cplusplus)
+
+# ifndef BW_CXX_NO_ARRAY
+#  include <array>
+# endif
 
 namespace Brickworks {
 
@@ -545,21 +563,21 @@ public:
 		float               x0 = 0.f,
 		float * BW_RESTRICT y0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		float                                       x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0);
-#endif
+# endif
 
 	void reset(
 		const float * x0,
 		float *       y0 = nullptr);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void reset(
 		std::array<float, N_CHANNELS>               x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = nullptr);
-#endif
+# endif
 
 	void process(
 		const float * BW_RESTRICT const * BW_RESTRICT x,
@@ -567,13 +585,13 @@ public:
 		size_t * BW_RESTRICT                          nInSamples,
 		size_t * BW_RESTRICT                          nOutSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 	void process(
 		std::array<const float * BW_RESTRICT, N_CHANNELS> x,
 		std::array<float * BW_RESTRICT, N_CHANNELS>       y,
 		std::array<size_t, N_CHANNELS> &                  nInSamples,
 		std::array<size_t, N_CHANNELS> &                  nOutSamples);
-#endif
+# endif
 /*! <<<...
  *  }
  *  ```
@@ -610,14 +628,14 @@ inline void SRC<N_CHANNELS>::reset(
 			bw_src_reset_state(&coeffs, states + i, x0);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void SRC<N_CHANNELS>::reset(
 		float                                       x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
 	reset(x0, y0 != nullptr ? y0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void SRC<N_CHANNELS>::reset(
@@ -626,14 +644,14 @@ inline void SRC<N_CHANNELS>::reset(
 	bw_src_reset_state_multi(&coeffs, statesP, x0, y0, N_CHANNELS);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void SRC<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS>               x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
 	reset(x0.data(), y0 != nullptr ? y0->data() : nullptr);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void SRC<N_CHANNELS>::process(
@@ -644,7 +662,7 @@ inline void SRC<N_CHANNELS>::process(
 	bw_src_process_multi(coeffs, statesP, x, y, N_CHANNELS, nInSamples, nOutSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void SRC<N_CHANNELS>::process(
 		std::array<const float * BW_RESTRICT, N_CHANNELS> x,
@@ -653,7 +671,7 @@ inline void SRC<N_CHANNELS>::process(
 		std::array<size_t, N_CHANNELS> &                  nOutSamples) {
 	process(x.data(), y.data(), nInSamples.data(), nOutSamples.data());
 }
-#endif
+# endif
 
 }
 #endif

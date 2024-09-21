@@ -31,6 +31,9 @@
  *        <ul>
  *          <li>Added <code>bw_buf_copy()</code> and
  *              <code>bw_buf_copy_multi()</code>.</li>
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *              <code>BW_NO_CXX</code>, and
+ *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *          <li>Added debugging check in
  *              <code>bw_buf_{neg,add,scale,mix,mul}_multi()</code> to ensure
  *              that buffers used for both input and output appear at the same
@@ -90,9 +93,13 @@
 #ifndef BW_BUF_H
 #define BW_BUF_H
 
-#include <bw_common.h>
+#ifdef BW_INCLUDE_WITH_QUOTES
+# include "bw_common.h"
+#else
+# include <bw_common.h>
+#endif
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -258,7 +265,7 @@ static inline void bw_buf_mul_multi(
  *    `n_channels` buffers `dest`.
  *  }}} */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif
 
@@ -267,7 +274,7 @@ static inline void bw_buf_mul_multi(
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -527,12 +534,15 @@ static inline void bw_buf_mul_multi(
 		bw_buf_mul(src1[i], src2[i], dest[i], n_elems);
 }
 
-#ifdef __cplusplus
+#if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
-
-#ifndef BW_CXX_NO_ARRAY
-# include <array>
 #endif
+
+#if !defined(BW_NO_CXX) && defined(__cplusplus)
+
+# ifndef BW_CXX_NO_ARRAY
+#  include <array>
+# endif
 
 namespace Brickworks {
 
@@ -547,13 +557,13 @@ inline void bufFill(
 	float * BW_RESTRICT const * BW_RESTRICT dest,
 	size_t                                  nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufFill(
 	float                                       k,
 	std::array<float * BW_RESTRICT, N_CHANNELS> dest,
 	size_t                                      nSamples);
-#endif
+# endif
 /*! <<<```
  *
  *    ##### Brickworks::bufCopy
@@ -564,13 +574,13 @@ inline void bufCopy(
 	float * const *       dest,
 	size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufCopy(
 	const std::array<const float *, N_CHANNELS> src,
 	const std::array<float *, N_CHANNELS>       dest,
 	size_t                                      nSamples);
-#endif
+# endif
 /*! <<<```
  *
  *    ##### Brickworks::bufNeg
@@ -581,13 +591,13 @@ inline void bufNeg(
 	float * const *       dest,
 	size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufNeg(
 	const std::array<const float *, N_CHANNELS> src,
 	const std::array<float *, N_CHANNELS>       dest,
 	size_t                                      nSamples);
-#endif
+# endif
 /*! <<<```
  *
  *    ##### Brickworks::bufAdd
@@ -599,14 +609,14 @@ inline void bufAdd(
 	float * const *       dest,
 	size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufAdd(
 	const std::array<const float *, N_CHANNELS> src,
 	float                                       k,
 	const std::array<float *, N_CHANNELS>       dest,
 	size_t                                      nSamples);
-#endif
+# endif
 /*! <<<```
  *
  *    ##### Brickworks::bufScale
@@ -618,14 +628,14 @@ inline void bufScale(
 	float * const *       dest,
 	size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufScale(
 	const std::array<const float *, N_CHANNELS> src,
 	float                                       k,
 	const std::array<float *, N_CHANNELS>       dest,
 	size_t                                      nSamples);
-#endif
+# endif
 /*! <<<```
  *
  *    ##### Brickworks::bufMix
@@ -637,14 +647,14 @@ inline void bufMix(
 	float * const *       dest,
 	size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufMix(
 	const std::array<const float *, N_CHANNELS> src1,
 	const std::array<const float *, N_CHANNELS> src2,
 	const std::array<float *, N_CHANNELS>       dest,
 	size_t                                      nSamples);
-#endif
+# endif
 /*! <<<```
  *
  *    ##### Brickworks::bufMul
@@ -656,14 +666,14 @@ inline void bufMul(
 	float * const *       dest,
 	size_t                nSamples);
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufMul(
 	const std::array<const float *, N_CHANNELS> src1,
 	const std::array<const float *, N_CHANNELS> src2,
 	const std::array<float *, N_CHANNELS>       dest,
 	size_t                                      nSamples);
-#endif
+# endif
 /*! <<<```
  *  }}} */
 
@@ -680,7 +690,7 @@ inline void bufFill(
 	bw_buf_fill_multi(k, dest, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufFill(
 		float                                             k,
@@ -688,7 +698,7 @@ inline void bufFill(
 		size_t                                            nSamples) {
 	bufFill<N_CHANNELS>(k, dest.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void bufCopy(
@@ -698,7 +708,7 @@ inline void bufCopy(
 	bw_buf_copy_multi(src, dest, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufCopy(
 		const std::array<const float *, N_CHANNELS> src,
@@ -706,7 +716,7 @@ inline void bufCopy(
 		size_t                                      nSamples) {
 	bufCopy<N_CHANNELS>(src.data(), dest.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void bufNeg(
@@ -716,7 +726,7 @@ inline void bufNeg(
 	bw_buf_neg_multi(src, dest, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufNeg(
 		const std::array<const float *, N_CHANNELS> src,
@@ -724,7 +734,7 @@ inline void bufNeg(
 		size_t                                      nSamples) {
 	bufNeg<N_CHANNELS>(src.data(), dest.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void bufAdd(
@@ -735,7 +745,7 @@ inline void bufAdd(
 	bw_buf_add_multi(src, k, dest, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufAdd(
 		const std::array<const float *, N_CHANNELS> src,
@@ -744,7 +754,7 @@ inline void bufAdd(
 		size_t                                      nSamples) {
 	bufAdd<N_CHANNELS>(src.data(), k, dest.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void bufScale(
@@ -755,7 +765,7 @@ inline void bufScale(
 	bw_buf_scale_multi(src, k, dest, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufScale(
 		const std::array<const float *, N_CHANNELS> src,
@@ -764,7 +774,7 @@ inline void bufScale(
 		size_t                                      nSamples) {
 	bufScale<N_CHANNELS>(src.data(), k, dest.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void bufMix(
@@ -775,7 +785,7 @@ inline void bufMix(
 	bw_buf_mix_multi(src1, src2, dest, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufMix(
 		const std::array<const float *, N_CHANNELS> src1,
@@ -784,7 +794,7 @@ inline void bufMix(
 		size_t                                      nSamples) {
 	bufMix<N_CHANNELS>(src1.data(), src2.data(), dest.data(), nSamples);
 }
-#endif
+# endif
 
 template<size_t N_CHANNELS>
 inline void bufMul(
@@ -795,7 +805,7 @@ inline void bufMul(
 	bw_buf_mul_multi(src1, src2, dest, N_CHANNELS, nSamples);
 }
 
-#ifndef BW_CXX_NO_ARRAY
+# ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 inline void bufMul(
 		const std::array<const float *, N_CHANNELS> src1,
@@ -804,7 +814,7 @@ inline void bufMul(
 		size_t                                      nSamples) {
 	bufMul<N_CHANNELS>(src1.data(), src2.data(), dest.data(), nSamples);
 }
-#endif
+# endif
 
 }
 #endif
