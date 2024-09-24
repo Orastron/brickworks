@@ -32,6 +32,9 @@
  *    <ul>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added <code>bw_one_pole_get_sticky_thresh()</code> and
+ *              <code>bw_one_pole_get_sticky_mode()</code> and related C++
+ *              API.</li>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
@@ -433,6 +436,20 @@ static inline void bw_one_pole_set_sticky_mode(
  *    `coeffs`.
  *
  *    Default value: `bw_one_pole_sticky_mode_abs`.
+ *
+ *    #### bw_one_pole_get_sticky_thresh()
+ *  ```>>> */
+static inline float bw_one_pole_get_sticky_thresh(
+	const bw_one_pole_coeffs * BW_RESTRICT coeffs);
+/*! <<<```
+ *    Returns the current target-reach threshold in `coeffs`.
+ *
+ *    #### bw_one_pole_get_sticky_thresh()
+ *  ```>>> */
+static inline bw_one_pole_sticky_mode bw_one_pole_get_sticky_mode(
+	const bw_one_pole_coeffs * BW_RESTRICT coeffs);
+/*! <<<```
+ *    Returns the current distance metric for sticky behavior in `coeffs`.
  *
  *    #### bw_one_pole_get_y_z1()
  *  ```>>> */
@@ -1180,6 +1197,22 @@ static inline void bw_one_pole_set_sticky_mode(
 	BW_ASSERT_DEEP(coeffs->state >= bw_one_pole_coeffs_state_init);
 }
 
+static inline float bw_one_pole_get_sticky_thresh(
+		const bw_one_pole_coeffs * BW_RESTRICT coeffs) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_one_pole_coeffs_is_valid(coeffs));
+
+	return coeffs->sticky_thresh;
+}
+
+static inline bw_one_pole_sticky_mode bw_one_pole_get_sticky_mode(
+		const bw_one_pole_coeffs * BW_RESTRICT coeffs) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_one_pole_coeffs_is_valid(coeffs));
+
+	return coeffs->sticky_mode;
+}
+
 static inline float bw_one_pole_get_y_z1(
 		const bw_one_pole_state * BW_RESTRICT state) {
 	BW_ASSERT(state != BW_NULL);
@@ -1330,6 +1363,10 @@ public:
 	void setStickyMode(
 		bw_one_pole_sticky_mode value);
 
+	float getStickyThresh();
+
+	bw_one_pole_sticky_mode getStickyMode();
+
 	float getYZ1(
 		size_t channel);
 /*! <<<...
@@ -1464,6 +1501,16 @@ template<size_t N_CHANNELS>
 inline void OnePole<N_CHANNELS>::setStickyMode(
 		bw_one_pole_sticky_mode value) {
 	bw_one_pole_set_sticky_mode(&coeffs, value);
+}
+
+template<size_t N_CHANNELS>
+inline float OnePole<N_CHANNELS>::getStickyThresh() {
+	return bw_one_pole_get_sticky_thresh(&coeffs);
+}
+
+template<size_t N_CHANNELS>
+inline bw_one_pole_sticky_mode OnePole<N_CHANNELS>::getStickyMode() {
+	return bw_one_pole_get_sticky_mode(&coeffs);
 }
 
 template<size_t N_CHANNELS>

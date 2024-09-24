@@ -23,12 +23,13 @@
  *  version {{{ 1.2.0 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
- *    Gain.
+ *    Smoothed gain module with optional sticky gain-reach threshold.
  *  }}}
  *  changelog {{{
  *    <ul>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
+ *          <li>Added optional sticky gain-reach threshold and related API.</li>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
@@ -118,6 +119,20 @@ typedef struct bw_gain_coeffs bw_gain_coeffs;
 /*! <<<```
  *    Coefficients and related.
  *
+ *    #### bw_gain_sticky_mode
+ *  ```>>> */
+typedef enum {
+	bw_gain_sticky_mode_abs,
+	bw_gain_sticky_mode_rel
+} bw_gain_sticky_mode;
+/*! <<<```
+ *    Distance metrics for sticky behavior:
+ *     * `bw_gain_sticky_mode_abs`: absolute gain difference
+ *       (|`current` - `target`|, with `current` and `target` linear);
+ *     * `bw_gain_sticky_mode_rel`: relative gain difference with respect to
+ *       target gain (|`current` - `target`| / |`target`|, with `current` and
+ *       `target` linear).
+ *
  *    #### bw_gain_init()
  *  ```>>> */
 static inline void bw_gain_init(
@@ -151,8 +166,26 @@ static inline void bw_gain_update_coeffs_ctrl(
  *  ```>>> */
 static inline void bw_gain_update_coeffs_audio(
 	bw_gain_coeffs * BW_RESTRICT coeffs);
+
+static inline void bw_gain_update_coeffs_audio_sticky_abs(
+	bw_gain_coeffs * BW_RESTRICT coeffs);
+
+static inline void bw_gain_update_coeffs_audio_sticky_rel(
+	bw_gain_coeffs * BW_RESTRICT coeffs);
 /*! <<<```
- *    Triggers audio-rate update of coefficients in `coeffs`.
+ *    These functions trigger audio-rate update of coefficients in `coeffs`.
+ *
+ *    In particular:
+ *     * `bw_gain_update_coeffs_audio` assumes that the gain-reach threshold is
+ *       `0.f`;
+ *     * `bw_gain_update_coeffs_audio_sticky_abs` assumes that the gain-reach
+ *       threshold is not `0.f` and the distance metric for sticky behavior is
+ *       set to `bw_gain_sticky_mode_abs`;
+ *     * `bw_gain_update_coeffs_audio_sticky_rel` assumes that the gain-reach
+ *       threshold is not `0.f` and the distance metric for sticky behavior is
+ *       set to `bw_gain_sticky_mode_rel`.
+ *
+ *    Such assumptions are unchecked even for debugging purposes.
  *
  *    #### bw_gain_process1()
  *  ```>>> */
@@ -223,6 +256,34 @@ static inline void bw_gain_set_smooth_tau(
  *    `value` must be non-negative.
  *
  *    Default value: `0.05f`.
+ *
+ *    #### bw_gain_set_sticky_thresh()
+ *  ```>>> */
+static inline void bw_gain_set_sticky_thresh(
+	bw_gain_coeffs * BW_RESTRICT coeffs,
+	float                        value);
+/*! <<<```
+ *    Sets the gain-reach threshold specified by `value` in `coeffs`.
+ *
+ *    When the difference between the current and the target gain would fall
+ *    under such threshold according to the current distance metric (see
+ *    `bw_gain_set_sticky_mode()`), the current gain is forcefully set to be
+ *    equal to the target gain value.
+ *
+ *    Valid range: [`0.f`, `1e18f`].
+ *
+ *    Default value: `0.f`.
+ *
+ *    #### bw_gain_set_sticky_mode()
+ *  ```>>> */
+static inline void bw_gain_set_sticky_mode(
+	bw_gain_coeffs * BW_RESTRICT coeffs,
+	bw_gain_sticky_mode          value);
+/*! <<<```
+ *    Sets the current distance metric for sticky behavior to `value` in
+ *    `coeffs`.
+ *
+ *    Default value: `bw_gain_sticky_mode_abs`.
  *
  *    #### bw_gain_get_gain_lin()
  *  ```>>> */
@@ -371,6 +432,32 @@ static inline void bw_gain_update_coeffs_audio(
 	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_reset_coeffs);
 }
 
+static inline void bw_gain_update_coeffs_audio_sticky_abs(
+		bw_gain_coeffs * BW_RESTRICT coeffs) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_reset_coeffs);
+
+	bw_one_pole_update_coeffs_audio(&coeffs->smooth_coeffs);
+	bw_one_pole_process1_sticky_abs(&coeffs->smooth_coeffs, &coeffs->smooth_state, coeffs->gain);
+
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_reset_coeffs);
+}
+
+static inline void bw_gain_update_coeffs_audio_sticky_rel(
+		bw_gain_coeffs * BW_RESTRICT coeffs) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_reset_coeffs);
+
+	bw_one_pole_update_coeffs_audio(&coeffs->smooth_coeffs);
+	bw_one_pole_process1_sticky_rel(&coeffs->smooth_coeffs, &coeffs->smooth_state, coeffs->gain);
+
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_reset_coeffs);
+}
+
 static inline float bw_gain_process1(
 		const bw_gain_coeffs * BW_RESTRICT coeffs,
 		float                              x) {
@@ -401,10 +488,21 @@ static inline void bw_gain_process(
 	BW_ASSERT(y != BW_NULL);
 
 	bw_gain_update_coeffs_ctrl(coeffs);
-	for (size_t i = 0; i < n_samples; i++) {
-		bw_gain_update_coeffs_audio(coeffs);
-		y[i] = bw_gain_process1(coeffs, x[i]);
-	}
+	if (bw_one_pole_get_sticky_thresh(&coeffs->smooth_coeffs) == 0.f)
+		for (size_t i = 0; i < n_samples; i++) {
+			bw_gain_update_coeffs_audio(coeffs);
+			y[i] = bw_gain_process1(coeffs, x[i]);
+		}
+	else if (bw_one_pole_get_sticky_mode(&coeffs->smooth_coeffs) == bw_one_pole_sticky_mode_abs)
+		for (size_t i = 0; i < n_samples; i++) {
+			bw_gain_update_coeffs_audio_sticky_abs(coeffs);
+			y[i] = bw_gain_process1(coeffs, x[i]);
+		}
+	else
+		for (size_t i = 0; i < n_samples; i++) {
+			bw_gain_update_coeffs_audio_sticky_rel(coeffs);
+			y[i] = bw_gain_process1(coeffs, x[i]);
+		}
 
 	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_reset_coeffs);
@@ -437,11 +535,24 @@ static inline void bw_gain_process_multi(
 #endif
 
 	bw_gain_update_coeffs_ctrl(coeffs);
-	for (size_t i = 0; i < n_samples; i++) {
-		bw_gain_update_coeffs_audio(coeffs);
-		for (size_t j = 0; j < n_channels; j++)
-			y[j][i] = bw_gain_process1(coeffs, x[j][i]);
-	}
+	if (bw_one_pole_get_sticky_thresh(&coeffs->smooth_coeffs) == 0.f)
+		for (size_t i = 0; i < n_samples; i++) {
+			bw_gain_update_coeffs_audio(coeffs);
+			for (size_t j = 0; j < n_channels; j++)
+				y[j][i] = bw_gain_process1(coeffs, x[j][i]);
+		}
+	else if (bw_one_pole_get_sticky_mode(&coeffs->smooth_coeffs) == bw_one_pole_sticky_mode_abs)
+		for (size_t i = 0; i < n_samples; i++) {
+			bw_gain_update_coeffs_audio_sticky_abs(coeffs);
+			for (size_t j = 0; j < n_channels; j++)
+				y[j][i] = bw_gain_process1(coeffs, x[j][i]);
+		}
+	else
+		for (size_t i = 0; i < n_samples; i++) {
+			bw_gain_update_coeffs_audio_sticky_rel(coeffs);
+			for (size_t j = 0; j < n_channels; j++)
+				y[j][i] = bw_gain_process1(coeffs, x[j][i]);
+		}
 
 	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_reset_coeffs);
@@ -490,6 +601,35 @@ static inline void bw_gain_set_smooth_tau(
 	BW_ASSERT(value >= 0.f);
 
 	bw_one_pole_set_tau(&coeffs->smooth_coeffs, value);
+
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_init);
+}
+
+static inline void bw_gain_set_sticky_thresh(
+		bw_gain_coeffs * BW_RESTRICT coeffs,
+		float                        value) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_init);
+	BW_ASSERT(!bw_is_nan(value));
+	BW_ASSERT(value >= 0.f && value <= 1e18f);
+
+	bw_one_pole_set_sticky_thresh(&coeffs->smooth_coeffs, value);
+
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_init);
+}
+
+static inline void bw_gain_set_sticky_mode(
+		bw_gain_coeffs * BW_RESTRICT coeffs,
+		bw_gain_sticky_mode          value) {
+	BW_ASSERT(coeffs != BW_NULL);
+	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
+	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_init);
+	BW_ASSERT(value == bw_gain_sticky_mode_abs || value == bw_gain_sticky_mode_rel);
+
+	bw_one_pole_set_sticky_mode(&coeffs->smooth_coeffs, value == bw_gain_sticky_mode_abs ? bw_one_pole_sticky_mode_abs : bw_one_pole_sticky_mode_rel);
 
 	BW_ASSERT_DEEP(bw_gain_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_gain_coeffs_state_init);
@@ -585,6 +725,12 @@ public:
 	void setSmoothTau(
 		float value);
 
+	void setStickyThresh(
+		float value);
+
+	void setStickyMode(
+		bw_gain_sticky_mode value);
+
 	float getGainLin();
 
 	float getGainCur();
@@ -652,6 +798,18 @@ template<size_t N_CHANNELS>
 inline void Gain<N_CHANNELS>::setSmoothTau(
 		float value) {
 	bw_gain_set_smooth_tau(&coeffs, value);
+}
+
+template<size_t N_CHANNELS>
+inline void Gain<N_CHANNELS>::setStickyThresh(
+		float value) {
+	bw_gain_set_sticky_thresh(&coeffs, value);
+}
+
+template<size_t N_CHANNELS>
+inline void Gain<N_CHANNELS>::setStickyMode(
+		bw_gain_sticky_mode value) {
+	bw_gain_set_sticky_mode(&coeffs, value);
 }
 
 template<size_t N_CHANNELS>
