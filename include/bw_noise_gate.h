@@ -113,6 +113,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_noise_gate_coeffs
  *  ```>>> */

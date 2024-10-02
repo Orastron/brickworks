@@ -128,6 +128,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_svf_coeffs
  *  ```>>> */

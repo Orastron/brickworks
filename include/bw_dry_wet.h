@@ -92,6 +92,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_dry_wet_coeffs
  *  ```>>> */

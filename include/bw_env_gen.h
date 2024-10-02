@@ -146,6 +146,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_env_gen_coeffs
  *  ```>>> */

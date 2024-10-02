@@ -123,6 +123,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_peak_coeffs
  *  ```>>> */

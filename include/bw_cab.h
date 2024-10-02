@@ -64,6 +64,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_cab_coeffs
  *  ```>>> */

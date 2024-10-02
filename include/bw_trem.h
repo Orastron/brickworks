@@ -103,6 +103,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_trem_coeffs
  *  ```>>> */

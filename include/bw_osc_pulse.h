@@ -120,6 +120,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_osc_pulse_coeffs
  *  ```>>> */

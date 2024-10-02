@@ -35,6 +35,8 @@
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
+ *          <li>Fixed typo in the documentation of
+ *              <code>bw_note_queue_reset()</code>.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.0.1</strong>:
@@ -134,7 +136,7 @@ typedef struct {
 static inline void bw_note_queue_reset(
 	bw_note_queue * BW_RESTRICT queue);
 /*! <<<```
- *    Clear both the event queue (no events) and the note statuses (all notes
+ *    Clears both the event queue (no events) and the note statuses (all notes
  *    off, all velocities `0.f`) in `queue`.
  *
  *    #### bw_note_queue_clear()

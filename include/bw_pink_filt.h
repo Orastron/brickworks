@@ -135,6 +135,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_pink_filt_coeffs
  *  ```>>> */

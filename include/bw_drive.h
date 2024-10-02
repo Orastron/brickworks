@@ -102,6 +102,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_drive_coeffs
  *  ```>>> */

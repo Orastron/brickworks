@@ -112,6 +112,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_slew_lim_coeffs
  *  ```>>> */

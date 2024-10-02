@@ -100,6 +100,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_osc_sin_process1()
  *  ```>>> */

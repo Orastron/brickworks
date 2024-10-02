@@ -134,6 +134,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_phase_gen_coeffs
  *  ```>>> */

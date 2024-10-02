@@ -111,6 +111,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_osc_filt_state
  *  ```>>> */

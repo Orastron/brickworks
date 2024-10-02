@@ -106,6 +106,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_bd_reduce_coeffs
  *  ```>>> */

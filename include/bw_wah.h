@@ -117,6 +117,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_wah_coeffs
  *  ```>>> */

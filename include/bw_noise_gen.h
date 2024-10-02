@@ -98,6 +98,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_noise_gen_coeffs
  *  ```>>> */

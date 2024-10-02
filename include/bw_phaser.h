@@ -109,6 +109,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_phaser_coeffs
  *  ```>>> */

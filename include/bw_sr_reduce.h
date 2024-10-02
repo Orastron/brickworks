@@ -114,6 +114,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_sr_reduce_coeffs
  *  ```>>> */

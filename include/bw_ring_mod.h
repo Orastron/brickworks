@@ -98,6 +98,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_ring_mod_coeffs
  *  ```>>> */

@@ -110,6 +110,8 @@
 extern "C" {
 #endif
 
+/*** Public API ***/
+
 /*! api {{{
  *    #### bw_delay_coeffs
  *  ```>>> */
