@@ -301,7 +301,7 @@ static inline void bw_peak_set_peak_gain_lin(
  *
  *    Valid range: [`1e-30f`, `1e30f`].
  *
- *    If actually using the bandwidth parameter to control Q,  by the time
+ *    If actually using the bandwidth parameter to control Q, by the time
  *    `bw_peak_reset_\*()`, `bw_peak_update_coeffs_\*()`, or
  *    `bw_peak_process\*()`, is called,
  *    `bw_sqrtf(bw_pow2f(bandwidth) * peak_gain) *
@@ -319,7 +319,7 @@ static inline void bw_peak_set_peak_gain_dB(
  *
  *    Valid range: [`-600.f`, `600.f`].
  *
- *    If actually using the bandwidth parameter to control Q,  by the time
+ *    If actually using the bandwidth parameter to control Q, by the time
  *    `bw_peak_reset_\*()`, `bw_peak_update_coeffs_\*()`, or
  *    `bw_peak_process\*()`, is called,
  *    `bw_sqrtf(bw_pow2f(bandwidth) * peak_gain) *
@@ -337,7 +337,7 @@ static inline void bw_peak_set_bandwidth(
  *
  *    Valid range: [`1e-6f`, `90.f`].
  *
- *    If actually using the bandwidth parameter to control Q,  by the time
+ *    If actually using the bandwidth parameter to control Q, by the time
  *    `bw_peak_reset_\*()`, `bw_peak_update_coeffs_\*()`, or
  *    `bw_peak_process\*()`, is called,
  *    `bw_sqrtf(bw_pow2f(bandwidth) * peak_gain) *
