@@ -32,10 +32,13 @@
  *    <ul>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
- *          <li>Added <code>bw_note_queue_all_notes_off</code>.</li>
+ *          <li>Added <code>bw_note_queue_all_notes_off()</code>.</li>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
+ *          <li>Fixed bug in <code>bw_note_queue_is_valid()</code> which
+ *              erroneously marked queue with 128 pressed notes or 128 events as
+ *              invalid.</li>
  *          <li>Fixed typo in the documentation of
  *              <code>bw_note_queue_reset()</code>.</li>
  *        </ul>
@@ -271,7 +274,7 @@ static inline char bw_note_queue_is_valid(
 		const bw_note_queue * BW_RESTRICT queue) {
 	BW_ASSERT(queue != BW_NULL);
 
-	if (queue->n_events >= 128 || queue->n_pressed >= 128)
+	if (queue->n_events > 128 || queue->n_pressed > 128)
 		return 0;
 
 	for (unsigned char i = 0; i < queue->n_events; i++) {
