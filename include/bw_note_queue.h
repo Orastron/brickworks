@@ -32,6 +32,7 @@
  *    <ul>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
+ *          <li>Added <code>bw_note_queue_all_notes_off</code>.</li>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
@@ -162,6 +163,15 @@ static inline void bw_note_queue_add(
  *    If `force_went_off` is set to non-`0`, `went_off` is always set to
  *    non-`0`.
  *
+ *    #### bw_note_queue_all_notes_off()
+ *  ```>>> */
+static inline void bw_note_queue_all_notes_off(
+	bw_note_queue * BW_RESTRICT queue,
+	float                       velocity);
+/*! <<<```
+ *    Turns all notes off in `queue`, adding note off events as needed with the
+ *    given `velocity`.
+ *
  *    #### bw_note_queue_is_valid()
  *  ```>>> */
 static inline char bw_note_queue_is_valid(
@@ -239,6 +249,20 @@ static inline void bw_note_queue_add(
 		queue->n_pressed--;
 	queue->status[note].pressed = pressed;
 	queue->status[note].velocity = velocity;
+
+	BW_ASSERT_DEEP(bw_note_queue_is_valid(queue));
+}
+
+static inline void bw_note_queue_all_notes_off(
+		bw_note_queue * BW_RESTRICT queue,
+		float                       velocity) {
+	BW_ASSERT(queue != BW_NULL);
+	BW_ASSERT_DEEP(bw_note_queue_is_valid(queue));
+	BW_ASSERT(bw_is_finite(velocity) && velocity <= 1.f);
+
+	for (unsigned char i = 0; i < 128; i++)
+		if (queue->status[i].pressed)
+			bw_note_queue_add(queue, i, 0, velocity, 0);
 
 	BW_ASSERT_DEEP(bw_note_queue_is_valid(queue));
 }
