@@ -40,11 +40,15 @@
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
+ *          <li>Added missing <code>BW_RESTRICT</code> to arguments of
+ *              <code>bw_reverb_process1()</code>.</li>
  *          <li>Added debugging checks from <code>bw_reverb_process()</code> to
  *              <code>bw_reverb_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_reverb_process_multi()</code>
  *              to ensure that buffers used for both input and output appear at
  *              the same channel indices.</li>
+ *          <li>Removed wrong sentence from the documentation of
+ *              <code>bw_reverb_reset_state()</code>.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:
@@ -178,8 +182,6 @@ static inline void bw_reverb_reset_state(
  *    The corresponding initial output values are put into `y_l_0` (left) and
  *    `y_r_0` (right).
  *
- *    Returns the corresponding initial output value.
- *
  *    #### bw_reverb_reset_state_multi()
  *  ```>>> */
 static inline void bw_reverb_reset_state_multi(
@@ -219,8 +221,8 @@ static inline void bw_reverb_process1(
 	bw_reverb_state * BW_RESTRICT        state,
 	float                                x_l,
 	float                                x_r,
-	float *                              y_l,
-	float *                              y_r);
+	float * BW_RESTRICT                  y_l,
+	float * BW_RESTRICT                  y_r);
 /*! <<<```
  *    Processes one set of input samples `x_l` (left) and `x_r` (right) using
  *    `coeffs`, while using and updating `state`. The left and right output
@@ -862,8 +864,8 @@ static inline void bw_reverb_process1(
 		bw_reverb_state * BW_RESTRICT        state,
 		float                                x_l,
 		float                                x_r,
-		float *                              y_l,
-		float *                              y_r) {
+		float * BW_RESTRICT                  y_l,
+		float * BW_RESTRICT                  y_r) {
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_reverb_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_reverb_coeffs_state_reset_coeffs);
