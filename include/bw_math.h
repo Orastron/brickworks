@@ -46,10 +46,12 @@
  *    <ul>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
- *          <li>Added <code>bw_signfilli64</code>, <code>bw_mini64</code>,
- *              <code>bw_maxi64</code>, <code>bw_clipi64</code>,
- *              <code>bw_minu64</code>, <code>bw_maxu64</code>, and
- *              <code>bw_clipu64</code>.</li>
+ *          <li>Added <code>bw_signfilli64()</code>, <code>bw_mini64()</code>,
+ *              <code>bw_maxi64()</code>, <code>bw_clipi64()</code>,
+ *              <code>bw_minu64()</code>, <code>bw_maxu64()</code>,
+ *              <code>bw_clipu64()</code>, <code>bw_log2_1p2xf()</code>,
+ *              <code>bw_log_1pexpxf()</code>, and
+ *              <code>bw_log10_1p10xf()</code>.</li>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code> and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *        </ul>
@@ -533,6 +535,33 @@ static inline float bw_pow10f(
  *    `x` must be less than or equal to `38.531f`.
  *
  *    Relative error < 0.062%.
+ *
+ *    #### bw_log2_1p2xf()
+ *  ```>>> */
+static inline float bw_log2_1p2xf(
+	float x);
+/*! <<<```
+ *    Returns an approximation of `log2(1+2^x)`.
+ *
+ *    Absolute error < 0.006.
+ *
+ *    #### bw_log_1pexpxf()
+ *  ```>>> */
+static inline float bw_log_1pexpxf(
+	float x);
+/*! <<<```
+ *    Returns an approximation of `log(1+exp(x))`.
+ *
+ *    Absolute error < 0.004.
+ *
+ *    #### bw_log10_1p10xf()
+ *  ```>>> */
+static inline float bw_log10_1p10xf(
+	float x);
+/*! <<<```
+ *    Returns an approximation of `log10(1+10^x)`.
+ *
+ *    Absolute error < 0.002.
  *
  *    #### bw_dB2linf()
  *  ```>>> */
@@ -1020,6 +1049,30 @@ static inline float bw_pow10f(
 	BW_ASSERT(!bw_is_nan(x));
 	BW_ASSERT(x <= 38.531f);
 	const float y = bw_pow2f(3.321928094887363f * x);
+	BW_ASSERT(bw_is_finite(y));
+	return y;
+}
+
+static inline float bw_log2_1p2xf(
+		float x) {
+	BW_ASSERT(!bw_is_nan(x));
+	const float y = x >= 32.f ? x : bw_log2f(1.f + bw_pow2f(x));
+	BW_ASSERT(bw_is_finite(y));
+	return y;
+}
+
+static inline float bw_log_1pexpxf(
+		float x) {
+	BW_ASSERT(!bw_is_nan(x));
+	const float y = 0.693147180559945f * bw_log2_1p2xf(1.442695040888963f * x);
+	BW_ASSERT(bw_is_finite(y));
+	return y;
+}
+
+static inline float bw_log10_1p10xf(
+		float x) {
+	BW_ASSERT(!bw_is_nan(x));
+	const float y = 0.3010299956639811f * bw_log2_1p2xf(3.321928094887363f * x);
 	BW_ASSERT(bw_is_finite(y));
 	return y;
 }
