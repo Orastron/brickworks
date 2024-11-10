@@ -683,7 +683,7 @@ static inline void bw_delay_process_multi(
 	for (size_t i = 0; i < n_channels; i++) {
 		BW_ASSERT(state[i] != BW_NULL);
 		BW_ASSERT_DEEP(bw_delay_state_is_valid(coeffs, state[i]));
-		BW_ASSERT_DEEP(state->state[i] >= bw_delay_state_state_reset_state);
+		BW_ASSERT_DEEP(state[i]->state >= bw_delay_state_state_reset_state);
 	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++)

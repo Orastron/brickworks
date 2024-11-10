@@ -933,7 +933,7 @@ static inline char bw_env_gen_coeffs_is_valid(
 		return 0;
 
 #ifdef BW_DEBUG_DEEP
-	if (coeffs->state >= bw_env_gen_coeffs_state_set_sample_rate && coeffs->k_T <= 0.f)
+	if (coeffs->state >= bw_env_gen_coeffs_state_set_sample_rate && (!bw_is_finite(coeffs->T) || coeffs->T <= 0.f))
 		return 0.f;
 #endif
 
