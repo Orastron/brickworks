@@ -24,6 +24,12 @@
  *  requires {{{ bw_common bw_gain bw_lp1 bw_math bw_one_pole }}}
  *  description {{{
  *    First-order multimode filter.
+ *
+ *    It implements an approximation of the Laplace-domain transfer function
+ *
+ *    > H(s) = coeff\_x + (2 pi fc coeff\_lp) / (s + 2 pi fc)
+ *
+ *    where fc is the cutoff frequency.
  *  }}}
  *  changelog {{{
  *    <ul>
@@ -37,6 +43,8 @@
  *          <li>Added debugging checks in <code>bw_mm1_process_multi()</code> to
  *              ensure that buffers used for both input and output appear at the
  *              same channel indices.</li>
+ *          <li>Clarified which transfer function the module implements in the
+ *              module description.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:

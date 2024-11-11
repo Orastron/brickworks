@@ -24,6 +24,13 @@
  *  requires {{{ bw_common bw_gain bw_math bw_one_pole bw_svf }}}
  *  description {{{
  *    Second-order multimode filter.
+ *
+ *    It implements an approximation of the Laplace-domain transfer function
+ *
+ *    > H(s) = coeff\_x + (coeff\_hp s^2 + 2 pi fc s coeff\_bp
+ *    >        + (2 pi fc)^2 coeff\_lp) / (s^2 + 2 pi fc / Q s + (2 pi fc)^2)
+ *
+ *    where fc is the cutoff frequency and Q is the quality factor.
  *  }}}
  *  changelog {{{
  *    <ul>
@@ -37,6 +44,8 @@
  *          <li>Added debugging checks in <code>bw_mm2_process_multi()</code> to
  *              ensure that buffers used for both input and output appear at the
  *              same channel indices.</li>
+ *          <li>Clarified which transfer function the module implements in the
+ *              module description.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:
