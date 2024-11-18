@@ -549,7 +549,7 @@ namespace Brickworks {
 /*** Public C++ API ***/
 
 /*! api_cpp {{{
- *    ##### Brickworks::bufFill
+ *    ##### Brickworks::bufFill()
  *  ```>>> */
 template<size_t N_CHANNELS>
 inline void bufFill(
@@ -566,7 +566,7 @@ inline void bufFill(
 # endif
 /*! <<<```
  *
- *    ##### Brickworks::bufCopy
+ *    ##### Brickworks::bufCopy()
  *  ```>>> */
 template<size_t N_CHANNELS>
 inline void bufCopy(
@@ -583,7 +583,7 @@ inline void bufCopy(
 # endif
 /*! <<<```
  *
- *    ##### Brickworks::bufNeg
+ *    ##### Brickworks::bufNeg()
  *  ```>>> */
 template<size_t N_CHANNELS>
 inline void bufNeg(
@@ -600,7 +600,7 @@ inline void bufNeg(
 # endif
 /*! <<<```
  *
- *    ##### Brickworks::bufAdd
+ *    ##### Brickworks::bufAdd()
  *  ```>>> */		
 template<size_t N_CHANNELS>
 inline void bufAdd(
@@ -619,7 +619,7 @@ inline void bufAdd(
 # endif
 /*! <<<```
  *
- *    ##### Brickworks::bufScale
+ *    ##### Brickworks::bufScale()
  *  ```>>> */
 template<size_t N_CHANNELS>
 inline void bufScale(
@@ -638,7 +638,7 @@ inline void bufScale(
 # endif
 /*! <<<```
  *
- *    ##### Brickworks::bufMix
+ *    ##### Brickworks::bufMix()
  *  ```>>> */
 template<size_t N_CHANNELS>
 inline void bufMix(
@@ -657,7 +657,7 @@ inline void bufMix(
 # endif
 /*! <<<```
  *
- *    ##### Brickworks::bufMul
+ *    ##### Brickworks::bufMul()
  *  ```>>> */
 template<size_t N_CHANNELS>
 inline void bufMul(
