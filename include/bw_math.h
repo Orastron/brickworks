@@ -648,7 +648,7 @@ static inline float bw_acoshf(
 /*! <<<```
  *    Returns an approximation of the hyperbolic arccosine of `x`.
  *
- *    `x` must be in [1.f, 8.507059173023462e+37f].
+ *    `x` must be in [`1.f`, `8.507059173023462e+37f`].
  *
  *    Absolute error < 0.004 or relative error < 0.8%, whatever is worse.
  *  }}} */
