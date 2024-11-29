@@ -23,7 +23,7 @@
  *  version {{{ 1.2.0 }}}
  *  description {{{
  *    A common header to make sure that a bunch of basic definitions are
- *    available and consistent for all Brickworks modules.
+ *    available and consistent for all modules.
  *  }}}
  *  changelog {{{
  *    <ul>
@@ -34,6 +34,7 @@
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *          <li>Allowed custom definitions of <code>BW_NULL</code>.</li>
  *          <li>Accomodate MSVC reporting incorrect C++ standard support.</li>
+ *          <li>Removed "Brickworks" references in the documentation.</li>
  *        </ul>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
@@ -106,37 +107,36 @@
  *
  *    #### BW_INCLUDE_WITH_QUOTES
  *
- *    Normally Brickworks modules include other such modules using angle
- *    brackets.
+ *    Normally, modules include other such modules using angle brackets.
  *
  *    If you would rather prefer that to happen using double quotes, you can
  *    define `BW_INCLUDE_WITH_QUOTES`.
  *
  *    #### BW_NO_CXX
  *
- *    If `BW_NO_CXX` is defined, the C++ APIs and implementations in Brickworks
- *    modules are not included.
+ *    If `BW_NO_CXX` is defined, the C++ APIs and implementations in modules
+ *    are not included.
  *
  *    #### BW_CXX_NO_EXTERN_C
  *
- *    Normally, the C APIs and implementations in Brickworks modules are
- *    included in <code>extern "C"</code> blocks when using a C++ compiler, even
- *    if <code>BW_NO_CXX</code> is defined.
+ *    Normally, the C APIs and implementations in modules are included in
+ *    <code>extern "C"</code> blocks when using a C++ compiler, even if
+ *    <code>BW_NO_CXX</code> is defined.
  *
  *    If you don't want to have them included in such blocks, you can define
  *    `BW_CXX_NO_EXTERN_C`.
  *
  *    #### BW_CXX_NO_ARRAY
  *
- *    C++ APIs of Brickworks modules typically include overloaded methods that
- *    use `std::array` arguments, and thus require the `<array>` header file.
+ *    C++ APIs in modules typically include overloaded methods that use
+ *    `std::array` arguments, and thus require the `<array>` header file.
  *
  *    If this is not wanted, defining `BW_CXX_NO_ARRAY` suppresses such methods
  *    and the inclusion of said header file.
  *
  *    #### Basic definitions
  *
- *    Brickworks requires definitions of:
+ *    Modules require definitions of:
  *
  *    * `NULL` (C only) and `size_t`, normally supplied by `stddef.h`;
  *    * `(u)int{8,16,32,64}_t`, `INT{8,16,32,64}_{MIN,MAX}`, and
