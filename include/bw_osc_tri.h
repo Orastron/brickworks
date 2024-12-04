@@ -50,7 +50,7 @@
  *              is on and that buffers used for both input and output appear at
  *              the same channel indices.</li>
  *          <li>Added extra checks in
- *              <code>bw_osc_pulse_coeffs_is_valid()</code>.</li>
+ *              <code>bw_osc_tri_coeffs_is_valid()</code>.</li>
  *          <li>Changed the name of C++ arguments to camel case.</li>
  *        </ul>
  *      </li>
