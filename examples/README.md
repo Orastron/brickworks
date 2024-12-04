@@ -14,7 +14,7 @@ You need [Node.js](https://nodejs.org/en) and [npm](https://www.npmjs.com/) to b
 
 ### Usage
 
-Get [Tibia 0.0.4](https://git.orastron.com/tibia/releases/tag/v0.0.4), place it in the same directory as the Brickworks folder, and rename it as `tibia`. Then either `cd` to the Tibia folder and `npm install dot`, or install the [dot npm package](https://www.npmjs.com/package/dot) globally and make sure that the `NODE_PATH` environment variable is corretly set to find it.
+Get [Tibia 0.0.4](https://git.orastron.com/orastron/tibia/releases/tag/v0.0.4), place it in the same directory as the Brickworks folder, and rename it as `tibia`. Then either `cd` to the Tibia folder and `npm install dot`, or install the [dot npm package](https://www.npmjs.com/package/dot) globally and make sure that the `NODE_PATH` environment variable is corretly set to find it.
 
 Now you can `cd` to the `examples` folder and run `./tibia_gen.sh` to copy/generate files for all examples, or otherwise run `./tibia_gen.sh common` to only copy/generate files in `examples/common` or <code>./tibia\_gen.sh *example*</code> to do the same for files in <code>examples/*example*</code>.
 
