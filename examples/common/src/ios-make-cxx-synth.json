@@ -5,7 +5,7 @@
 			"../../../../common/src",
 			"../../../../../include"
 		],
-		"deploymentTarget": 16.6,
+		"deploymentTarget": 14.0,
 		"commonDir": "../../common/ios",
 		"pluginDir": "../../common/src/cxx-synth",
 		"cSrcs": "../../common/src/cxx-synth/impl.h",
