@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    One-pole (6 dB/oct) lowpass filter with unitary DC gain, separate attack
@@ -30,6 +30,12 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Verison <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Fixed typo in the documentation of
+ *              <code>bw_one_pole_get_sticky_mode()</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added <code>bw_one_pole_get_sticky_thresh()</code> and
@@ -444,7 +450,7 @@ static inline float bw_one_pole_get_sticky_thresh(
 /*! <<<```
  *    Returns the current target-reach threshold in `coeffs`.
  *
- *    #### bw_one_pole_get_sticky_thresh()
+ *    #### bw_one_pole_get_sticky_mode()
  *  ```>>> */
 static inline bw_one_pole_sticky_mode bw_one_pole_get_sticky_mode(
 	const bw_one_pole_coeffs * BW_RESTRICT coeffs);
