@@ -29,7 +29,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
-  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
+ *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
  *          <li>Added debugging checks from <code>bw_balance_process()</code> to

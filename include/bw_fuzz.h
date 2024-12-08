@@ -214,7 +214,7 @@ static inline void bw_fuzz_process_multi(
 	size_t                                          n_channels,
 	size_t                                          n_samples);
 /*! <<<```
-  *    Processes the first `n_samples` of the `n_channels` input buffers `x` and
+ *    Processes the first `n_samples` of the `n_channels` input buffers `x` and
  *    fills the first `n_samples` of the `n_channels` output buffers `y`, while
  *    using and updating both the common `coeffs` and each of the `n_channels`
  *    `state`s (control and audio rate).
