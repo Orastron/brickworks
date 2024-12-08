@@ -33,8 +33,8 @@
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
  *              <code>BW_NO_CXX</code>, and
  *              <code>BW_CXX_NO_EXTERN_C</code>.</li>
- *          <li>Added debugging checks from <code>bw_ap1_process()</code> to
- *              <code>bw_ap1_process_multi()</code>.</li>
+ *          <li>Added debugging checks from <code>bw_gain_process()</code> to
+ *              <code>bw_gain_process_multi()</code>.</li>
  *          <li>Added debugging checks in <code>bw_gain_process_multi()</code>
  *              to ensure that buffers used for both input and output appear at
  *              the same channel indices.</li>
