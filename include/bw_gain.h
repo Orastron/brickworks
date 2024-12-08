@@ -20,13 +20,19 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Smoothed gain module with optional sticky gain-reach threshold.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Fixed typo in the documentation of
+ *              <code>bw_gain_update_coeffs_audio*()</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added optional sticky gain-reach threshold and related API.</li>
@@ -164,7 +170,7 @@ static inline void bw_gain_update_coeffs_ctrl(
 /*! <<<```
  *    Triggers control-rate update of coefficients in `coeffs`.
  *
- *    #### bw_gain_update_coeffs_audio()
+ *    #### bw_gain_update_coeffs_audio*()
  *  ```>>> */
 static inline void bw_gain_update_coeffs_audio(
 	bw_gain_coeffs * BW_RESTRICT coeffs);
