@@ -1,6 +1,5 @@
 {
 	"make": {
-		"cflags": "-I../../../include -I../../common/src -I../common/src",
-		"pluginDir": "../src"
+		"mkincDir": "../../common/src"
 	}
 }

@@ -1,6 +1,0 @@
-{
-	"vst3_make": {
-		"cflags": "-I../../../../vst3_c_api",
-		"commonDir": "../../common/vst3"
-	}
-}

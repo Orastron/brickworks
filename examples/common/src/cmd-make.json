@@ -1,7 +1,0 @@
-{
-	"cmd_make": {
-		"commonDir": "../../common/cmd",
-		"tinywavDir": "../../../../tinywav",
-		"midiParserDir": "../../../../midi-parser"
-	}
-}

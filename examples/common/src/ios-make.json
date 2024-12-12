@@ -5,8 +5,6 @@
 			"../../../../common/src",
 			"../../../../../include"
 		],
-		"deploymentTarget": 14.0,
-		"commonDir": "../../common/ios",
-		"pluginDir": "../src"
+		"deploymentTarget": 14.0
 	}
 }
