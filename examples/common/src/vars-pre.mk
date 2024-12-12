@@ -1,5 +1,21 @@
-CFLAGS_EXTRA := -I../../../include -I../../common/src -I../common/src
-PLUGIN_DIR := ../src
+ifeq ($(EXAMPLE_TYPE), c)
+	PLUGIN_DIR := ../src
+	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../common/src
+endif
+
+ifeq ($(EXAMPLE_TYPE), cxx-fx)
+	PLUGIN_DIR := ../../common/src/cxx-fx
+	CXX_SRCS_EXTRA := ../src/impl.cpp
+	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-fx -I../common/src
+	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-fx -I../common/src -std=c++11
+endif
+
+ifeq ($(EXAMPLE_TYPE), cxx-synth)
+	PLUGIN_DIR := ../../common/src/cxx-synth
+	CXX_SRCS_EXTRA := ../src/impl.cpp
+	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-synth -I../common/src
+	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-synth -I../common/src -std=c++11
+endif
 
 ifeq ($(TEMPLATE), cmd)
 	COMMON_DIR := ../../common/cmd
@@ -29,6 +45,12 @@ endif
 
 ifeq ($(TEMPLATE), ios)
 	COMMON_DIR := ../../common/ios
+	ifeq ($(EXAMPLE_TYPE), cxx-fx)
+		C_SRCS_EXTRA := ../../common/src/cxx-fx/impl.h
+	endif
+	ifeq ($(EXAMPLE_TYPE), cxx-synth)
+		C_SRCS_EXTRA := ../../common/src/cxx-synth/impl.h
+	endif
 endif
 
 ifeq ($(TEMPLATE), android)

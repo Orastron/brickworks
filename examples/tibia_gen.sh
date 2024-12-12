@@ -81,6 +81,6 @@ for d in $dirs; do
 	echo "include ../../common/android/Makefile" > $d/android/Makefile
 
 	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json $TIBIA_DIR/templates/ios ios && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json,../common/src/ios-$make_json $TIBIA_DIR/templates/ios-make ios && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json,../common/src/$make_json,../common/src/ios-make.json $TIBIA_DIR/templates/ios-make ios && cd ..
 	echo "include ../../common/ios/Makefile" > $d/ios/Makefile
 done

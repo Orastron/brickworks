@@ -1,8 +1,6 @@
 {
 	"make": {
-		"cxxSrcs": "../src/impl.cpp",
-		"cflags": "-I../../../include -I../../common/src -I../../common/src/cxx-synth -I../common/src",
-		"cxxflags": "-I../../../include -I../../common/src -I../../common/src/cxx-synth -I../common/src -std=c++11",
-		"pluginDir": "../../common/src/cxx-synth"
+		"mkincDir": "../../common/src",
+		"extra": "EXAMPLE_TYPE := cxx-synth"
 	}
 }

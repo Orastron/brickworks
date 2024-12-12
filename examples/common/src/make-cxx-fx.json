@@ -1,8 +1,6 @@
 {
 	"make": {
-		"cxxSrcs": "../src/impl.cpp",
-		"cflags": "-I../../../include -I../../common/src -I../../common/src/cxx-fx -I../common/src",
-		"cxxflags": "-I../../../include -I../../common/src -I../../common/src/cxx-fx -I../common/src -std=c++11",
-		"pluginDir": "../../common/src/cxx-fx"
+		"mkincDir": "../../common/src",
+		"extra": "EXAMPLE_TYPE := cxx-fx"
 	}
 }
