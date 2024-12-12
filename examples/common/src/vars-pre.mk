@@ -1,20 +1,22 @@
+API_DIR := ../api
+
 ifeq ($(EXAMPLE_TYPE), c)
 	PLUGIN_DIR := ../src
-	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../common/src
+	CFLAGS_EXTRA := -I../../../include -I../../common/src
 endif
 
 ifeq ($(EXAMPLE_TYPE), cxx-fx)
 	PLUGIN_DIR := ../../common/src/cxx-fx
 	CXX_SRCS_EXTRA := ../src/impl.cpp
-	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-fx -I../common/src
-	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-fx -I../common/src -std=c++11
+	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-fx
+	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-fx -std=c++11
 endif
 
 ifeq ($(EXAMPLE_TYPE), cxx-synth)
 	PLUGIN_DIR := ../../common/src/cxx-synth
 	CXX_SRCS_EXTRA := ../src/impl.cpp
-	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-synth -I../common/src
-	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-synth -I../common/src -std=c++11
+	CFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-synth
+	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../../common/src/cxx-synth -std=c++11
 endif
 
 ifeq ($(TEMPLATE), cmd)
@@ -35,7 +37,7 @@ endif
 ifeq ($(TEMPLATE), web)
 	COMMON_DIR := ../../common/web
 	CFLAGS_EXTRA := $(CFLAGS_EXTRA) -DWASM
-	CXXFLAGS_EXTRA := -DWASM -std=c++11
+	CXXFLAGS_EXTRA := $(CXXFLAGS_EXTRA) -DWASM -std=c++11
 endif
 
 ifeq ($(TEMPLATE), daisy-seed)
@@ -55,7 +57,7 @@ endif
 
 ifeq ($(TEMPLATE), android)
 	COMMON_DIR := ../../common/android
-	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../common/src -I../../../../miniaudio
+	CXXFLAGS_EXTRA := -I../../../include -I../../common/src -I../../../../miniaudio
 	KEY_STORE := ../../common/src/keystore.jks
 	KEY_ALIAS := androidkey
 	STORE_PASS := android
