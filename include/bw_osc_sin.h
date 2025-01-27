@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Sinusoidal oscillator waveshaper.
@@ -30,6 +30,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Fixed indentation in C++ documentation.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
@@ -225,16 +230,16 @@ namespace Brickworks {
  *  ```>>> */
 template<size_t N_CHANNELS>
 void oscSinProcess(
-		const float * const * x,
-		float * const *       y,
-		size_t                nSamples);
+	const float * const * x,
+	float * const *       y,
+	size_t                nSamples);
 
 # ifndef BW_CXX_NO_ARRAY
 template<size_t N_CHANNELS>
 void oscSinProcess(
-		std::array<const float *, N_CHANNELS> x,
-		std::array<float *, N_CHANNELS>       y,
-		size_t                                nSamples);
+	std::array<const float *, N_CHANNELS> x,
+	std::array<float *, N_CHANNELS>       y,
+	size_t                                nSamples);
 # endif
 /*! <<<```
  *  }}} */
