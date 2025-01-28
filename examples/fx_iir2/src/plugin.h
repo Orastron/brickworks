@@ -66,6 +66,7 @@ static void plugin_reset(plugin *instance) {
 	bw_iir2_coeffs_mm2(instance->sample_rate, instance->cutoff, instance->q, instance->cutoff, instance->coeff_x, instance->coeff_lp, instance->coeff_bp, instance->coeff_hp, &instance->b0, &instance->b1, &instance->b2, &instance->a1, &instance->a2);
 	float y;
 	bw_iir2_reset(0.f, &y, &instance->s1, &instance->s2, instance->b0, instance->b1, instance->b2, instance->a1, instance->a2);
+	instance->to_reset = 0;
 }
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
