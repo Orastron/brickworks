@@ -263,11 +263,11 @@ static inline void bw_iir1_reset_multi(
 	if (y_0 != BW_NULL) {
 		if (s_0 != BW_NULL)
 			for (size_t i = 0; i < n_channels; i++)
-				bw_iir1_reset(x_0[i], y0 + i, s_0 + i, b0, b1, a1);
+				bw_iir1_reset(x_0[i], y_0 + i, s_0 + i, b0, b1, a1);
 		else
 			for (size_t i = 0; i < n_channels; i++) {
 				float v_s;
-				bw_iir1_reset(x_0[i], y0 + i, &v_s, b0, b1, a1);
+				bw_iir1_reset(x_0[i], y_0 + i, &v_s, b0, b1, a1);
 			}
 	} else {
 		if (s_0 != BW_NULL)
@@ -276,7 +276,7 @@ static inline void bw_iir1_reset_multi(
 				bw_iir1_reset(x_0[i], &v_y, s_0 + i, b0, b1, a1);
 			}
 		else
-			; // no need to do anything
+			{} // no need to do anything
 	}
 }
 
@@ -343,7 +343,7 @@ static inline void bw_iir1_coeffs_hp1(
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
 	BW_IIR1_COEFFS_COMMON
-	*b0 = d * prewarp_freq;
+	*b0 = d * (k - prewarp_freq);
 	*b1 = -*b0;
 }
 
@@ -421,8 +421,8 @@ static inline void bw_iir1_coeffs_mm1(
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
 	BW_IIR1_COEFFS_COMMON
-	const float k2 = coeff_x * prewarp_freq;
-	const float k3 = coeff_lp * k;
+	const float k2 = prewarp_freq * coeff_x;
+	const float k3 = k * (coeff_lp + coeff_x);
 	*b0 = d * (k3 + k2);
 	*b1 = d * (k3 - k2);
 }

@@ -443,7 +443,7 @@ static inline void bw_iir2_reset_multi(
 					bw_iir2_reset(x_0[i], &v_y, &v_s1, s2_0 + i, b0, b1, b2, a1, a2);
 				}
 			else
-				; // no need to do anything
+				{} // no need to do anything
 		}
 	}
 }
@@ -625,7 +625,7 @@ static inline void bw_iir2_coeffs_ls2_lin(
 	BW_IIR2_COEFFS_COMMON
 	const float k6 = k3 * (dc_gain_lin - sg);
 	const float k7 = Q * (k6 + k1);
-	const float k8 = k4 * sg
+	const float k8 = k4 * sg;
 	*b0 = d * (k7 + k8);
 	*b1 = d * (Q + Q) * (k6 - k1);
 	*b2 = d * (k7 - k8);
