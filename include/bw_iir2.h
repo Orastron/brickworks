@@ -137,6 +137,7 @@ static inline void bw_iir2_coeffs_ap2(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
@@ -152,6 +153,7 @@ static inline void bw_iir2_coeffs_bp2(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
@@ -167,6 +169,7 @@ static inline void bw_iir2_coeffs_hp2(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
@@ -182,6 +185,7 @@ static inline void bw_iir2_coeffs_hs2_lin(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               high_gain_lin,
 	float * BW_RESTRICT b0,
@@ -198,6 +202,7 @@ static inline void bw_iir2_coeffs_hs2_dB(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               high_gain_dB,
 	float * BW_RESTRICT b0,
@@ -214,6 +219,7 @@ static inline void bw_iir2_coeffs_lp2(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
@@ -229,6 +235,7 @@ static inline void bw_iir2_coeffs_ls2_lin(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               dc_gain_lin,
 	float * BW_RESTRICT b0,
@@ -245,6 +252,7 @@ static inline void bw_iir2_coeffs_ls2_dB(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               dc_gain_dB,
 	float * BW_RESTRICT b0,
@@ -261,6 +269,7 @@ static inline void bw_iir2_coeffs_mm2(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               coeff_x,
 	float               coeff_lp,
@@ -280,6 +289,7 @@ static inline void bw_iir2_coeffs_notch(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
@@ -295,6 +305,7 @@ static inline void bw_iir2_coeffs_peak_lin(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               peak_gain_lin,
 	float * BW_RESTRICT b0,
@@ -311,6 +322,7 @@ static inline void bw_iir2_coeffs_peak_dB(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               peak_gain_dB,
 	float * BW_RESTRICT b0,
@@ -327,6 +339,7 @@ static inline void bw_iir2_coeffs_peak_lin_bw(
 	float               sample_rate,
 	float               cutoff,
 	float               bandwidth,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               peak_gain_lin,
 	float * BW_RESTRICT b0,
@@ -343,6 +356,7 @@ static inline void bw_iir2_coeffs_peak_dB_bw(
 	float               sample_rate,
 	float               cutoff,
 	float               bandwidth,
+	char                prewarp_at_cutoff,
 	float               prewarp_freq,
 	float               peak_gain_dB,
 	float * BW_RESTRICT b0,
@@ -496,6 +510,7 @@ static inline void bw_iir2_process_multi(
 }
 
 #define BW_IIR2_COEFFS_COMMON \
+	prewarp_freq = prewarp_at_cutoff ? cutoff : prewarp_freq; \
 	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate)); \
 	const float k1 = prewarp_freq * prewarp_freq; \
 	const float k2 = t * cutoff; \
@@ -510,6 +525,7 @@ static inline void bw_iir2_coeffs_ap2(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
@@ -526,6 +542,7 @@ static inline void bw_iir2_coeffs_bp2(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
@@ -542,6 +559,7 @@ static inline void bw_iir2_coeffs_hp2(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
@@ -558,6 +576,7 @@ static inline void bw_iir2_coeffs_hs2_lin(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               high_gain_lin,
 		float * BW_RESTRICT b0,
@@ -582,6 +601,7 @@ static inline void bw_iir2_coeffs_hs2_dB(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               high_gain_dB,
 		float * BW_RESTRICT b0,
@@ -589,13 +609,14 @@ static inline void bw_iir2_coeffs_hs2_dB(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_hs2_lin(sample_rate, cutoff, Q, prewarp_freq, bw_dB2linf(high_gain_dB), b0, b1, b2, a1, a2);
+	bw_iir2_coeffs_hs2_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(high_gain_dB), b0, b1, b2, a1, a2);
 }
 
 static inline void bw_iir2_coeffs_lp2(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
@@ -612,6 +633,7 @@ static inline void bw_iir2_coeffs_ls2_lin(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               dc_gain_lin,
 		float * BW_RESTRICT b0,
@@ -635,6 +657,7 @@ static inline void bw_iir2_coeffs_ls2_dB(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               dc_gain_dB,
 		float * BW_RESTRICT b0,
@@ -642,13 +665,14 @@ static inline void bw_iir2_coeffs_ls2_dB(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_ls2_lin(sample_rate, cutoff, Q, prewarp_freq, bw_dB2linf(dc_gain_dB), b0, b1, b2, a1, a2);
+	bw_iir2_coeffs_ls2_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(dc_gain_dB), b0, b1, b2, a1, a2);
 }
 
 static inline void bw_iir2_coeffs_mm2(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               coeff_x,
 		float               coeff_lp,
@@ -673,6 +697,7 @@ static inline void bw_iir2_coeffs_notch(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
@@ -689,6 +714,7 @@ static inline void bw_iir2_coeffs_peak_lin(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               peak_gain_lin,
 		float * BW_RESTRICT b0,
@@ -708,6 +734,7 @@ static inline void bw_iir2_coeffs_peak_dB(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               peak_gain_dB,
 		float * BW_RESTRICT b0,
@@ -715,13 +742,14 @@ static inline void bw_iir2_coeffs_peak_dB(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_peak_lin(sample_rate, cutoff, Q, prewarp_freq, bw_dB2linf(peak_gain_dB), b0, b1, b2, a1, a2);
+	bw_iir2_coeffs_peak_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(peak_gain_dB), b0, b1, b2, a1, a2);
 }
 
 static inline void bw_iir2_coeffs_peak_lin_bw(
 		float               sample_rate,
 		float               cutoff,
 		float               bandwidth,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               peak_gain_lin,
 		float * BW_RESTRICT b0,
@@ -731,13 +759,14 @@ static inline void bw_iir2_coeffs_peak_lin_bw(
 		float * BW_RESTRICT a2) {
 	const float k6 = bw_pow2f(bandwidth);
 	const float Q = bw_sqrtf(k6 * peak_gain_lin) * bw_rcpf(k6 - 1.f);
-	bw_iir2_coeffs_peak_lin(sample_rate, cutoff, Q, prewarp_freq, peak_gain_lin, b0, b1, b2, a1, a2);
+	bw_iir2_coeffs_peak_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, peak_gain_lin, b0, b1, b2, a1, a2);
 }
 
 static inline void bw_iir2_coeffs_peak_dB_bw(
 		float               sample_rate,
 		float               cutoff,
 		float               bandwidth,
+		char                prewarp_at_cutoff,
 		float               prewarp_freq,
 		float               peak_gain_dB,
 		float * BW_RESTRICT b0,
@@ -745,7 +774,7 @@ static inline void bw_iir2_coeffs_peak_dB_bw(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_peak_lin_bw(sample_rate, cutoff, bandwidth, prewarp_freq, bw_dB2linf(peak_gain_dB), b0, b1, b2, a1, a2);
+	bw_iir2_coeffs_peak_lin_bw(sample_rate, cutoff, bandwidth, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(peak_gain_dB), b0, b1, b2, a1, a2);
 }
 
 #undef BW_IIR2_COEFFS_COMMON

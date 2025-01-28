@@ -54,7 +54,7 @@ void impl_set_sample_rate(impl handle, float sample_rate) {
 
 void impl_reset(impl handle) {
 	plugin *instance = reinterpret_cast<plugin *>(handle);
-	bw_iir1_coeffs_mm1(instance->sample_rate, instance->cutoff, instance->cutoff, instance->coeff_x, instance->coeff_lp, &instance->b0, &instance->b1, &instance->a1);
+	bw_iir1_coeffs_mm1(instance->sample_rate, instance->cutoff, 1, instance->cutoff, instance->coeff_x, instance->coeff_lp, &instance->b0, &instance->b1, &instance->a1);
 	float x0[1] = { 0.f };
 	iir1Reset<1>(x0, BW_NULL, &instance->s, instance->b0, instance->b1, instance->a1);
 	instance->to_reset = 0;

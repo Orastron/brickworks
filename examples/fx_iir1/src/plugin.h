@@ -57,7 +57,7 @@ static void plugin_mem_set(plugin *instance, void *mem) {
 }
 
 static void plugin_reset(plugin *instance) {
-	bw_iir1_coeffs_mm1(instance->sample_rate, instance->cutoff, instance->cutoff, instance->coeff_x, instance->coeff_lp, &instance->b0, &instance->b1, &instance->a1);
+	bw_iir1_coeffs_mm1(instance->sample_rate, instance->cutoff, 1, instance->cutoff, instance->coeff_x, instance->coeff_lp, &instance->b0, &instance->b1, &instance->a1);
 	float y;
 	bw_iir1_reset(0.f, &y, &instance->s, instance->b0, instance->b1, instance->a1);
 	instance->to_reset = 0;
