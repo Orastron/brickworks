@@ -532,7 +532,7 @@ inline void iir1Reset(
 		float                                       b0,
 		float                                       b1,
 		float                                       a1) {
-	iir1Reset<N_CHANNELS>(x0.data(), y0 != nullptr ? y0.data() : nullptr, s0 != nullptr ? s0.data() : nullptr, b0, b1, a1);
+	iir1Reset<N_CHANNELS>(x0.data(), y0 != BW_NULL ? y0.data() : BW_NULL, s0 != BW_NULL ? s0.data() : BW_NULL, b0, b1, a1);
 }
 # endif
 

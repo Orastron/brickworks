@@ -883,7 +883,7 @@ inline void iir2Reset(
 		float                                       b2,
 		float                                       a1,
 		float                                       a2) {
-	iir2Reset<N_CHANNELS>(x0.data(), y0 != nullptr ? y0.data() : nullptr, s10 != nullptr ? s10.data() : nullptr, s20 != nullptr ? s20.data() : nullptr, b0, b1, b2, a1, a2);
+	iir2Reset<N_CHANNELS>(x0.data(), y0 != BW_NULL ? y0.data() : BW_NULL, s10 != BW_NULL ? s10.data() : BW_NULL, s20 != BW_NULL ? s20.data() : BW_NULL, b0, b1, b2, a1, a2);
 }
 # endif
 

@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,19 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_env_follow bw_math bw_one_pole }}}
  *  description {{{
  *    Noise gate with independent sidechain input.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Now using <code>BW_NULL</code> in the C++ API and
+ *              implementation.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
@@ -841,7 +847,7 @@ public:
 	void reset(
 		float               x0 = 0.f,
 		float               xSc0 = 0.f,
-		float * BW_RESTRICT y0 = nullptr);
+		float * BW_RESTRICT y0 = BW_NULL);
 
 # ifndef BW_CXX_NO_ARRAY
 	void reset(
@@ -853,13 +859,13 @@ public:
 	void reset(
 		const float * x0,
 		const float * xSc0,
-		float *       y0 = nullptr);
+		float *       y0 = BW_NULL);
 
 # ifndef BW_CXX_NO_ARRAY
 	void reset(
 		std::array<float, N_CHANNELS>               x0,
 		std::array<float, N_CHANNELS>               xSc0,
-		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = nullptr);
+		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = BW_NULL);
 # endif
 
 	void process(
@@ -933,7 +939,7 @@ inline void NoiseGate<N_CHANNELS>::reset(
 		float               xSc0,
 		float * BW_RESTRICT y0) {
 	bw_noise_gate_reset_coeffs(&coeffs);
-	if (y0 != nullptr)
+	if (y0 != BW_NULL)
 		for (size_t i = 0; i < N_CHANNELS; i++)
 			y0[i] = bw_noise_gate_reset_state(&coeffs, states + i, x0, xSc0);
 	else
@@ -947,7 +953,7 @@ inline void NoiseGate<N_CHANNELS>::reset(
 		float                                       x0,
 		float                                       xSc0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
-	reset(x0, xSc0, y0 != nullptr ? y0->data() : nullptr);
+	reset(x0, xSc0, y0 != BW_NULL ? y0->data() : BW_NULL);
 }
 # endif
 
@@ -966,7 +972,7 @@ inline void NoiseGate<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS>               x0,
 		std::array<float, N_CHANNELS>               xSc0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
-	reset(x0.data(), xSc0.data(), y0 != nullptr ? y0->data() : nullptr);
+	reset(x0.data(), xSc0.data(), y0 != BW_NULL ? y0->data() : BW_NULL);
 }
 # endif
 

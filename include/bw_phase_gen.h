@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Phase generator with portamento and exponential frequency modulation.
@@ -29,6 +29,12 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Now using <code>BW_NULL</code> in the C++ API and
+ *              implementation.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added phase_inc_min and phase_inc_max parameters.</li>
@@ -1069,8 +1075,8 @@ public:
 
 	void reset(
 		float               phase0 = 0.f,
-		float * BW_RESTRICT y0 = nullptr,
-		float * BW_RESTRICT yInc0 = nullptr);
+		float * BW_RESTRICT y0 = BW_NULL,
+		float * BW_RESTRICT yInc0 = BW_NULL);
 
 # ifndef BW_CXX_NO_ARRAY
 	void reset(
@@ -1081,14 +1087,14 @@ public:
 
 	void reset(
 		const float * phase0,
-		float *       y0 = nullptr,
-		float *       yInc0 = nullptr);
+		float *       y0 = BW_NULL,
+		float *       yInc0 = BW_NULL);
 
 # ifndef BW_CXX_NO_ARRAY
 	void reset(
 		std::array<float, N_CHANNELS>               phase0,
-		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = nullptr,
-		std::array<float, N_CHANNELS> * BW_RESTRICT yInc0 = nullptr);
+		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = BW_NULL,
+		std::array<float, N_CHANNELS> * BW_RESTRICT yInc0 = BW_NULL);
 # endif
 
 	void process(
@@ -1151,8 +1157,8 @@ inline void PhaseGen<N_CHANNELS>::reset(
 		float * BW_RESTRICT y0,
 		float * BW_RESTRICT yInc0) {
 	bw_phase_gen_reset_coeffs(&coeffs);
-	if (y0 != nullptr) {
-		if (yInc0 != nullptr) {
+	if (y0 != BW_NULL) {
+		if (yInc0 != BW_NULL) {
 			for (size_t i = 0; i < N_CHANNELS; i++)
 				bw_phase_gen_reset_state(&coeffs, states + i, phase0, y0 + i, yInc0 + i);
 		} else {
@@ -1162,7 +1168,7 @@ inline void PhaseGen<N_CHANNELS>::reset(
 			}
 		}
 	} else {
-		if (yInc0 != nullptr) {
+		if (yInc0 != BW_NULL) {
 			for (size_t i = 0; i < N_CHANNELS; i++) {
 				float v;
 				bw_phase_gen_reset_state(&coeffs, states + i, phase0, &v, yInc0 + i);
@@ -1182,7 +1188,7 @@ inline void PhaseGen<N_CHANNELS>::reset(
 		float                                       phase0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yInc0) {
-	reset(phase0, y0 != nullptr ? y0->data() : nullptr, yInc0 != nullptr ? yInc0->data() : nullptr);
+	reset(phase0, y0 != BW_NULL ? y0->data() : BW_NULL, yInc0 != BW_NULL ? yInc0->data() : BW_NULL);
 }
 # endif
 
@@ -1201,7 +1207,7 @@ inline void PhaseGen<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS>               phase0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT yInc0) {
-	reset(phase0.data(), y0 != nullptr ? y0->data() : nullptr, yInc0 != nullptr ? yInc0->data() : nullptr);
+	reset(phase0.data(), y0 != BW_NULL ? y0->data() : BW_NULL, yInc0 != BW_NULL ? yInc0->data() : BW_NULL);
 }
 # endif
 

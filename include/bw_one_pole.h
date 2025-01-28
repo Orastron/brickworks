@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@
  *    <ul>
  *      <li>Verison <strong>1.2.1</strong>:
  *        <ul>
+ *          <li>Now using <code>BW_NULL</code> in the C++ API and
+ *              implementation.</li>
  *          <li>Fixed typo in the documentation of
  *              <code>bw_one_pole_get_sticky_mode()</code>.</li>
  *        </ul>
@@ -1315,7 +1317,7 @@ public:
 
 	void reset(
 		float               x0 = 0.f,
-		float * BW_RESTRICT y0 = nullptr);
+		float * BW_RESTRICT y0 = BW_NULL);
 
 # ifndef BW_CXX_NO_ARRAY
 	void reset(
@@ -1325,12 +1327,12 @@ public:
 
 	void reset(
 		const float * x0,
-		float *       y0 = nullptr);
+		float *       y0 = BW_NULL);
 
 # ifndef BW_CXX_NO_ARRAY
 	void reset(
 		std::array<float, N_CHANNELS>               x0,
-		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = nullptr);
+		std::array<float, N_CHANNELS> * BW_RESTRICT y0 = BW_NULL);
 # endif
 
 	void process(
@@ -1409,7 +1411,7 @@ inline void OnePole<N_CHANNELS>::reset(
 		float               x0,
 		float * BW_RESTRICT y0) {
 	bw_one_pole_reset_coeffs(&coeffs);
-	if (y0 != nullptr)
+	if (y0 != BW_NULL)
 		for (size_t i = 0; i < N_CHANNELS; i++)
 			y0[i] = bw_one_pole_reset_state(&coeffs, states + i, x0);
 	else
@@ -1422,7 +1424,7 @@ template<size_t N_CHANNELS>
 inline void OnePole<N_CHANNELS>::reset(
 		float                                       x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
-	reset(x0, y0 != nullptr ? y0->data() : nullptr);
+	reset(x0, y0 != BW_NULL ? y0->data() : BW_NULL);
 }
 # endif
 
@@ -1439,7 +1441,7 @@ template<size_t N_CHANNELS>
 inline void OnePole<N_CHANNELS>::reset(
 		std::array<float, N_CHANNELS>               x0,
 		std::array<float, N_CHANNELS> * BW_RESTRICT y0) {
-	reset(x0.data(), y0 != nullptr ? y0->data() : nullptr);
+	reset(x0.data(), y0 != BW_NULL ? y0->data() : BW_NULL);
 }
 # endif
 
