@@ -317,6 +317,12 @@ static inline void bw_iir1_process_multi(
 			bw_iir1_process1(x[j][i], y[j] + i, s + j, b0, b1, a1);
 }
 
+#define BW_IIR1_COEFFS_COMMON \
+	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate)); \
+	const float k = t * cutoff; \
+	const float d = bw_rcpf(k + prewarp_freq); \
+	*a1 = d * (k - prewarp_freq);
+
 static inline void bw_iir1_coeffs_ap1(
 		float               sample_rate,
 		float               cutoff,
@@ -324,10 +330,7 @@ static inline void bw_iir1_coeffs_ap1(
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
-	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate));
-	const float k = t * cutoff;
-	const float d = bw_rcpf(k + prewarp_freq);
-	*a1 = d * (k - prewarp_freq);
+	BW_IIR1_COEFFS_COMMON
 	*b0 = *a1;
 	*b1 = 1.f;
 }
@@ -339,10 +342,7 @@ static inline void bw_iir1_coeffs_hp1(
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
-	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate));
-	const float k = t * cutoff;
-	const float d = bw_rcpf(k + prewarp_freq);
-	*a1 = d * (k - prewarp_freq);
+	BW_IIR1_COEFFS_COMMON
 	*b0 = d * prewarp_freq;
 	*b1 = -*b0;
 }
@@ -355,11 +355,9 @@ static inline void bw_iir1_coeffs_hs1_lin(
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
-	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate));
-	const float k = t * cutoff;
-	const float d = bw_rcpf(k + prewarp_freq);
+	cutoff = cutoff * bw_sqrtf(high_gain_lin);
+	BW_IIR1_COEFFS_COMMON
 	const float k2 = high_gain_lin * prewarp_freq;
-	*a1 = d * (k - prewarp_freq);
 	*b0 = d * (k + k2);
 	*b1 = d * (k - k2);
 }
@@ -382,10 +380,7 @@ static inline void bw_iir1_coeffs_lp1(
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
-	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate));
-	const float k = t * cutoff;
-	const float d = bw_rcpf(k + prewarp_freq);
-	*a1 = d * (k - prewarp_freq);
+	BW_IIR1_COEFFS_COMMON
 	*b0 = d * k;
 	*b1 = *b0;
 }
@@ -398,11 +393,9 @@ static inline void bw_iir1_coeffs_ls1_lin(
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
-	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate));
-	const float k = t * cutoff;
-	const float d = bw_rcpf(k + prewarp_freq);
+	cutoff = cutoff * bw_rcpf(bw_sqrtf(dc_gain_lin));
+	BW_IIR1_COEFFS_COMMON
 	const float k2 = dc_gain_lin * k;
-	*a1 = d * (k - prewarp_freq);
 	*b0 = d * (k2 + prewarp_freq);
 	*b1 = d * (k2 - prewarp_freq);
 }
@@ -427,15 +420,14 @@ static inline void bw_iir1_coeffs_mm1(
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT a1) {
-	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate));
-	const float k = t * cutoff;
-	const float d = bw_rcpf(k + prewarp_freq);
+	BW_IIR1_COEFFS_COMMON
 	const float k2 = coeff_x * prewarp_freq;
 	const float k3 = coeff_lp * k;
-	*a1 = d * (k - prewarp_freq);
 	*b0 = d * (k3 + k2);
 	*b1 = d * (k3 - k2);
 }
+
+#undef BW_IIR1_COEFFS_COMMON
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
@@ -451,8 +443,6 @@ namespace Brickworks {
 
 /*** Public C++ API ***/
 
-//XXX
-
 /*! api_cpp {{{
  *    ##### Brickworks::iir1Reset
  *  ```>>> */
@@ -460,7 +450,7 @@ template<size_t N_CHANNELS>
 void iir1Reset(
 	const float *       x0,
 	float *             y0,
-	float * BW_RESTRICT s0, 
+	float * BW_RESTRICT s0,
 	float               b0,
 	float               b1,
 	float               a1);
