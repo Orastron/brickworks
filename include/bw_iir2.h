@@ -179,32 +179,16 @@ static inline void bw_iir2_coeffs_hp2(
 /*! <<<```
  *    XXX
  *
- *    #### bw_iir2_coeffs_hs2_lin()
+ *    #### bw_iir2_coeffs_hs2()
  *  ```>>> */
-static inline void bw_iir2_coeffs_hs2_lin(
+static inline void bw_iir2_coeffs_hs2(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
 	char                prewarp_at_cutoff,
 	float               prewarp_freq,
-	float               high_gain_lin,
-	float * BW_RESTRICT b0,
-	float * BW_RESTRICT b1,
-	float * BW_RESTRICT b2,
-	float * BW_RESTRICT a1,
-	float * BW_RESTRICT a2);
-/*! <<<```
- *    XXX
- *
- *    #### bw_iir2_coeffs_hs2_dB()
- *  ```>>> */
-static inline void bw_iir2_coeffs_hs2_dB(
-	float               sample_rate,
-	float               cutoff,
-	float               Q,
-	char                prewarp_at_cutoff,
-	float               prewarp_freq,
-	float               high_gain_dB,
+	char                high_gain_dB,
+	float               high_gain,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
 	float * BW_RESTRICT b2,
@@ -229,32 +213,16 @@ static inline void bw_iir2_coeffs_lp2(
 /*! <<<```
  *    XXX
  *
- *    #### bw_iir2_coeffs_ls2_lin()
+ *    #### bw_iir2_coeffs_ls2()
  *  ```>>> */
-static inline void bw_iir2_coeffs_ls2_lin(
+static inline void bw_iir2_coeffs_ls2(
 	float               sample_rate,
 	float               cutoff,
 	float               Q,
 	char                prewarp_at_cutoff,
 	float               prewarp_freq,
-	float               dc_gain_lin,
-	float * BW_RESTRICT b0,
-	float * BW_RESTRICT b1,
-	float * BW_RESTRICT b2,
-	float * BW_RESTRICT a1,
-	float * BW_RESTRICT a2);
-/*! <<<```
- *    XXX
- *
- *    #### bw_iir2_coeffs_ls2_dB()
- *  ```>>> */
-static inline void bw_iir2_coeffs_ls2_dB(
-	float               sample_rate,
-	float               cutoff,
-	float               Q,
-	char                prewarp_at_cutoff,
-	float               prewarp_freq,
-	float               dc_gain_dB,
+	char                dc_gain_dB,
+	float               dc_gain,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
 	float * BW_RESTRICT b2,
@@ -299,66 +267,17 @@ static inline void bw_iir2_coeffs_notch(
 /*! <<<```
  *    XXX
  *
- *    #### bw_iir2_coeffs_peak_lin()
+ *    #### bw_iir2_coeffs_peak()
  *  ```>>> */
-static inline void bw_iir2_coeffs_peak_lin(
+static inline void bw_iir2_coeffs_peak(
 	float               sample_rate,
 	float               cutoff,
-	float               Q,
+	char                use_bandwidth,
+	float               Q_bandwidth,
 	char                prewarp_at_cutoff,
 	float               prewarp_freq,
-	float               peak_gain_lin,
-	float * BW_RESTRICT b0,
-	float * BW_RESTRICT b1,
-	float * BW_RESTRICT b2,
-	float * BW_RESTRICT a1,
-	float * BW_RESTRICT a2);
-/*! <<<```
- *    XXX
- *
- *    #### bw_iir2_coeffs_peak_dB()
- *  ```>>> */
-static inline void bw_iir2_coeffs_peak_dB(
-	float               sample_rate,
-	float               cutoff,
-	float               Q,
-	char                prewarp_at_cutoff,
-	float               prewarp_freq,
-	float               peak_gain_dB,
-	float * BW_RESTRICT b0,
-	float * BW_RESTRICT b1,
-	float * BW_RESTRICT b2,
-	float * BW_RESTRICT a1,
-	float * BW_RESTRICT a2);
-/*! <<<```
- *    XXX
- *
- *    #### bw_iir2_coeffs_peak_lin_bw()
- *  ```>>> */
-static inline void bw_iir2_coeffs_peak_lin_bw(
-	float               sample_rate,
-	float               cutoff,
-	float               bandwidth,
-	char                prewarp_at_cutoff,
-	float               prewarp_freq,
-	float               peak_gain_lin,
-	float * BW_RESTRICT b0,
-	float * BW_RESTRICT b1,
-	float * BW_RESTRICT b2,
-	float * BW_RESTRICT a1,
-	float * BW_RESTRICT a2);
-/*! <<<```
- *    XXX
- *
- *    #### bw_iir2_coeffs_peak_dB_bw()
- *  ```>>> */
-static inline void bw_iir2_coeffs_peak_dB_bw(
-	float               sample_rate,
-	float               cutoff,
-	float               bandwidth,
-	char                prewarp_at_cutoff,
-	float               prewarp_freq,
-	float               peak_gain_dB,
+	char                peak_gain_dB,
+	float               peak_gain,
 	float * BW_RESTRICT b0,
 	float * BW_RESTRICT b1,
 	float * BW_RESTRICT b2,
@@ -387,6 +306,28 @@ static inline void bw_iir2_coeffs_peak_dB_bw(
 extern "C" {
 #endif
 
+static inline void bw_iir2_assert_valid_coeffs(
+		float b0,
+		float b1,
+		float b2,
+		float a1,
+		float a2) {
+#ifndef BW_NO_DEBUG
+	BW_ASSERT(bw_is_finite(b0));
+	BW_ASSERT(bw_is_finite(b1));
+	BW_ASSERT(bw_is_finite(b2));
+	BW_ASSERT(bw_is_finite(a1));
+	BW_ASSERT(bw_is_finite(a2));
+	BW_ASSERT_DEEP(bw_absf(a1) <= 2.f && a2 >= bw_absf(a1) - 1.f && (a2 <= 0.25f * (a1 * a1) || 1.f - 0.25f * (a1 * a1) >= 4.f * (a2 - 0.25f * (a1 * a1)) * (a2 - 0.25f * (a1 * a1))));
+#else
+	(void)b0;
+	(void)b1;
+	(void)b2;
+	(void)a1;
+	(void)a2;
+#endif
+}
+
 static inline void bw_iir2_reset(
 		float               x_0,
 		float * BW_RESTRICT y_0,
@@ -397,12 +338,30 @@ static inline void bw_iir2_reset(
 		float               b2,
 		float               a1,
 		float               a2) {
-	// a1, a2...
-	const float d = bw_rcpf(1.f + a1 + a2);
-	const float k = d * x_0;
-	*y_0 = k * (b0 + b1 + b2);
-	*s1_0 = k * (b1 + b2 - b0 * (a1 + a2));
-	*s2_0 = k * (b2 + b2 * a1 - a2 * (b0 + b1));
+	BW_ASSERT(bw_is_finite(x_0));
+	BW_ASSERT(y_0 != BW_NULL);
+	BW_ASSERT(s1_0 != BW_NULL);
+	BW_ASSERT(s2_0 != BW_NULL);
+	BW_ASSERT(y_0 != s1_0);
+	BW_ASSERT(y_0 != s2_0);
+	BW_ASSERT(s1_0 != s2_0);
+	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+
+	if (a1 + a2 == -1.f) {
+		*y_0 = 0.f;
+		*s1_0 = 0.f;
+		*s2_0 = 0.f;
+	} else {
+		const float d = bw_rcpf(1.f + a1 + a2);
+		const float k = d * x_0;
+		*y_0 = k * (b0 + b1 + b2);
+		*s1_0 = k * (b1 + b2 - b0 * (a1 + a2));
+		*s2_0 = k * (b2 + b2 * a1 - a2 * (b0 + b1));
+	}
+
+	BW_ASSERT(bw_is_finite(*y_0));
+	BW_ASSERT(bw_is_finite(*s1_0));
+	BW_ASSERT(bw_is_finite(*s2_0));
 }
 
 static inline void bw_iir2_reset_multi(
@@ -416,6 +375,15 @@ static inline void bw_iir2_reset_multi(
 		float               a1,
 		float               a2,
 		size_t              n_channels) {
+	BW_ASSERT(x_0 != BW_NULL);
+	BW_ASSERT_DEEP(bw_has_only_finite(x_0, n_channels));
+	BW_ASSERT(s1_0 == BW_NULL || x_0 != s1_0);
+	BW_ASSERT(y_0 == BW_NULL || s1_0 == BW_NULL || y_0 != s1_0);
+	BW_ASSERT(s2_0 == BW_NULL || x_0 != s2_0);
+	BW_ASSERT(y_0 == BW_NULL || s2_0 == BW_NULL || y_0 != s2_0);
+	BW_ASSERT(s1_0 == BW_NULL || s2_0 == BW_NULL || s1_0 != s2_0);
+	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+
 	if (y_0 != BW_NULL) {
 		if (s1_0 != BW_NULL) {
 			if (s2_0 != BW_NULL)
@@ -460,6 +428,10 @@ static inline void bw_iir2_reset_multi(
 				{} // no need to do anything
 		}
 	}
+
+	BW_ASSERT_DEEP(y_0 != BW_NULL ? bw_has_only_finite(y_0, n_channels) : 1);
+	BW_ASSERT_DEEP(s1_0 != BW_NULL ? bw_has_only_finite(s1_0, n_channels) : 1);
+	BW_ASSERT_DEEP(s2_0 != BW_NULL ? bw_has_only_finite(s2_0, n_channels) : 1);
 }
 
 static inline void bw_iir2_process1(
@@ -472,9 +444,24 @@ static inline void bw_iir2_process1(
 		float               b2,
 		float               a1,
 		float               a2) {
+	BW_ASSERT(bw_is_finite(x));
+	BW_ASSERT(y != BW_NULL);
+	BW_ASSERT(s1 != BW_NULL);
+	BW_ASSERT(s2 != BW_NULL);
+	BW_ASSERT(y != s1);
+	BW_ASSERT(y != s2);
+	BW_ASSERT(s1 != s2);
+	BW_ASSERT(bw_is_finite(*s1));
+	BW_ASSERT(bw_is_finite(*s2));
+	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+
 	*y = b0 * x + *s1;
 	*s1 = b1 * x - a1 * *y + *s2;
 	*s2 = b2 * x - a2 * *y;
+
+	BW_ASSERT(bw_is_finite(*y));
+	BW_ASSERT(bw_is_finite(*s1));
+	BW_ASSERT(bw_is_finite(*s2));
 }
 
 static inline void bw_iir2_process(
@@ -488,8 +475,26 @@ static inline void bw_iir2_process(
 		float               a1,
 		float               a2,
 		size_t              n_samples) {
+	BW_ASSERT(x != BW_NULL);
+	BW_ASSERT_DEEP(bw_has_only_finite(x, n_channels));
+	BW_ASSERT(y != BW_NULL);
+	BW_ASSERT(s1 != BW_NULL);
+	BW_ASSERT(s2 != BW_NULL);
+	BW_ASSERT(x != s1);
+	BW_ASSERT(y != s1);
+	BW_ASSERT(x != s2);
+	BW_ASSERT(y != s2);
+	BW_ASSERT(s1 != s2);
+	BW_ASSERT(bw_is_finite(*s1));
+	BW_ASSERT(bw_is_finite(*s2));
+	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+
 	for (size_t i = 0; i < n_samples; i++)
 		bw_iir2_process1(x[i], y + i, s1, s2, b0, b1, b2, a1, a2);
+
+	BW_ASSERT_DEEP(bw_has_only_finite(y, n_channels));
+	BW_ASSERT(bw_is_finite(*s1));
+	BW_ASSERT(bw_is_finite(*s2));
 }
 
 static inline void bw_iir2_process_multi(
@@ -504,9 +509,41 @@ static inline void bw_iir2_process_multi(
 		float                 a2,
 		size_t                n_channels,
 		size_t                n_samples) {
+	BW_ASSERT(x != BW_NULL);
+	BW_ASSERT(y != BW_NULL);
+	BW_ASSERT(s1 != BW_NULL);
+	BW_ASSERT(s2 != BW_NULL);
+	BW_ASSERT(s1 != s2);
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(x[i] != BW_NULL);
+		BW_ASSERT_DEEP(bw_has_only_finite(x[i], n_samples));
+		BW_ASSERT(y[i] != BW_NULL);
+	}
+	for (size_t i = 0; i < n_channels; i++)
+		for (size_t j = i + 1; j < n_channels; j++)
+			BW_ASSERT(y[i] != y[j]);
+	for (size_t i = 0; i < n_channels; i++)
+		for (size_t j = 0; j < n_channels; j++)
+			BW_ASSERT(i == j || x[i] != y[j]);
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT(bw_is_finite(s1[i]));
+		BW_ASSERT(bw_is_finite(s2[i]));
+	}
+#endif
+	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+
 	for (size_t i = 0; i < n_samples; i++)
 		for (size_t j = 0; j < n_channels; j++)
 			bw_iir2_process1(x[j][i], y[j] + i, s1 + j, s2 + j, b0, b1, b2, a1, a2);
+
+#ifndef BW_NO_DEBUG
+	for (size_t i = 0; i < n_channels; i++) {
+		BW_ASSERT_DEEP(bw_has_only_finite(y[i], n_samples));
+		BW_ASSERT(bw_is_finite(s1[i]));
+		BW_ASSERT(bw_is_finite(s2[i]));
+	}
+#endif
 }
 
 #define BW_IIR2_COEFFS_COMMON \
@@ -521,6 +558,47 @@ static inline void bw_iir2_process_multi(
 	*a1 = d * (Q + Q) * (k3 - k1); \
 	*a2 = d * (k5 - k4);
 
+static inline void bw_iir2_assert_valid_params(
+		float sample_rate,
+		float cutoff,
+		float Q,
+		char prewarp_at_cutoff,
+		float prewarp_freq) {
+#ifndef BW_NO_DEBUG
+	BW_ASSERT(bw_is_finite(sample_rate));
+	BW_ASSERT(sample_rate > 0.f);
+	BW_ASSERT(bw_is_finite(cutoff));
+	BW_ASSERT(cutoff >= 1e-6f && cutoff <= 1e12f);
+	BW_ASSERT(bw_is_finite(Q));
+	BW_ASSERT(Q >= 1e-6f && Q <= 1e6f);
+	BW_ASSERT(prewarp_at_cutoff ? bw_is_finite(prewarp_freq) : 1);
+	BW_ASSERT(prewarp_at_cutoff ? prewarp_freq >= 1e-6f && prewarp_freq <= 1e12f : 1);
+#else
+	(void)sample_rate;
+	(void)cutoff;
+	(void)Q;
+	(void)prewarp_at_cutoff;
+	(void)prewarp_freq;
+#endif
+}
+
+#define BW_IIR2_ASSERT_VALID_COEFF_PTRS \
+	BW_ASSERT(b0 != BW_NULL); \
+	BW_ASSERT(b1 != BW_NULL); \
+	BW_ASSERT(b2 != BW_NULL); \
+	BW_ASSERT(a1 != BW_NULL); \
+	BW_ASSERT(a2 != BW_NULL); \
+	BW_ASSERT(b0 != b1); \
+	BW_ASSERT(b0 != b2); \
+	BW_ASSERT(b1 != b2); \
+	BW_ASSERT(b0 != a1); \
+	BW_ASSERT(b1 != a1); \
+	BW_ASSERT(b2 != a1); \
+	BW_ASSERT(b0 != a2); \
+	BW_ASSERT(b1 != a2); \
+	BW_ASSERT(b2 != a2); \
+	BW_ASSERT(a1 != a2);
+
 static inline void bw_iir2_coeffs_ap2(
 		float               sample_rate,
 		float               cutoff,
@@ -532,10 +610,15 @@ static inline void bw_iir2_coeffs_ap2(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+
 	BW_IIR2_COEFFS_COMMON
 	*b0 = *a2;
 	*b1 = *a1;
 	*b2 = 1.f;
+
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
 static inline void bw_iir2_coeffs_bp2(
@@ -549,10 +632,15 @@ static inline void bw_iir2_coeffs_bp2(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+
 	BW_IIR2_COEFFS_COMMON
 	*b0 = Q * k4;
 	*b1 = 0.f;
 	*b2 = -*b0;
+
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
 static inline void bw_iir2_coeffs_hp2(
@@ -566,50 +654,52 @@ static inline void bw_iir2_coeffs_hp2(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+
 	BW_IIR2_COEFFS_COMMON
 	*b0 = Q * k1;
 	*b1 = -(*b0 + *b0);
 	*b2 = *b0;
+
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
-static inline void bw_iir2_coeffs_hs2_lin(
+static inline void bw_iir2_coeffs_hs2(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
 		char                prewarp_at_cutoff,
 		float               prewarp_freq,
-		float               high_gain_lin,
+		char                high_gain_dB,
+		float               high_gain,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
-	const float sg = bw_sqrtf(high_gain_lin);
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+	BW_ASSERT(bw_is_finite(high_gain));
+	BW_ASSERT(high_gain_dB ? high_gain >= -600.f && high_gain <= 600.f : high_gain >= 1e-30f && high_gain <= 1e30f);
+
+	high_gain = high_gain_dB ? bw_dB2linf(high_gain) : high_gain;
+
+	BW_ASSERT_DEEP(cutoff * bw_sqrt(bw_sqrtf(high_gain)) >= 1e-6f && cutoff * bw_sqrt(bw_sqrtf(high_gain)) <= 1e12f);
+
+	const float sg = bw_sqrtf(high_gain);
 	const float ssg = bw_sqrtf(sg);
 	cutoff = cutoff * ssg;
 	BW_IIR2_COEFFS_COMMON
-	const float k6 = k1 * high_gain_lin;
+	const float k6 = k1 * high_gain;
 	const float k7 = k3 - k3 * sg;
 	const float k8 = Q * (k7 + k6);
 	const float k9 = k4 * sg;
 	*b0 = d * (k8 + k9);
 	*b1 = d * (Q + Q) * (k7 - k6);
 	*b2 = d * (k8 - k9);
-}
 
-static inline void bw_iir2_coeffs_hs2_dB(
-		float               sample_rate,
-		float               cutoff,
-		float               Q,
-		char                prewarp_at_cutoff,
-		float               prewarp_freq,
-		float               high_gain_dB,
-		float * BW_RESTRICT b0,
-		float * BW_RESTRICT b1,
-		float * BW_RESTRICT b2,
-		float * BW_RESTRICT a1,
-		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_hs2_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(high_gain_dB), b0, b1, b2, a1, a2);
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
 static inline void bw_iir2_coeffs_lp2(
@@ -623,49 +713,51 @@ static inline void bw_iir2_coeffs_lp2(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+
 	BW_IIR2_COEFFS_COMMON
 	*b0 = Q * k3;
 	*b1 = *b0 + *b0;
 	*b2 = *b0;
+
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
-static inline void bw_iir2_coeffs_ls2_lin(
+static inline void bw_iir2_coeffs_ls2(
 		float               sample_rate,
 		float               cutoff,
 		float               Q,
 		char                prewarp_at_cutoff,
 		float               prewarp_freq,
-		float               dc_gain_lin,
+		char                dc_gain_dB,
+		float               dc_gain,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
-	const float sg = bw_sqrtf(dc_gain_lin);
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+	BW_ASSERT(bw_is_finite(dc_gain));
+	BW_ASSERT(dc_gain_dB ? dc_gain >= -600.f && dc_gain <= 600.f : dc_gain >= 1e-30f && dc_gain <= 1e30f);
+
+	dc_gain = dc_gain_dB ? bw_dB2linf(dc_gain) : dc_gain;
+
+	BW_ASSERT_DEEP(cutoff * bw_rcpf(bw_sqrt(bw_sqrtf(dc_gain))) >= 1e-6f && cutoff * bw_rcpf(bw_sqrt(bw_sqrtf(dc_gain))) <= 1e12f);
+
+	const float sg = bw_sqrtf(dc_gain);
 	const float issg = bw_rcpf(bw_sqrtf(sg));
 	cutoff = cutoff * issg;
 	BW_IIR2_COEFFS_COMMON
-	const float k6 = k3 * (dc_gain_lin - sg);
+	const float k6 = k3 * (dc_gain - sg);
 	const float k7 = Q * (k6 + k1);
 	const float k8 = k4 * sg;
 	*b0 = d * (k7 + k8);
 	*b1 = d * (Q + Q) * (k6 - k1);
 	*b2 = d * (k7 - k8);
-}
 
-static inline void bw_iir2_coeffs_ls2_dB(
-		float               sample_rate,
-		float               cutoff,
-		float               Q,
-		char                prewarp_at_cutoff,
-		float               prewarp_freq,
-		float               dc_gain_dB,
-		float * BW_RESTRICT b0,
-		float * BW_RESTRICT b1,
-		float * BW_RESTRICT b2,
-		float * BW_RESTRICT a1,
-		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_ls2_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(dc_gain_dB), b0, b1, b2, a1, a2);
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
 static inline void bw_iir2_coeffs_mm2(
@@ -683,6 +775,9 @@ static inline void bw_iir2_coeffs_mm2(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+
 	BW_IIR2_COEFFS_COMMON
 	const float k6 = k3 * (coeff_lp + coeff_x);
 	const float k7 = k1 * (coeff_hp + coeff_x);
@@ -691,6 +786,8 @@ static inline void bw_iir2_coeffs_mm2(
 	*b0 = d * (k9 + k8);
 	*b1 = d * (Q + Q) * (k6 - k7);
 	*b2 = d * (k9 - k8);
+
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
 static inline void bw_iir2_coeffs_notch(
@@ -704,77 +801,55 @@ static inline void bw_iir2_coeffs_notch(
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+
 	BW_IIR2_COEFFS_COMMON
 	*b0 = d * k5;
 	*b1 = *a1;
 	*b2 = *b0;
+
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
-static inline void bw_iir2_coeffs_peak_lin(
+static inline void bw_iir2_coeffs_peak(
 		float               sample_rate,
 		float               cutoff,
-		float               Q,
+		char                use_bandwidth,
+		float               Q_bandwidth,
 		char                prewarp_at_cutoff,
 		float               prewarp_freq,
-		float               peak_gain_lin,
+		char                peak_gain_dB,
+		float               peak_gain,
 		float * BW_RESTRICT b0,
 		float * BW_RESTRICT b1,
 		float * BW_RESTRICT b2,
 		float * BW_RESTRICT a1,
 		float * BW_RESTRICT a2) {
+	BW_ASSERT(bw_is_finite(Q_bandwidth));
+	BW_ASSERT(use_bandwidth ? Q_bandwidth >= 1e-6f && Q_bandwidth <= 90.f : 1);
+	BW_ASSERT(bw_is_finite(peak_gain));
+	BW_ASSERT(peak_gain_dB ? peak_gain >= -600.f && peak_gain <= 600.f : peak_gain >= 1e-30f && peak_gain <= 1e30f);
+
+	peak_gain = peak_gain_dB ? bw_dB2linf(peak_gain) : peak_gain;
+	float Q;
+	if (use_bandwidth) {
+		const float k6 = bw_pow2f(Q_bandwidth);
+		Q = bw_sqrtf(k6 * peak_gain) * bw_rcpf(k6 - 1.f);
+	} else
+		Q = Q_bandwidth;
+
+	bw_iir2_assert_valid_params(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq);
+	BW_IIR2_ASSERT_VALID_COEFF_PTRS
+
 	BW_IIR2_COEFFS_COMMON
 	const float k6 = Q * (k1 + k3);
-	const float k7 = k4 * peak_gain_lin;
+	const float k7 = k4 * peak_gain;
 	*b0 = d * (k6 + k7);
 	*b1 = *a1;
 	*b2 = d * (k6 - k7);
-}
 
-static inline void bw_iir2_coeffs_peak_dB(
-		float               sample_rate,
-		float               cutoff,
-		float               Q,
-		char                prewarp_at_cutoff,
-		float               prewarp_freq,
-		float               peak_gain_dB,
-		float * BW_RESTRICT b0,
-		float * BW_RESTRICT b1,
-		float * BW_RESTRICT b2,
-		float * BW_RESTRICT a1,
-		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_peak_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(peak_gain_dB), b0, b1, b2, a1, a2);
-}
-
-static inline void bw_iir2_coeffs_peak_lin_bw(
-		float               sample_rate,
-		float               cutoff,
-		float               bandwidth,
-		char                prewarp_at_cutoff,
-		float               prewarp_freq,
-		float               peak_gain_lin,
-		float * BW_RESTRICT b0,
-		float * BW_RESTRICT b1,
-		float * BW_RESTRICT b2,
-		float * BW_RESTRICT a1,
-		float * BW_RESTRICT a2) {
-	const float k6 = bw_pow2f(bandwidth);
-	const float Q = bw_sqrtf(k6 * peak_gain_lin) * bw_rcpf(k6 - 1.f);
-	bw_iir2_coeffs_peak_lin(sample_rate, cutoff, Q, prewarp_at_cutoff, prewarp_freq, peak_gain_lin, b0, b1, b2, a1, a2);
-}
-
-static inline void bw_iir2_coeffs_peak_dB_bw(
-		float               sample_rate,
-		float               cutoff,
-		float               bandwidth,
-		char                prewarp_at_cutoff,
-		float               prewarp_freq,
-		float               peak_gain_dB,
-		float * BW_RESTRICT b0,
-		float * BW_RESTRICT b1,
-		float * BW_RESTRICT b2,
-		float * BW_RESTRICT a1,
-		float * BW_RESTRICT a2) {
-	bw_iir2_coeffs_peak_lin_bw(sample_rate, cutoff, bandwidth, prewarp_at_cutoff, prewarp_freq, bw_dB2linf(peak_gain_dB), b0, b1, b2, a1, a2);
+	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
 }
 
 #undef BW_IIR2_COEFFS_COMMON
