@@ -33,6 +33,7 @@
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
  *              implementation.</li>
+ *          <li>Fixed typos in documenation.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.0</strong>:
@@ -330,8 +331,8 @@ static inline void bw_phase_gen_set_phase_inc_min(
  *
  *    Valid range: [`-INFINITY`, `INFINITY`).
  *
- *    By the time `bw_phase_gen_reset_\*()`, `bw_phase_gen_update_coeffs_\*()`,
- *    or `bw_peak_process\*()` is called, phase_inc_min must be less than
+ *    By the time `bw_phase_gen_reset_*()`, `bw_phase_gen_update_coeffs_*()`,
+ *    or `bw_peak_process*()` is called, phase_inc_min must be less than
  *    phase_inc_max.
  *
  *    Default value: `-INFINITY`.
@@ -351,8 +352,8 @@ static inline void bw_phase_gen_set_phase_inc_max(
  *
  *    Valid range: (`-INFINITY`, `INFINITY`].
  *
- *    By the time `bw_phase_gen_reset_\*()`, `bw_phase_gen_update_coeffs_\*()`,
- *    or `bw_peak_process\*()` is called, phase_inc_min must be less than
+ *    By the time `bw_phase_gen_reset_*()`, `bw_phase_gen_update_coeffs_*()`,
+ *    or `bw_peak_process*()` is called, phase_inc_min must be less than
  *    phase_inc_max.
  *
  *    Default value: `INFINITY`.

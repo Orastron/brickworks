@@ -32,6 +32,7 @@
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
  *              implementation.</li>
+ *          <li>Fixed typos in documenation.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.0</strong>:
@@ -245,8 +246,8 @@ static inline void bw_ls1_set_cutoff(
  *
  *    `value` must be finite and positive.
  *
- *    By the time `bw_ls1_reset_\*()`, `bw_ls1_update_coeffs_\*()`, or
- *    `bw_ls1_process\*()` is called, `cutoff * bw_rcpf(bw_sqrtf(dc_gain))`
+ *    By the time `bw_ls1_reset_*()`, `bw_ls1_update_coeffs_*()`, or
+ *    `bw_ls1_process*()` is called, `cutoff * bw_rcpf(bw_sqrtf(dc_gain))`
  *    must be in [`1e-6f`, `1e12f`].
  *
  *    Default value: `1e3f`.
@@ -287,8 +288,8 @@ static inline void bw_ls1_set_dc_gain_lin(
  *
  *    Valid range: [`1e-30f`, `1e30f`].
  *
- *    By the time `bw_ls1_reset_\*()`, `bw_ls1_update_coeffs_\*()`, or
- *    `bw_ls1_process\*()` is called, `cutoff * bw_rcpf(bw_sqrtf(dc_gain))`
+ *    By the time `bw_ls1_reset_*()`, `bw_ls1_update_coeffs_*()`, or
+ *    `bw_ls1_process*()` is called, `cutoff * bw_rcpf(bw_sqrtf(dc_gain))`
  *    must be in [`1e-6f`, `1e12f`].
  *
  *    Default value: `1.f`.
@@ -303,8 +304,8 @@ static inline void bw_ls1_set_dc_gain_dB(
  *
  *    Valid range: [`-600.f`, `600.f`].
  *
- *    By the time `bw_ls1_reset_\*()`, `bw_ls1_update_coeffs_\*()`, or
- *    `bw_ls1_process\*()` is called, `cutoff * bw_rcpf(bw_sqrtf(dc_gain))`
+ *    By the time `bw_ls1_reset_*()`, `bw_ls1_update_coeffs_*()`, or
+ *    `bw_ls1_process*()` is called, `cutoff * bw_rcpf(bw_sqrtf(dc_gain))`
  *    must be in [`1e-6f`, `1e12f`].
  *
  *    Default value: `0.f`.

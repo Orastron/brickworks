@@ -34,6 +34,7 @@
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
  *              implementation.</li>
+ *          <li>Fixed typos in documenation.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.0</strong>:
@@ -254,8 +255,8 @@ static inline void bw_phaser_set_center(
  *
  *    Valid range: [`1e-6f`, `1e12f`].
  *
- *    By the time `bw_phaser_reset_\*()`, `bw_phaser_update_coeffs_\*()`, or
- *    `bw_phaser_process\*()` is called, `center * bw_pow2f(amount)` must be in
+ *    By the time `bw_phaser_reset_*()`, `bw_phaser_update_coeffs_*()`, or
+ *    `bw_phaser_process*()` is called, `center * bw_pow2f(amount)` must be in
  *    [`1e-6f`, `1e12f`].
  *
  *    Default value: `1e3f`.
@@ -270,8 +271,8 @@ static inline void bw_phaser_set_amount(
  *
  *    `value` must be finite and non-negative.
  *
- *    By the time `bw_phaser_reset_\*()`, `bw_phaser_update_coeffs_\*()`, or
- *    `bw_phaser_process\*()` is called, `center * bw_pow2f(amount)` must be in
+ *    By the time `bw_phaser_reset_*()`, `bw_phaser_update_coeffs_*()`, or
+ *    `bw_phaser_process*()` is called, `center * bw_pow2f(amount)` must be in
  *    [`1e-6f`, `1e12f`].
  *
  *    Default value: `1.f`.

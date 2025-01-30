@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Triangle oscillator waveshaper with variable slope (increasing time over
@@ -37,6 +37,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Fixed typo in Changelog.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
@@ -85,7 +90,7 @@
  *      <li>Version <strong>0.5.0</strong>:
  *        <ul>
  *          <li>Added <code>bw_osc_tri_process_multi()</code>.</li>
- *          <li>Fixed typo in <code>bw_osc_tri_process1\*()</code>
+ *          <li>Fixed typo in <code>bw_osc_tri_process1*()</code>
  *              documentation.</li>
  *          <li>Added C++ wrapper.</li>
  *        </ul>
