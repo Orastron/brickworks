@@ -2,6 +2,9 @@
 
 TIBIA_DIR=../../../tibia
 
+VERSION=1.3.0
+BUILD_VERSION=1
+
 if [ -z "$1" -o "$1" = "common" ]; then
 	echo Generating common files
 
@@ -32,6 +35,10 @@ if [ "$1" = "common" ]; then
 	exit 0
 fi
 
+echo
+echo "--- Version $VERSION.$BUILD_VERSION ---"
+echo
+
 if [ -z "$1" ]; then
 	dirs="fx* synth*"
 else
@@ -53,34 +60,40 @@ for d in $dirs; do
 		;;
 	esac
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/api api && cd ..
+	ARGS="product.version=\"$VERSION\" product.buildVersion=\"$BUILD_VERSION\""
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/cmd cmd && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,../common/src/$make_json $TIBIA_DIR/templates/cmd-make cmd && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/api api $ARGS && cd ..
+
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/cmd cmd $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,../common/src/$make_json $TIBIA_DIR/templates/cmd-make cmd $ARGS && cd ..
 	echo "include ../../common/cmd/Makefile" > $d/cmd/Makefile
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/web web && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,../common/src/$make_json $TIBIA_DIR/templates/web-make web && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,../common/src/$make_json $TIBIA_DIR/templates/web-demo web && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json $TIBIA_DIR/templates/web web $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,../common/src/$make_json $TIBIA_DIR/templates/web-make web $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,../common/src/$make_json $TIBIA_DIR/templates/web-demo web $ARGS && cd ..
 	echo "include ../../common/web/Makefile" > $d/web/Makefile
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/daisy-seed.json $TIBIA_DIR/templates/daisy-seed daisy-seed && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/daisy-seed.json,../common/src/$make_json $TIBIA_DIR/templates/daisy-seed-make daisy-seed && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/daisy-seed.json $TIBIA_DIR/templates/daisy-seed daisy-seed $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/daisy-seed.json,../common/src/$make_json $TIBIA_DIR/templates/daisy-seed-make daisy-seed $ARGS && cd ..
 	echo "include ../../common/daisy-seed/Makefile" > $d/daisy-seed/Makefile
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/lv2.json $TIBIA_DIR/templates/lv2 lv2 && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/lv2.json,../common/src/$make_json $TIBIA_DIR/templates/lv2-make lv2 && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/lv2.json $TIBIA_DIR/templates/lv2 lv2 $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/lv2.json,../common/src/$make_json $TIBIA_DIR/templates/lv2-make lv2 $ARGS && cd ..
 	echo "include ../../common/lv2/Makefile" > $d/lv2/Makefile
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/vst3.json $TIBIA_DIR/templates/vst3 vst3 && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/vst3.json,../common/src/$make_json $TIBIA_DIR/templates/vst3-make vst3 && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/vst3.json $TIBIA_DIR/templates/vst3 vst3 $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/vst3.json,../common/src/$make_json $TIBIA_DIR/templates/vst3-make vst3 $ARGS && cd ..
 	echo "include ../../common/vst3/Makefile" > $d/vst3/Makefile
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json $TIBIA_DIR/templates/android android && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json,../common/src/$make_json $TIBIA_DIR/templates/android-make android && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json $TIBIA_DIR/templates/android android $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json,../common/src/$make_json $TIBIA_DIR/templates/android-make android $ARGS && cd ..
 	echo "include ../../common/android/Makefile" > $d/android/Makefile
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json $TIBIA_DIR/templates/ios ios && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json,../common/src/$make_json,../common/src/ios-make.json $TIBIA_DIR/templates/ios-make ios && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json $TIBIA_DIR/templates/ios ios $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json,../common/src/$make_json,../common/src/ios-make.json $TIBIA_DIR/templates/ios-make ios $ARGS && cd ..
 	echo "include ../../common/ios/Makefile" > $d/ios/Makefile
 done
+
+echo
+echo "--- Version $VERSION.$BUILD_VERSION ---"
+echo

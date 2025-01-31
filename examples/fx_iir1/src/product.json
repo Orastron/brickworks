@@ -1,8 +1,6 @@
 {
 	"product": {
 		"name":	"Brickworks 1st-order IIR filter example",
-		"version": "1.0.0",
-		"buildVersion": "1",
 		"bundleName": "bw_example_fx_iir1",
 		"buses": [
 			{

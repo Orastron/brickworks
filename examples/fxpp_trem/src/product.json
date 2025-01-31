@@ -1,8 +1,6 @@
 {
 	"product": {
 		"name":	"Brickworks tremolo example (C++)",
-		"version": "1.1.0",
-		"buildVersion": "1",
 		"bundleName": "bw_example_fxpp_trem",
 		"buses": [
 			{
