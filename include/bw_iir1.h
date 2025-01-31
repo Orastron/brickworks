@@ -70,7 +70,7 @@ static inline void bw_iir1_reset(
 /*! <<<```
  *    Computes and puts the initial output in `y_0` and the initial state in
  *    `s_0`, given the initial input `x_0` and coefficients `b0`, `b1`, and
- *    `b2`.
+ *    `a1`.
  *
  *    The given coefficients must describe a stable filter.
  *
@@ -87,7 +87,7 @@ static inline void bw_iir1_reset_multi(
 /*! <<<```
  *    Computes and puts each of the `n_channels` initial outputs in `y_0` and
  *    initial states in `s_0`, given the corresponding initial inputs `x_0` and
- *    coefficients `b0`, `b1`, and `b2`.
+ *    coefficients `b0`, `b1`, and `a1`.
  *
  *    `y_0` and/or `s_0` may be `BW_NULL`, in which case the corresponding
  *    values are not written anywhere.
@@ -104,7 +104,7 @@ static inline void bw_iir1_process1(
 	float               b1,
 	float               a1);
 /*! <<<```
- *    Processes one input sample `x` using coefficients `b0`, `b1`, and `b2`.
+ *    Processes one input sample `x` using coefficients `b0`, `b1`, and `a1`.
  *    The output sample and next state value are put in `y` and `s`
  *    respectively.
  *
@@ -123,7 +123,7 @@ static inline void bw_iir1_process(
 /*! <<<```
  *    Processes the first `n_samples` of the input buffer `x` and fills the
  *    first `n_samples` of the output buffer `y`, while using coefficients `b0`,
- *    `b1`, and `b2`. The next state value is put in `s`.
+ *    `b1`, and `a1`. The next state value is put in `s`.
  *
  *    The given coefficients must describe a stable filter.
  *
@@ -141,7 +141,7 @@ static inline void bw_iir1_process_multi(
 /*! <<<```
  *    Processes the first `n_samples` of the `n_channels` input buffers `x` and
  *    fills the first `n_samples` of the `n_channels` output buffers `y`, while
- *    using coefficients `b0`, `b1`, and `b2`. The next `n_channels` state
+ *    using coefficients `b0`, `b1`, and `a1`. The next `n_channels` state
  *    values are put in `s`.
  *
  *    The given coefficients must describe a stable filter.
@@ -162,11 +162,11 @@ static inline void bw_iir1_coeffs_ap1(
  *    at high frequencies) with unitary gain, using the bilinear transform with
  *    prewarping.
  *
- *    It takes the `sample_rate` (Hz, must be positive) and the `cutoff`
- *    frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`, then the
- *    prewarping frequency matches `cutoff`, otherwise the value specified by
- *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
- *    avoid instability) is used.
+ *    It takes the `sample_rate` (Hz, must be finite and positive) and the
+ *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`,
+ *    then the prewarping frequency matches `cutoff`, otherwise the value
+ *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
+ *    limited to avoid instability) is used.
  *
  *    #### bw_iir1_coeffs_hp1()
  *  ```>>> */
@@ -184,11 +184,11 @@ static inline void bw_iir1_coeffs_hp1(
  *    approaching unity as frequency increases, using the bilinear transform
  *    with prewarping.
  *
- *    It takes the `sample_rate` (Hz, must be positive) and the `cutoff`
- *    frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`, then the
- *    prewarping frequency matches `cutoff`, otherwise the value specified by
- *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
- *    avoid instability) is used.
+ *    It takes the `sample_rate` (Hz, must be finite and positive) and the
+ *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`,
+ *    then the prewarping frequency matches `cutoff`, otherwise the value
+ *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
+ *    limited to avoid instability) is used.
  *
  *    #### bw_iir1_coeffs_hs1()
  *  ```>>> */
@@ -207,13 +207,16 @@ static inline void bw_iir1_coeffs_hs1(
  *    a first-order high shelf filter (6 dB/oct) with unitary DC gain, using the
  *    bilinear transform with prewarping.
  *
- *    It takes the `sample_rate` (Hz, must be positive), the `cutoff` frequency
- *    (Hz, in [`1e-6f`, `1e12f`]), and the high-frequency gain `high_gain`,
- *    either as linear gain (in [1e-30f, 1e30f]) if `high_gain_dB` is `0`, or
- *    otherwise in dB (in [-600.f, 600.f]). If `prewarp_freq` is `0`, then the
- *    prewarping frequency matches `cutoff`, otherwise the value specified by
- *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
- *    avoid instability) is used.
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, must be finite and positive), and the high-frequency gain
+ *    `high_gain`, either as linear gain (in [`1e-30f`, `1e30f`]) if
+ *    `high_gain_dB` is `0`, or otherwise in dB (in [`-600.f`, `600.f`]). If
+ *    `prewarp_freq` is `0`, then the prewarping frequency matches `cutoff`,
+ *    otherwise the value specified by `prewarp_freq` (Hz, in [`1e-6f`,
+ *    `1e12f`], however interally limited to avoid instability) is used.
+ *
+ *    `cutoff * bw_sqrtf(high_gain)` must be in [`1e-6f`, `1e12f`], where
+ *    `high_gain` is expressed as linear gain.
  *
  *    #### bw_iir1_coeffs_lp1()
  *  ```>>> */
@@ -230,11 +233,11 @@ static inline void bw_iir1_coeffs_lp1(
  *    a first-order lowpass filter (6 dB/oct) with unitary DC gain, using the
  *    bilinear transform with prewarping.
  *
- *    It takes the `sample_rate` (Hz, must be positive) and the `cutoff`
- *    frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`, then the
- *    prewarping frequency matches `cutoff`, otherwise the value specified by
- *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
- *    avoid instability) is used.
+ *    It takes the `sample_rate` (Hz, must be finite and positive) and the
+ *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`,
+ *    then the prewarping frequency matches `cutoff`, otherwise the value
+ *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
+ *    limited to avoid instability) is used.
  *
  *    #### bw_iir1_coeffs_ls1()
  *  ```>>> */
@@ -253,13 +256,16 @@ static inline void bw_iir1_coeffs_ls1(
  *    a first-order high shelf filter (6 dB/oct) with unitary DC gain, using the
  *    bilinear transform with prewarping.
  *
- *    It takes the `sample_rate` (Hz, must be positive), the `cutoff` frequency
- *    (Hz, in [`1e-6f`, `1e12f`]), and the `dc_gain`, either as linear gain
- *    (in [1e-30f, 1e30f]) if `dc_gain_dB` is `0`, or otherwise in dB (in
- *    [-600.f, 600.f]). If `prewarp_freq` is `0`, then the prewarping frequency
- *    matches `cutoff`, otherwise the value specified by `prewarp_freq` (Hz, in
- *    [`1e-6f`, `1e12f`], however interally limited to avoid instability) is
- *    used.
+ *    It takes the `sample_rate` (Hz, must be finite and  positive), the
+ *    `cutoff` frequency (Hz, must be finite and positive), and the `dc_gain`,
+ *    either as linear gain (in [`1e-30f`, `1e30f`]) if `dc_gain_dB` is `0`, or
+ *    otherwise in dB (in [`-600.f`, `600.f`]). If `prewarp_freq` is `0`, then
+ *    the prewarping frequency matches `cutoff`, otherwise the value specified
+ *    by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
+ *    avoid instability) is used.
+ *
+ *    `cutoff * bw_rcpf(bw_sqrtf(dc_gain))` must be in [`1e-6f`, `1e12f`], where
+ *    `dc_gain` is expressed as linear gain.
  *
  *    #### bw_iir1_coeffs_mm1()
  *  ```>>> */
@@ -283,9 +289,9 @@ static inline void bw_iir1_coeffs_mm1(
  *    where fc is the cutoff frequency, using the bilinear transform with
  *    prewarping.
  *
- *    It takes the `sample_rate` (Hz, must be positive), the `cutoff` frequency
- *    (Hz, in [`1e-6f`, `1e12f`]), and output coefficients `coeff_x` and
- *    `coeff_lp` (both must be finite). If `prewarp_freq` is `0`, then the
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, in [`1e-6f`, `1e12f`]), and output coefficients `coeff_x`
+ *    and `coeff_lp` (both must be finite). If `prewarp_freq` is `0`, then the
  *    prewarping frequency matches `cutoff`, otherwise the value specified by
  *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
  *    avoid instability) is used.

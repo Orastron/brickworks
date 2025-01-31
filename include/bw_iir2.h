@@ -71,7 +71,11 @@ static inline void bw_iir2_reset(
 	float               a1,
 	float               a2);
 /*! <<<```
- *    XXX.
+ *    Computes and puts the initial output in `y_0` and the initial states in
+ *    `s1_0` and `s2_0`, given the initial input `x_0` and coefficients `b0`,
+ *    `b1`, `b2`, `a1`, and `a2`.
+ *
+ *    The given coefficients must describe a stable filter.
  *
  *    #### bw_iir2_reset_multi()
  *  ```>>> */
@@ -87,7 +91,14 @@ static inline void bw_iir2_reset_multi(
 	float               a2,
 	size_t              n_channels);
 /*! <<<```
- *    XXX.
+ *    Computes and puts each of the `n_channels` initial outputs in `y_0` and
+ *    initial states in `s1_0` and `s2_0`, given the corresponding initial
+ *    inputs `x_0` and coefficients `b0`, `b1`, `b2`, `a1`, and `a2`.
+ *
+ *    `y_0` and/or `s_0` may be `BW_NULL`, in which case the corresponding
+ *    values are not written anywhere.
+ *
+ *    The given coefficients must describe a stable filter.
  *
  *    #### bw_iir2_process1()
  *  ```>>> */
@@ -102,7 +113,11 @@ static inline void bw_iir2_process1(
 	float               a1,
 	float               a2);
 /*! <<<```
- *    XXX.
+ *    Processes one input sample `x` using coefficients `b0`, `b1`, `b2`, `a1`,
+ *    and `a2`. The output sample and next states value are put in `y` and
+ *    `s1`/`s2` respectively.
+ *
+ *    The given coefficients must describe a stable filter.
  *
  *    #### bw_iir2_process()
  *  ```>>> */
@@ -118,7 +133,11 @@ static inline void bw_iir2_process(
 	float               a2,
 	size_t              n_samples);
 /*! <<<```
- *    XXX
+ *    Processes the first `n_samples` of the input buffer `x` and fills the
+ *    first `n_samples` of the output buffer `y`, while using coefficients `b0`,
+ *    `b1`, `b2, `a1`, and `a2`. The next state values are put in `s1` and `s2`.
+ *
+ *    The given coefficients must describe a stable filter.
  *
  *    #### bw_iir2_process_multi()
  *  ```>>> */
@@ -135,7 +154,12 @@ static inline void bw_iir2_process_multi(
 	size_t                n_channels,
 	size_t                n_samples);
 /*! <<<```
- *    XXX
+ *    Processes the first `n_samples` of the `n_channels` input buffers `x` and
+ *    fills the first `n_samples` of the `n_channels` output buffers `y`, while
+ *    using coefficients `b0`, `b1`, `b2`, `a1`, and `a2`. The next `n_channels`
+ *    state values are put in `s1` and `s2`.
+ *
+ *    The given coefficients must describe a stable filter.
  *
  *    #### bw_iir2_coeffs_ap2()
  *  ```>>> */
@@ -151,7 +175,17 @@ static inline void bw_iir2_coeffs_ap2(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1`, and `a2`
+ *    resulting in a second-order allpass filter (180° shift at cutoff,
+ *    approaching 360° shift at high frequencies) with unitary gain, using the
+ *    bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be positive), the `cutoff` frequency
+ *    (Hz, in [`1e-6f`, `1e12f`]), and the quality factor `Q` (in [`1e-6f`,
+ *    `1e6f`]). If `prewarp_freq` is `0`, then the prewarping frequency matches
+ *    `cutoff`, otherwise the value specified by `prewarp_freq` (Hz, in
+ *    [`1e-6f`, `1e12f`], however interally limited to avoid instability) is
+ *    used.
  *
  *    #### bw_iir2_coeffs_bp2()
  *  ```>>> */
@@ -167,7 +201,16 @@ static inline void bw_iir2_coeffs_bp2(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1`, and `a2`
+ *    resulting in a second-order bandpass filter (6 dB/oct) with peak gain
+ *    `Q` (linear gain), using the bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, in [`1e-6f`, `1e12f`]), and the quality factor `Q` (in
+ *    [`1e-6f`, `1e6f`]). If `prewarp_freq` is `0`, then the prewarping
+ *    frequency matches `cutoff`, otherwise the value specified by
+ *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
+ *    avoid instability) is used.
  *
  *    #### bw_iir2_coeffs_hp2()
  *  ```>>> */
@@ -183,7 +226,17 @@ static inline void bw_iir2_coeffs_hp2(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1`, and `a2`
+ *    resulting in a second-order highpass filter (12 dB/oct) with gain
+ *    asymptotically approaching unity as frequency increases, using the
+ *    bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, in [`1e-6f`, `1e12f`]), and the quality factor `Q` (in
+ *    [`1e-6f`, `1e6f`]). If `prewarp_freq` is `0`, then the prewarping
+ *    frequency matches `cutoff`, otherwise the value specified by
+ *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
+ *    avoid instability) is used.
  *
  *    #### bw_iir2_coeffs_hs2()
  *  ```>>> */
@@ -201,7 +254,21 @@ static inline void bw_iir2_coeffs_hs2(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1,` and `a2`
+ *    resulting in a second-order high shelf filter (12 dB/oct) with unitary DC
+ *    gain, using the bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, must be finite and positive), the quality factor `Q` (in
+ *    [`1e-6f`, `1e6f`]), and the high-frequency gain `high_gain`, either as
+ *    linear gain (in [`1e-30f`, `1e30f`]) if `high_gain_dB` is `0`, or
+ *    otherwise in dB (in [`-600.f`, `600.f`]). If `prewarp_freq` is `0`, then
+ *    the prewarpingfrequency matches `cutoff`, otherwise the value specified by
+ *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
+ *    avoid instability) is used.
+ *
+ *    `cutoff * bw_sqrtf(bw_sqrtf(high_gain))` must be in [`1e-6f`, `1e12f`],
+ *    where `high_gain` is expressed as linear gain.
  *
  *    #### bw_iir2_coeffs_lp2()
  *  ```>>> */
@@ -217,7 +284,16 @@ static inline void bw_iir2_coeffs_lp2(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1`, and `a2`
+ *    resulting in a second-order lowpass filter (12 dB/oct) with unitary DC
+ *    gain, using the bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, in [`1e-6f`, `1e12f`]), and the quality factor `Q` (in
+ *    [`1e-6f`, `1e6f`]). If `prewarp_freq` is `0`, then the prewarping
+ *    frequency matches `cutoff`, otherwise the value specified by
+ *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
+ *    avoid instability) is used.
  *
  *    #### bw_iir2_coeffs_ls2()
  *  ```>>> */
@@ -235,7 +311,22 @@ static inline void bw_iir2_coeffs_ls2(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1,` and `a2`
+ *    resulting in a second-order low shelf filter (12 dB/oct) with gain
+ *    asymptotically approaching unity as frequency increases, using the
+ *    bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, must be finite and positive), the quality factor `Q` (in
+ *    [`1e-6f`, `1e6f`]), and the `dc_gain`, either as linear gain (in
+ *    [`1e-30f`, `1e30f`]) if `high_gain_dB` is `0`, or otherwise in dB (in
+ *    [`-600.f`, `600.f`]). If `prewarp_freq` is `0`, then the prewarping
+ *    frequency matches `cutoff`, otherwise the value specified by
+ *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
+ *    avoid instability) is used.
+ *
+ *    `cutoff * bw_rpcf(bw_sqrtf(bw_sqrtf(dc_gain)))` must be in [`1e-6f`,
+ *    `1e12f`], where `dc_gain` is expressed as linear gain.
  *
  *    #### bw_iir2_coeffs_mm2()
  *  ```>>> */
@@ -255,7 +346,23 @@ static inline void bw_iir2_coeffs_mm2(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1`, and `a2`
+ *    resulting in a second-order filter implementing an approximation of the
+ *    Laplace-domain transfer function
+ *
+ *    > H(s) = coeff\_x + (coeff\_hp s^2 + 2 pi fc s coeff\_bp
+ *    >        + (2 pi fc)^2 coeff\_lp) / (s^2 + 2 pi fc / Q s + (2 pi fc)^2)
+ *
+ *    where fc is the cutoff frequency and Q is the quality factor, using the
+ *    bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, in [`1e-6f`, `1e12f`]), the quality factor `Q` (in
+ *    [`1e-6f`, `1e6f`]), and output coefficients `coeff_x`, `coeff_lp`,
+ *    `coeff_bp`, `coeff_hp` (all must be finite). If `prewarp_freq` is `0`,
+ *    then the prewarping frequency matches `cutoff`, otherwise the value
+ *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
+ *    limited to avoid instability) is used.
  *
  *    #### bw_iir2_coeffs_notch()
  *  ```>>> */
@@ -271,7 +378,17 @@ static inline void bw_iir2_coeffs_notch(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, `b2`, `a1`, and `a2`
+ *    resulting in a second-order notch filter with unitary gain at DC and
+ *    asymptotically as frequency increases, and null gain at cutoff frequency,
+ *    using the bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
+ *    frequency (Hz, in [`1e-6f`, `1e12f`]), and the quality factor `Q` (in
+ *    [`1e-6f`, `1e6f`]). If `prewarp_freq` is `0`, then the prewarping
+ *    frequency matches `cutoff`, otherwise the value specified by
+ *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
+ *    avoid instability) is used.
  *
  *    #### bw_iir2_coeffs_peak()
  *  ```>>> */
@@ -290,7 +407,25 @@ static inline void bw_iir2_coeffs_peak(
 	float * BW_RESTRICT a1,
 	float * BW_RESTRICT a2);
 /*! <<<```
- *    XXX
+ *    Computes and puts coefficient values in `b0`, `b1`, and `a1` resulting in
+ *    a second-order peak filter with unitary gain at DC and asymptotically as
+ *    frequency increases, using the bilinear transform with prewarping.
+ *
+ *    It takes the `sample_rate` (Hz, must be finite and  positive), the
+ *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]), and the `peak_gain`,
+ *    either as linear gain (in [`1e-30f`, `1e30f`]) if `peak_gain_dB` is `0`,
+ *    or otherwise in dB (in [`-600.f`, `600.f`]). `Q_bandwidth` indicates
+ *    either the quality factor (in [`1e-6f`, `1e6f`]) if `use_bandwidth` is
+ *    `0`, or otherwise the bandwidth (octaves, in [`1e-6f`, `90.f`]),
+ *    designating the distance between midpoint gain frequencies (i.e.,
+ *    frequencies with gain = peak gain / 2 in dB terms). If `prewarp_freq` is
+ *    `0`, then the prewarping frequency matches `cutoff`, otherwise the value
+ *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
+ *    limited to avoid instability) is used.
+ *
+ *    If `use_bandwidth` is non-`0`, then `bw_sqrtf(bw_pow2f(Q_bandwidth) *
+ *    peak_gain) * bw_rcpf(bw_pow2f(Q_bandwidth) - 1.f)` must be in [`1e-6f`,
+ *    `1e6f`], where `peak_gain` is expressed as linear gain.
  *  }}} */
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
