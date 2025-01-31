@@ -23,7 +23,13 @@
  *  version {{{ 1.0.0 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
- *    XXX
+ *    Lightweight and fast second-order IIR filter (biquad) in TDF-II form.
+ *
+ *    This is not a regular DSP module, as it exposes state and coefficients,
+ *    and it's not appropriate for time-varying operation. If you need that,
+ *    check out [bw_ap2](bw_ap2), [bw_hs2](bw_hs2), [bw_ls2](bw_ls2),
+ *    [bw_mm2](bw_mm2), [bw_notch](bw_notch), [bw_peak](bw_peak), and
+ *    [bw_svf](bw_svf).
  *  }}}
  *  changelog {{{
  *    <ul>
@@ -548,6 +554,7 @@ static inline void bw_iir2_process_multi(
 
 #define BW_IIR2_COEFFS_COMMON \
 	prewarp_freq = prewarp_at_cutoff ? cutoff : prewarp_freq; \
+	prewarp_freq = bw_minf(prewarp_freq, 0.499f * sample_rate); \
 	const float t = bw_tanf(3.141592653589793f * prewarp_freq * bw_rcpf(sample_rate)); \
 	const float k1 = prewarp_freq * prewarp_freq; \
 	const float k2 = t * cutoff; \
