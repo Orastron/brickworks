@@ -135,7 +135,8 @@ static inline void bw_iir2_process(
 /*! <<<```
  *    Processes the first `n_samples` of the input buffer `x` and fills the
  *    first `n_samples` of the output buffer `y`, while using coefficients `b0`,
- *    `b1`, `b2, `a1`, and `a2`. The next state values are put in `s1` and `s2`.
+ *    `b1`, `b2`, `a1`, and `a2`. The next state values are put in `s1` and
+ *    `s2`.
  *
  *    The given coefficients must describe a stable filter.
  *
