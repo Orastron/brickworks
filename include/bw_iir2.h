@@ -618,7 +618,7 @@ static inline void bw_iir2_process(
 		float               a2,
 		size_t              n_samples) {
 	BW_ASSERT(x != BW_NULL);
-	BW_ASSERT_DEEP(bw_has_only_finite(x, n_channels));
+	BW_ASSERT_DEEP(bw_has_only_finite(x, n_samples));
 	BW_ASSERT(y != BW_NULL);
 	BW_ASSERT(s1 != BW_NULL);
 	BW_ASSERT(s2 != BW_NULL);
@@ -634,7 +634,7 @@ static inline void bw_iir2_process(
 	for (size_t i = 0; i < n_samples; i++)
 		bw_iir2_process1(x[i], y + i, s1, s2, b0, b1, b2, a1, a2);
 
-	BW_ASSERT_DEEP(bw_has_only_finite(y, n_channels));
+	BW_ASSERT_DEEP(bw_has_only_finite(y, n_samples));
 	BW_ASSERT(bw_is_finite(*s1));
 	BW_ASSERT(bw_is_finite(*s2));
 }
