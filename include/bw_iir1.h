@@ -739,7 +739,7 @@ inline void iir1Reset(
 		float                                       b0,
 		float                                       b1,
 		float                                       a1) {
-	iir1Reset<N_CHANNELS>(x0.data(), y0 != BW_NULL ? y0.data() : BW_NULL, s0 != BW_NULL ? s0.data() : BW_NULL, b0, b1, a1);
+	iir1Reset<N_CHANNELS>(x0.data(), y0 != BW_NULL ? y0->data() : BW_NULL, s0 != BW_NULL ? s0->data() : BW_NULL, b0, b1, a1);
 }
 # endif
 
@@ -765,7 +765,7 @@ inline void iir1Process(
 		float                                       b1,
 		float                                       a1,
 		size_t                                      nSamples) {
-	iir1Process<N_CHANNELS>(x.data(), y.data(), s.data(), b0, b1, a1, nSamples);
+	iir1Process<N_CHANNELS>(x.data(), y.data(), s->data(), b0, b1, a1, nSamples);
 }
 # endif
 

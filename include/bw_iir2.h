@@ -1101,7 +1101,7 @@ inline void iir2Reset(
 		float                                       b2,
 		float                                       a1,
 		float                                       a2) {
-	iir2Reset<N_CHANNELS>(x0.data(), y0 != BW_NULL ? y0.data() : BW_NULL, s10 != BW_NULL ? s10.data() : BW_NULL, s20 != BW_NULL ? s20.data() : BW_NULL, b0, b1, b2, a1, a2);
+	iir2Reset<N_CHANNELS>(x0.data(), y0 != BW_NULL ? y0->data() : BW_NULL, s10 != BW_NULL ? s10->data() : BW_NULL, s20 != BW_NULL ? s20->data() : BW_NULL, b0, b1, b2, a1, a2);
 }
 # endif
 
@@ -1133,7 +1133,7 @@ inline void iir2Process(
 		float                                       a1,
 		float                                       a2,
 		size_t                                      nSamples) {
-	iir2Process<N_CHANNELS>(x.data(), y.data(), s1.data(), s2.data(), b0, b1, b2, a1, a2, nSamples);
+	iir2Process<N_CHANNELS>(x.data(), y.data(), s1->data(), s2->data(), b0, b1, b2, a1, a2, nSamples);
 }
 # endif
 
