@@ -470,8 +470,8 @@ static inline void bw_iir1_process_multi(
 #endif
 	bw_iir1_assert_valid_coeffs(b0, b1, a1);
 
-	for (size_t i = 0; i < n_samples; i++)
-		for (size_t j = 0; j < n_channels; j++)
+	for (size_t j = 0; j < n_channels; j++)
+		for (size_t i = 0; i < n_samples; i++)
 			bw_iir1_process1(x[j][i], y[j] + i, s + j, b0, b1, a1);
 
 #ifndef BW_NO_DEBUG
