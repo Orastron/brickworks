@@ -34,7 +34,7 @@
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
  *              implementation.</li>
- *          <li>Fixed typos in documenation.</li>
+ *          <li>Fixed typos in documentation.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.0</strong>:
