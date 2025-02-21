@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    State variable filter (2nd order, 12 dB/oct) model with separated lowpass,
@@ -28,6 +28,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Small implementation optimization.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
@@ -396,7 +401,6 @@ struct bw_svf_coeffs {
 	float				t_k;
 	float				prewarp_freq_max;
 
-	float				t;
 	float				kf;
 	float				kbl;
 	float				k;
@@ -481,8 +485,7 @@ static inline void bw_svf_do_update_coeffs(
 			if (prewarp_freq_changed) {
 				prewarp_freq_cur = bw_one_pole_process1_sticky_rel(&coeffs->smooth_coeffs, &coeffs->smooth_prewarp_freq_state, prewarp_freq);
 				const float f = bw_minf(prewarp_freq_cur, coeffs->prewarp_freq_max);
-				coeffs->t = bw_tanf(coeffs->t_k * f);
-				coeffs->kf = coeffs->t * bw_rcpf(f);
+				coeffs->kf = bw_tanf(coeffs->t_k * f) * bw_rcpf(f);
 			}
 			coeffs->kbl = coeffs->kf * cutoff_cur;
 		}
@@ -1052,8 +1055,6 @@ static inline char bw_svf_coeffs_is_valid(
 	}
 
 	if (coeffs->state >= bw_svf_coeffs_state_reset_coeffs) {
-		if (!bw_is_finite(coeffs->t) || coeffs->t <= 0.f)
-			return 0;
 		if (!bw_is_finite(coeffs->kf) || coeffs->kf <= 0.f)
 			return 0;
 		if (!bw_is_finite(coeffs->kbl) || coeffs->kbl <= 0.f)
