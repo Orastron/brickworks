@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2021-2024 Orastron Srl unipersonale
+ * Copyright (C) 2021-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.1.0 }}}
+ *  version {{{ 1.2.0 }}}
  *  requires {{{ bw_common }}}
  *  description {{{
  *    A collection of mathematical routines that strive to be better suited to
@@ -44,6 +44,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.0</strong>:
+ *        <ul>
+ *          <li>Added <code>bw_sechf()</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
  *          <li>Added <code>bw_signfilli64()</code>, <code>bw_mini64()</code>,
@@ -630,6 +635,15 @@ static inline float bw_coshf(
  *
  *    Relative error < 0.07%.
  *
+ *    #### bw_sechf()
+ *  ```>>> */
+static inline float bw_sechf(
+	float x);
+/*! <<<```
+ *    Returns an approximation of the hyperbolic secant of `x`.
+ *
+ *    Relative error < 0.07%.
+ *
  *    #### bw_asinhf()
  *  ```>>> */
 static inline float bw_asinhf(
@@ -1138,6 +1152,17 @@ static inline float bw_coshf(
 	BW_ASSERT(bw_is_finite(x));
 	BW_ASSERT(x >= -88.722f && x <= 88.722f);
 	const float y = 0.5f * (bw_expf(x) + bw_expf(-x));
+	BW_ASSERT(bw_is_finite(y));
+	return y;
+}
+
+static inline float bw_sechf(
+		float x) {
+	BW_ASSERT(!bw_is_nan(x));
+	if (x * x >= 88.722f * 88.722f)
+	       return 0.f;
+	float y = bw_rcpf(bw_expf(x) + bw_expf(-x));
+	y = y + y;
 	BW_ASSERT(bw_is_finite(y));
 	return y;
 }
