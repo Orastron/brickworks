@@ -642,7 +642,7 @@ static inline float bw_sechf(
 /*! <<<```
  *    Returns an approximation of the hyperbolic secant of `x`.
  *
- *    Relative error < 0.07%.
+ *    Absolute error < 1e-9 or relative error < 0.07%, whatever is worse.
  *
  *    #### bw_asinhf()
  *  ```>>> */
@@ -1159,7 +1159,7 @@ static inline float bw_coshf(
 static inline float bw_sechf(
 		float x) {
 	BW_ASSERT(!bw_is_nan(x));
-	if (x * x >= 88.722f * 88.722f)
+	if (x * x >= 22.f * 22.f)
 	       return 0.f;
 	float y = bw_rcpf(bw_expf(x) + bw_expf(-x));
 	y = y + y;
