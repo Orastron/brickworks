@@ -20,13 +20,20 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Slew-rate limiter with separate maximum increasing and decreasing rates.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Fixed typos in the documentation of
+ *          <code>bw_slew_lim_set_max_rate()</code> and
+ *          <code>bw_slew_lim_set_max_rate_down()</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
@@ -281,8 +288,8 @@ static inline void bw_slew_lim_set_max_rate(
  *    `value` represents the maximum variation per second and must be
  *    non-negative.
  *
- *    This is equivalent to calling both `bw_slew_lim_set_max_inc_rate()` and
- *    `bw_slew_lim_set_max_dec_rate()` with same `coeffs` and `value`.
+ *    This is equivalent to calling both `bw_slew_lim_set_max_rate_up()` and
+ *    `bw_slew_lim_set_max_rate_down()` with same `coeffs` and `value`.
  *
  *    Default value: `INFINITY`.
  *  >>> */
@@ -304,7 +311,7 @@ static inline void bw_slew_lim_set_max_rate_up(
  *  >>> */
 
 /*! ...
- *    #### bw_slew_lim_set_max_inc_rate()
+ *    #### bw_slew_lim_set_max_rate_up()
  *  ```>>> */
 static inline void bw_slew_lim_set_max_rate_down(
 	bw_slew_lim_coeffs * BW_RESTRICT coeffs,
