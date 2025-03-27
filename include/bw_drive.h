@@ -20,9 +20,9 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{
- *    bw_common bw_gain bw_hs1 bw_lp1 bw_math bw_mm2 bw_one_pole bw_peak
+ *    bw_common bw_gain bw_hs1 bw_lp1 bw_math bw_mm1 bw_mm2 bw_one_pole bw_peak
  *    bw_satur bw_svf
  *  }}}
  *  description {{{
@@ -32,6 +32,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Added missing bw_mm1 to list of dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
