@@ -469,9 +469,9 @@ static inline float bw_drive_reset_state(
 static inline void bw_drive_reset_state_multi(
 		const bw_drive_coeffs * BW_RESTRICT              coeffs,
 		bw_drive_state * BW_RESTRICT const * BW_RESTRICT state,
-		const float *                                   x_0,
-		float *                                         y_0,
-		size_t                                          n_channels) {
+		const float *                                    x_0,
+		float *                                          y_0,
+		size_t                                           n_channels) {
 	BW_ASSERT(coeffs != BW_NULL);
 	BW_ASSERT_DEEP(bw_drive_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_drive_coeffs_state_reset_coeffs);
