@@ -64,6 +64,19 @@ typedef struct bw_sampler_state bw_sampler_state;
 /*! <<<```
  *    Internal state and related.
  *
+ *    #### bw_sampler_phase
+ *  ```>>> */
+typedef enum {
+	bw_sampler_phase_before,
+	bw_sampler_phase_playing,
+	bw_sampler_phase_done
+} bw_sampler_phase;
+/*! <<<```
+ *    Sampler playback phase:
+ *     * `bw_sampler_phase_before`: playback has not yet started;
+ *     * `bw_sampler_phase_playing`: playback ongoing;
+ *     * `bw_sampler_phase_done`: playback finished.
+ *
  *    #### bw_sampler_init()
  *  ```>>> */
 static inline void bw_sampler_init(
@@ -159,9 +172,9 @@ static inline void bw_sampler_process_multi(
 /*! <<<```
  *    ...
  *
- *    #### bw_sampler_set_playback_rate()
+ *    #### bw_sampler_set_rate()
  *  ```>>> */
-static inline void bw_sampler_set_playback_rate(
+static inline void bw_sampler_set_rate(
 	bw_sampler_coeffs * BW_RESTRICT coeffs,
 	float                           value);
 /*! <<<```
@@ -170,6 +183,13 @@ static inline void bw_sampler_set_playback_rate(
  *    `value` must be finite.
  *
  *    Default value: `1.f`.
+ *
+ *    #### bw_sampler_get_phase()
+ *  ```>>> */
+static inline bw_sampler_phase bw_sampler_get_phase(
+	const bw_sampler_state * BW_RESTRICT state);
+/*! <<<```
+ *    ...
  *
  *    #### bw_sampler_coeffs_is_valid()
  *  ```>>> */
@@ -238,24 +258,25 @@ struct bw_sampler_coeffs {
 #endif
 
 	// Parameters
-	float				playback_rate;
+	float				rate;
 };
 
 struct bw_sampler_state {
 #ifdef BW_DEBUG_DEEP
-	uint32_t	hash;
-	uint32_t	coeffs_reset_id;
+	uint32_t			hash;
+	uint32_t			coeffs_reset_id;
 #endif
 
 	// States
-	float		pos;
+	float				pos;
+	bw_sampler_phase		phase;
 };
 
 static inline void bw_sampler_init(
 		bw_sampler_coeffs * BW_RESTRICT coeffs) {
 	BW_ASSERT(coeffs != BW_NULL);
 
-	coeffs->playback_rate = 1.f;
+	coeffs->rate = 1.f;
 
 #ifdef BW_DEBUG_DEEP
 	coeffs->hash = bw_hash_sdbm("bw_sampler_coeffs");
@@ -384,6 +405,7 @@ static inline float bw_sampler_reset_state(
 
 	(void)coeffs;
 	state->pos = pos_0;
+	state->phase = bw_sampler_phase_before;
 	const float y = bw_sampler_interpolate(sample, sample_length, pos_0);
 
 #ifdef BW_DEBUG_DEEP
@@ -474,9 +496,12 @@ static inline float bw_sampler_process1(
 	float y;
 	if (state->pos >= sample_length + 2) {
 		y = bw_sampler_interpolate(sample, sample_length, state->pos);
-		state->pos += coeffs->playback_rate;
-	} else
+		state->pos += coeffs->rate;
+		state->phase = bw_sampler_phase_playing;
+	} else {
 		y = 0.f;
+		state->phase = bw_sampler_phase_done;
+	}
 
 	BW_ASSERT_DEEP(bw_sampler_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_sampler_coeffs_state_reset_coeffs);
@@ -566,7 +591,7 @@ static inline void bw_sampler_process_multi(
 #endif
 }
 
-static inline void bw_sampler_set_playback_rate(
+static inline void bw_sampler_set_rate(
 		bw_sampler_coeffs * BW_RESTRICT coeffs,
 		float                           value) {
 	BW_ASSERT(coeffs != BW_NULL);
@@ -575,10 +600,18 @@ static inline void bw_sampler_set_playback_rate(
 	BW_ASSERT(bw_is_finite(value));
 	BW_ASSERT(value >= 0.f);
 
-	coeffs->playback_rate = value;
+	coeffs->rate = value;
 
 	BW_ASSERT_DEEP(bw_sampler_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_sampler_coeffs_state_init);
+}
+
+static inline bw_sampler_phase bw_sampler_get_phase(
+		const bw_sampler_state * BW_RESTRICT state) {
+	BW_ASSERT(state != BW_NULL);
+	BW_ASSERT_DEEP(bw_sampler_state_is_valid(BW_NULL, state));
+
+	return state->phase;
 }
 
 static inline char bw_sampler_coeffs_is_valid(
@@ -592,7 +625,7 @@ static inline char bw_sampler_coeffs_is_valid(
 		return 0;
 #endif
 
-	if (!bw_is_finite(coeffs->playback_rate) || coeffs->playback_rate < 0.f)
+	if (!bw_is_finite(coeffs->rate) || coeffs->rate < 0.f)
 		return 0;
 
 	return 1;
@@ -613,7 +646,12 @@ static inline char bw_sampler_state_is_valid(
 
 	(void)coeffs;
 
-	return bw_is_finite(state->pos) && pos >= 0.f;
+	if (!bw_is_finite(state->pos) || state->pos < 0.f)
+		return 0;
+	if (state->phase < bw_sampler_phase_before || state->phase > bw_sampler_phase_done)
+		return 0;
+
+	return 1;
 }
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
@@ -683,8 +721,11 @@ public:
 		size_t                                            nSamples);
 # endif
 
-	void setPlaybackRate(
+	void setRate(
 		float value);
+
+	bw_sampler_phase getPhase(
+		size_t channel);
 /*! <<<...
  *  }
  *  ```
@@ -782,9 +823,15 @@ inline void Sampler<N_CHANNELS>::process(
 # endif
 
 template<size_t N_CHANNELS>
-inline void Sampler<N_CHANNELS>::setPlaybackRate(
+inline void Sampler<N_CHANNELS>::setRate(
 		float value) {
-	bw_sampler_set_playback_rate(&coeffs, value);
+	bw_sampler_set_rate(&coeffs, value);
+}
+
+template<size_t N_CHANNELS>
+inline bw_sampler_phase Sampler<N_CHANNELS>::getPhase(
+		size_t channel) {
+	return bw_sampler_get_phase(states + channel);
 }
 
 }
