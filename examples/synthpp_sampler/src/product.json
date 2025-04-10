@@ -1,0 +1,58 @@
+{
+	"product": {
+		"name":	"Brickworks sampler synth example (C++)",
+		"bundleName": "bw_example_synthpp_sampler",
+		"buses": [
+			{
+				"type": "midi",
+				"direction": "input",
+				"name": "MIDI input",
+				"shortName": "MIDI input",
+				"id": "midi_in"
+			},
+			{
+				"type": "audio",
+				"direction": "output",
+				"channels": "mono",
+				"name": "Output",
+				"shortName": "Output",
+				"id": "output"
+			}
+		],
+		"parameters": [
+			{
+				"name": "Volume",
+				"shortName": "Volume",
+				"id": "volume",
+				"direction": "input",
+				"defaultValue": 50.0,
+				"minimum": 0.0,
+				"maximum": 100.0,
+				"unit": "pc",
+				"map": "linear"
+			},
+			{
+				"name": "Master tune",
+				"shortName": "Master tune",
+				"id": "master_tune",
+				"direction": "input",
+				"defaultValue": 440.0,
+				"minimum": 415.304697579945,
+				"maximum": 466.1637615180899,
+				"unit": "hz",
+				"map": "logarithmic"
+			},
+			{
+				"name": "Level",
+				"shortName": "Level",
+				"id": "level",
+				"direction": "output",
+				"defaultValue": -60.0,
+				"minimum": -60.0,
+				"maximum": 0.0,
+				"unit": "db",
+				"map": "linear"
+			}
+		]
+	}
+}

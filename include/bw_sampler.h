@@ -325,12 +325,11 @@ static inline float bw_sampler_interpolate(
 		const float * BW_RESTRICT sample,
 		size_t                    sample_length,
 		float                     pos) {
-{
 	BW_ASSERT(sample_length > 0);
 
 	float xm1, x0, x1, x2, d;
 	if (pos >= 1.f) {
-		const size_t p = static_cast<const size_t>(pos);
+		const size_t p = (size_t)pos;
 		if (p + 2 < sample_length) {
 			xm1 = sample[p - 1];
 			x0 = sample[p];
@@ -494,7 +493,7 @@ static inline float bw_sampler_process1(
 	BW_ASSERT_DEEP(bw_has_only_finite(sample, sample_length));
 
 	float y;
-	if (state->pos >= sample_length + 2) {
+	if (state->pos <= sample_length + 2) {
 		y = bw_sampler_interpolate(sample, sample_length, state->pos);
 		state->pos += coeffs->rate;
 		state->phase = bw_sampler_phase_playing;

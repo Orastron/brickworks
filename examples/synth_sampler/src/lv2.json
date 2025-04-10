@@ -1,0 +1,10 @@
+{
+	"lv2": {
+		"prefixes": {
+			"bw_examples": "https://www.orastron.com/brickworks/examples/"
+		},
+		"uri": "@bw_examples:synth_sampler",
+		"types": [ "@lv2:InstrumentPlugin" ],
+		"version": "0.0"
+	}
+}
