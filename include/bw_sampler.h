@@ -23,7 +23,7 @@
  *  version {{{ 1.0.0 }}}
  *  requires {{{ bw_common }}}
  *  description {{{
- *    ...
+ *    Very basic sampler with variable playback speed.
  *  }}}
  *  changelog {{{
  *    <ul>
@@ -108,7 +108,13 @@ static inline float bw_sampler_reset_state(
 	size_t                                sample_length,
 	float                                 pos_0);
 /*! <<<```
- *    ...
+ *    Resets the given `state` to its initial values using the given `coeffs`,
+ *    the audio `sample` and its corresponding `sample_length`, and the initial
+ *    and the initial playback position `pos_0`.
+ *
+ *    Returns the corresponding initial output value.
+ *
+ *    `sample_length` must be strictly positive.
  *
  *    #### bw_sampler_reset_state_multi()
  *  ```>>> */
@@ -121,7 +127,15 @@ static inline void bw_sampler_reset_state_multi(
 	float *                                            y_0,
 	size_t                                             n_channels);
 /*! <<<```
- *    ...
+ *    Resets each of the `n_channels` `state`s to its initial values using the
+ *    given `coeffs`, the `n_channels` audio `sample`s and their corresponding
+ *    `sample_length`s, and the corresponding initial playback positions in the
+ *    `pos_0` array.
+ *
+ *    The corresponding initial output values are written into the `y_0` array,
+ *    if not `BW_NULL`.
+ *
+ *    All values in `sample_length` must be strictly positive.
  *
  *    #### bw_sampler_update_coeffs_ctrl()
  *  ```>>> */
@@ -145,7 +159,11 @@ static inline float bw_sampler_process1(
 	const float * BW_RESTRICT             sample,
 	size_t                                sample_length);
 /*! <<<```
- *    ...
+ *    Computes and returns the next output sample from the input audio `sample`
+ *    of length `sample_length` using `coeffs`, while using and updating `state`
+ *    (audio rate only).
+ *
+ *    `sample_length` must be strictly positive.
  *
  *    #### bw_sampler_process()
  *  ```>>> */
@@ -157,7 +175,11 @@ static inline void bw_sampler_process(
 	float * BW_RESTRICT             y,
 	size_t                          n_samples);
 /*! <<<```
- *    ...
+ *    Computes and fills the first `n_samples` of the output buffer `y` from the
+ *    input audio `sample` of length `sample_length`, while using and updating
+ *    both `coeffs` and `state` (control and audio rate).
+ *
+ *    `sample_length` must be strictly positive.
  *
  *    #### bw_sampler_process_multi()
  *  ```>>> */
@@ -170,7 +192,12 @@ static inline void bw_sampler_process_multi(
 	size_t                                             n_channels,
 	size_t                                             n_samples);
 /*! <<<```
- *    ...
+ *    Computes and fills the first `n_samples` of the `n_channels` output
+ *    buffers `y` using the given `n_channels` input audio `sample`s and their
+ *    corresponding `sample_length`s, while using and updating both the common
+ *    `coeffs` and each of the `n_channels` `state`s (control and audio rate).
+ *
+ *    All values in `sample_length` must be strictly positive.
  *
  *    #### bw_sampler_set_rate()
  *  ```>>> */
@@ -178,9 +205,9 @@ static inline void bw_sampler_set_rate(
 	bw_sampler_coeffs * BW_RESTRICT coeffs,
 	float                           value);
 /*! <<<```
- *    Sets the ... `value` in `coeffs`.
+ *    Sets the playback rate `value` in `coeffs`.
  *
- *    `value` must be finite.
+ *    `value` must be non-negative.
  *
  *    Default value: `1.f`.
  *
@@ -189,7 +216,7 @@ static inline void bw_sampler_set_rate(
 static inline bw_sampler_phase bw_sampler_get_phase(
 	const bw_sampler_state * BW_RESTRICT state);
 /*! <<<```
- *    ...
+ *    Returns the current playback phase as stored in `state`.
  *
  *    #### bw_sampler_coeffs_is_valid()
  *  ```>>> */
@@ -228,14 +255,6 @@ static inline char bw_sampler_state_is_valid(
 
 /* WARNING: This part of the file is not part of the public API. Its content may
  * change at any time in future versions. Please, do not use it directly. */
-
-#ifdef BW_INCLUDE_WITH_QUOTES
-# include "bw_math.h"
-# include "bw_one_pole.h"
-#else
-# include <bw_math.h>
-# include <bw_one_pole.h>
-#endif
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 extern "C" {
