@@ -85,8 +85,8 @@ for d in $dirs; do
 	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/vst3.json,../common/src/$make_json $TIBIA_DIR/templates/vst3-make vst3 $ARGS && cd ..
 	echo "include ../../common/vst3/Makefile" > $d/vst3/Makefile
 
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json $TIBIA_DIR/templates/android android $ARGS && cd ..
-	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json,../common/src/$make_json $TIBIA_DIR/templates/android-make android $ARGS && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json $TIBIA_DIR/templates/android android $ARGS android.androidVersion=\"36\" && cd ..
+	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/android.json,../common/src/$make_json $TIBIA_DIR/templates/android-make android $ARGS android.androidVersion=\"36\" && cd ..
 	echo "include ../../common/android/Makefile" > $d/android/Makefile
 
 	cd $d && $TIBIA_DIR/tibia --data ../common/src/company.json,src/product.json,src/ios.json $TIBIA_DIR/templates/ios ios $ARGS && cd ..
