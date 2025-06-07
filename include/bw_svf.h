@@ -31,6 +31,7 @@
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
  *          <li>Small implementation optimization.</li>
+ *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.1</strong>:

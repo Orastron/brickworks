@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    One-pole (6 dB/oct) lowpass filter with unitary DC gain, separate attack
@@ -30,6 +30,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Verison <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and

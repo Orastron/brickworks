@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_math bw_one_pole bw_svf }}}
  *  description {{{
  *    Second-order allpass filter (180° shift at cutoff, approaching 360° shift
@@ -28,6 +28,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and

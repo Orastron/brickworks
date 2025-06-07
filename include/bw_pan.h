@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,

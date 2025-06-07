@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Sinusoidal oscillator waveshaper.
@@ -30,6 +30,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Fixed indentation in C++ documentation.</li>

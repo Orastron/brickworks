@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,18 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Smoothed gain module with optional sticky gain-reach threshold.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Fixed typo in the documentation of

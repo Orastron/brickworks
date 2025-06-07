@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.0.0 }}}
+ *  version {{{ 1.0.1 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Lightweight and fast first-order IIR filter in TDF-II form.
@@ -33,6 +33,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.0.1</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.0.0</strong>:
  *        <ul>
  *          <li>First release.</li>

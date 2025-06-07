@@ -48,6 +48,7 @@
  *        <ul>
  *          <li>Added citation regarding BLEP residual polynomial in the module
  *              description.</li>
+ *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.0</strong>:

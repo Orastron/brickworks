@@ -35,6 +35,7 @@
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
  *          <li>Added missing bw_mm1 to list of dependencies.</li>
+ *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.1</strong>:

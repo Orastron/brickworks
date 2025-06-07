@@ -30,8 +30,9 @@
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
  *          <li>Fixed typos in the documentation of
- *          <code>bw_slew_lim_set_max_rate()</code> and
- *          <code>bw_slew_lim_set_max_rate_down()</code>.</li>
+ *              <code>bw_slew_lim_set_max_rate()</code> and
+ *              <code>bw_slew_lim_set_max_rate_down()</code>.</li>
+ *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.2.1</strong>:

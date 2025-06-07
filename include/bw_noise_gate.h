@@ -20,13 +20,18 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_env_follow bw_math bw_one_pole }}}
  *  description {{{
  *    Noise gate with independent sidechain input.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
