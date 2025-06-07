@@ -68,6 +68,43 @@ int n_ko = 0;
 	} \
 }
 
+#define TEST_ABS(expr, expected, tol_abs) \
+{ \
+	union { float f; uint32_t u; } v_expr, v_expected; \
+	v_expr.f = expr; \
+	v_expected.f = expected; \
+	float err_abs = fabsf(v_expr.f - v_expected.f); \
+	if (err_abs <= tol_abs) { \
+		printf("✔ %s = %g (expected %g, err %g, tol %g)\n", #expr, v_expr.f, v_expected.f, err_abs, tol_abs); \
+		n_ok++; \
+	} else { \
+		printf("✘ %s = %g [0x%x] (expected %g [0x%x], err %g, tol %g) - line %d\n", #expr, v_expr.f, v_expr.u, v_expected.f, v_expected.u, err_abs, tol_abs, __LINE__); \
+		n_ko++; \
+	} \
+}
+
+static float log2_1p2xf(float x) {
+	if (x > 30.f)
+		return x;
+	return log2f(1.f + powf(2.f, x));
+}
+
+static float log_1pexpxf(float x) {
+	if (x > 25.f)
+		return x;
+	return logf(1.f + expf(x));
+}
+
+static float log10_1p10xf(float x) {
+	if (x > 10.f)
+		return x;
+	return log10f(1.f + powf(10.f, x));
+}
+
+static float xsechf(float x) {
+	return 1.f / coshf(x);
+}
+
 int main() {
 	printf("\nbw_math unit tests\n");
 	printf("------------------\n\n");
@@ -1178,6 +1215,73 @@ int main() {
 	TEST_REL(bw_coshf(60.f), coshf(60.f), 0.0007f);
 	TEST_REL(bw_coshf(70.f), coshf(70.f), 0.0007f);
 	TEST_REL(bw_coshf(80.f), coshf(80.f), 0.0007f);
+
+	TEST_ABS_REL(bw_sechf(-1e37f), xsechf(-1e37f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e30f), xsechf(-1e30f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e20f), xsechf(-1e20f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e10f), xsechf(-1e10f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e5f), xsechf(-1e5f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-100.f), xsechf(-100.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-80.f), xsechf(-80.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-70.f), xsechf(-70.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-60.f), xsechf(-60.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-50.f), xsechf(-50.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-40.f), xsechf(-40.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-30.f), xsechf(-30.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-20.f), xsechf(-20.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-10.f), xsechf(-10.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-9.f), xsechf(-9.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-8.f), xsechf(-8.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-7.f), xsechf(-7.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-6.f), xsechf(-6.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-5.f), xsechf(-5.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-4.f), xsechf(-4.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-3.f), xsechf(-3.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-2.f), xsechf(-2.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1.f), xsechf(-1.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-1f), xsechf(-1e-1f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-2f), xsechf(-1e-2f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-3f), xsechf(-1e-3f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-4f), xsechf(-1e-4f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-5f), xsechf(-1e-5f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-6f), xsechf(-1e-6f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-7f), xsechf(-1e-7f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-8f), xsechf(-1e-8f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-1e-9f), xsechf(-1e-9f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(-0.f), xsechf(0.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(0.f), xsechf(0.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-9f), xsechf(1e-9f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-8f), xsechf(1e-8f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-7f), xsechf(1e-7f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-6f), xsechf(1e-6f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-5f), xsechf(1e-5f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-4f), xsechf(1e-4f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-3f), xsechf(1e-3f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-2f), xsechf(1e-2f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e-1f), xsechf(1e-1f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1.f), xsechf(1.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(2.f), xsechf(2.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(3.f), xsechf(3.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(4.f), xsechf(4.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(5.f), xsechf(5.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(6.f), xsechf(6.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(7.f), xsechf(7.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(8.f), xsechf(8.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(9.f), xsechf(9.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(10.f), xsechf(10.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(20.f), xsechf(20.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(30.f), xsechf(30.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(40.f), xsechf(40.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(50.f), xsechf(50.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(60.f), xsechf(60.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(70.f), xsechf(70.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(80.f), xsechf(80.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(100.f), xsechf(100.f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e5f), xsechf(1e5f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e10f), xsechf(1e10f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e20f), xsechf(1e20f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e30f), xsechf(1e30f), 1e-9f, 0.0007f);
+	TEST_ABS_REL(bw_sechf(1e37f), xsechf(1e37f), 1e-9f, 0.0007f);
 	
 	TEST_ABS_REL(bw_asinhf(-1e37f), asinhf(-1e37f), 0.004f, 0.012f);
 	TEST_ABS_REL(bw_asinhf(-1e30f), asinhf(-1e30f), 0.004f, 0.012f);
@@ -1269,6 +1373,207 @@ int main() {
 	TEST_ABS_REL(bw_acoshf(1e20f), acoshf(1e20f), 0.004f, 0.008f);
 	TEST_ABS_REL(bw_acoshf(1e30f), acoshf(1e30f), 0.004f, 0.008f);
 	TEST_ABS_REL(bw_acoshf(1e37f), acoshf(1e37f), 0.004f, 0.008f);
+
+	TEST_ABS(bw_log2_1p2xf(-1e37f), log2_1p2xf(-1e37f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e30f), log2_1p2xf(-1e30f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e20f), log2_1p2xf(-1e20f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e10f), log2_1p2xf(-1e10f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e5f), log2_1p2xf(-1e5f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-100.f), log2_1p2xf(-100.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-80.f), log2_1p2xf(-80.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-70.f), log2_1p2xf(-70.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-60.f), log2_1p2xf(-60.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-50.f), log2_1p2xf(-50.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-40.f), log2_1p2xf(-40.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-30.f), log2_1p2xf(-30.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-20.f), log2_1p2xf(-20.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-10.f), log2_1p2xf(-10.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-9.f), log2_1p2xf(-9.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-8.f), log2_1p2xf(-8.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-7.f), log2_1p2xf(-7.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-6.f), log2_1p2xf(-6.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-5.f), log2_1p2xf(-5.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-4.f), log2_1p2xf(-4.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-3.f), log2_1p2xf(-3.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-2.f), log2_1p2xf(-2.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1.f), log2_1p2xf(-1.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-1f), log2_1p2xf(-1e-1f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-2f), log2_1p2xf(-1e-2f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-3f), log2_1p2xf(-1e-3f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-4f), log2_1p2xf(-1e-4f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-5f), log2_1p2xf(-1e-5f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-6f), log2_1p2xf(-1e-6f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-7f), log2_1p2xf(-1e-7f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-8f), log2_1p2xf(-1e-8f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-1e-9f), log2_1p2xf(-1e-9f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(-0.f), log2_1p2xf(-0.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(0.f), log2_1p2xf(0.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-9f), log2_1p2xf(1e-9f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-8f), log2_1p2xf(1e-8f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-7f), log2_1p2xf(1e-7f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-6f), log2_1p2xf(1e-6f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-5f), log2_1p2xf(1e-5f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-4f), log2_1p2xf(1e-4f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-3f), log2_1p2xf(1e-3f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-2f), log2_1p2xf(1e-2f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e-1f), log2_1p2xf(1e-1f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1.f), log2_1p2xf(1.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(2.f), log2_1p2xf(2.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(3.f), log2_1p2xf(3.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(4.f), log2_1p2xf(4.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(5.f), log2_1p2xf(5.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(6.f), log2_1p2xf(6.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(7.f), log2_1p2xf(7.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(8.f), log2_1p2xf(8.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(9.f), log2_1p2xf(9.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(10.f), log2_1p2xf(10.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(20.f), log2_1p2xf(20.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(30.f), log2_1p2xf(30.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(40.f), log2_1p2xf(40.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(50.f), log2_1p2xf(50.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(60.f), log2_1p2xf(60.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(70.f), log2_1p2xf(70.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(80.f), log2_1p2xf(80.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(100.f), log2_1p2xf(100.f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e5f), log2_1p2xf(1e5f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e10f), log2_1p2xf(1e10f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e20f), log2_1p2xf(1e20f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e30f), log2_1p2xf(1e30f), 0.006f);
+	TEST_ABS(bw_log2_1p2xf(1e37f), log2_1p2xf(1e37f), 0.006f);
+
+	TEST_ABS(bw_log_1pexpxf(-1e37f), log_1pexpxf(-1e37f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e30f), log_1pexpxf(-1e30f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e20f), log_1pexpxf(-1e20f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e10f), log_1pexpxf(-1e10f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e5f), log_1pexpxf(-1e5f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-100.f), log_1pexpxf(-100.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-80.f), log_1pexpxf(-80.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-70.f), log_1pexpxf(-70.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-60.f), log_1pexpxf(-60.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-50.f), log_1pexpxf(-50.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-40.f), log_1pexpxf(-40.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-30.f), log_1pexpxf(-30.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-20.f), log_1pexpxf(-20.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-10.f), log_1pexpxf(-10.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-9.f), log_1pexpxf(-9.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-8.f), log_1pexpxf(-8.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-7.f), log_1pexpxf(-7.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-6.f), log_1pexpxf(-6.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-5.f), log_1pexpxf(-5.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-4.f), log_1pexpxf(-4.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-3.f), log_1pexpxf(-3.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-2.f), log_1pexpxf(-2.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1.f), log_1pexpxf(-1.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-1f), log_1pexpxf(-1e-1f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-2f), log_1pexpxf(-1e-2f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-3f), log_1pexpxf(-1e-3f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-4f), log_1pexpxf(-1e-4f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-5f), log_1pexpxf(-1e-5f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-6f), log_1pexpxf(-1e-6f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-7f), log_1pexpxf(-1e-7f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-8f), log_1pexpxf(-1e-8f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-1e-9f), log_1pexpxf(-1e-9f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(-0.f), log_1pexpxf(-0.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(0.f), log_1pexpxf(0.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-9f), log_1pexpxf(1e-9f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-8f), log_1pexpxf(1e-8f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-7f), log_1pexpxf(1e-7f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-6f), log_1pexpxf(1e-6f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-5f), log_1pexpxf(1e-5f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-4f), log_1pexpxf(1e-4f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-3f), log_1pexpxf(1e-3f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-2f), log_1pexpxf(1e-2f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e-1f), log_1pexpxf(1e-1f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1.f), log_1pexpxf(1.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(2.f), log_1pexpxf(2.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(3.f), log_1pexpxf(3.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(4.f), log_1pexpxf(4.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(5.f), log_1pexpxf(5.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(6.f), log_1pexpxf(6.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(7.f), log_1pexpxf(7.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(8.f), log_1pexpxf(8.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(9.f), log_1pexpxf(9.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(10.f), log_1pexpxf(10.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(20.f), log_1pexpxf(20.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(30.f), log_1pexpxf(30.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(40.f), log_1pexpxf(40.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(50.f), log_1pexpxf(50.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(60.f), log_1pexpxf(60.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(70.f), log_1pexpxf(70.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(80.f), log_1pexpxf(80.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(100.f), log_1pexpxf(100.f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e5f), log_1pexpxf(1e5f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e10f), log_1pexpxf(1e10f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e20f), log_1pexpxf(1e20f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e30f), log_1pexpxf(1e30f), 0.004f);
+	TEST_ABS(bw_log_1pexpxf(1e37f), log_1pexpxf(1e37f), 0.004f);
+
+	TEST_ABS(bw_log10_1p10xf(-1e37f), log10_1p10xf(-1e37f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e30f), log10_1p10xf(-1e30f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e20f), log10_1p10xf(-1e20f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e10f), log10_1p10xf(-1e10f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e5f), log10_1p10xf(-1e5f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-100.f), log10_1p10xf(-100.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-80.f), log10_1p10xf(-80.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-70.f), log10_1p10xf(-70.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-60.f), log10_1p10xf(-60.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-50.f), log10_1p10xf(-50.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-40.f), log10_1p10xf(-40.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-30.f), log10_1p10xf(-30.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-20.f), log10_1p10xf(-20.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-10.f), log10_1p10xf(-10.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-9.f), log10_1p10xf(-9.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-8.f), log10_1p10xf(-8.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-7.f), log10_1p10xf(-7.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-6.f), log10_1p10xf(-6.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-5.f), log10_1p10xf(-5.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-4.f), log10_1p10xf(-4.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-3.f), log10_1p10xf(-3.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-2.f), log10_1p10xf(-2.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1.f), log10_1p10xf(-1.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-1f), log10_1p10xf(-1e-1f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-2f), log10_1p10xf(-1e-2f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-3f), log10_1p10xf(-1e-3f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-4f), log10_1p10xf(-1e-4f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-5f), log10_1p10xf(-1e-5f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-6f), log10_1p10xf(-1e-6f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-7f), log10_1p10xf(-1e-7f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-8f), log10_1p10xf(-1e-8f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-1e-9f), log10_1p10xf(-1e-9f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(-0.f), log10_1p10xf(-0.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(0.f), log10_1p10xf(0.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-9f), log10_1p10xf(1e-9f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-8f), log10_1p10xf(1e-8f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-7f), log10_1p10xf(1e-7f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-6f), log10_1p10xf(1e-6f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-5f), log10_1p10xf(1e-5f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-4f), log10_1p10xf(1e-4f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-3f), log10_1p10xf(1e-3f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-2f), log10_1p10xf(1e-2f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e-1f), log10_1p10xf(1e-1f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1.f), log10_1p10xf(1.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(2.f), log10_1p10xf(2.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(3.f), log10_1p10xf(3.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(4.f), log10_1p10xf(4.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(5.f), log10_1p10xf(5.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(6.f), log10_1p10xf(6.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(7.f), log10_1p10xf(7.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(8.f), log10_1p10xf(8.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(9.f), log10_1p10xf(9.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(10.f), log10_1p10xf(10.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(20.f), log10_1p10xf(20.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(30.f), log10_1p10xf(30.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(40.f), log10_1p10xf(40.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(50.f), log10_1p10xf(50.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(60.f), log10_1p10xf(60.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(70.f), log10_1p10xf(70.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(80.f), log10_1p10xf(80.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(100.f), log10_1p10xf(100.f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e5f), log10_1p10xf(1e5f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e10f), log10_1p10xf(1e10f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e20f), log10_1p10xf(1e20f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e30f), log10_1p10xf(1e30f), 0.002f);
+	TEST_ABS(bw_log10_1p10xf(1e37f), log10_1p10xf(1e37f), 0.002f);
 
 	printf("\nsuceeded: %d, failed: %d\n\n", n_ok, n_ko);
 	

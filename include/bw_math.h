@@ -47,6 +47,10 @@
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added <code>bw_sechf()</code>.</li>
+ *          <li>Added <code>bw_{signfill,min,max,clip}{i,u}{8,16}()</code>.</li>
+ *          <li>Improved precision and performance of
+ *              <code>bw_log_1pexpxf()</code>, and
+ *              <code>bw_log10_1p10xf()</code>.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.1.0</strong>:
@@ -151,6 +155,124 @@ extern "C" {
 /*** Public API ***/
 
 /*! api {{{
+ *    #### bw_signfilli8()
+ *  ```>>> */
+static inline int8_t bw_signfilli8(
+	int8_t x);
+/*! <<<```
+ *    Returns `~0` if `x` is negative, `0` otherwise.
+ *
+ *    #### bw_mini8()
+ *  ```>>> */
+static inline int8_t bw_mini8(
+	int8_t a,
+	int8_t b);
+/*! <<<```
+ *    Returns the minimum of `a` and `b`.
+ *
+ *    #### bw_maxi8()
+ *  ```>>> */
+static inline int8_t bw_maxi8(
+	int8_t a,
+	int8_t b);
+/*! <<<```
+ *    Returns the maximum of `a` and `b`.
+ *
+ *    #### bw_clipi8()
+ *  ```>>> */
+static inline int8_t bw_clipi8(
+	int8_t x,
+	int8_t m,
+	int8_t M);
+/*! <<<```
+ *    Returns `x` unless it is smaller than `m`, in which case it returns `m`,
+ *    or bigger than `M`, in which case it returns `M`.
+ *
+ *    #### bw_minu8()
+ *  ```>>> */
+static inline uint8_t bw_minu8(
+	uint8_t a,
+	uint8_t b);
+/*! <<<```
+ *    Returns the minimum of `a` and `b`.
+ *
+ *    #### bw_maxu8()
+ *  ```>>> */
+static inline uint8_t bw_maxu8(
+	uint8_t a,
+	uint8_t b);
+/*! <<<```
+ *    Returns the maximum of `a` and `b`.
+ *
+ *    #### bw_clipu8()
+ *  ```>>> */
+static inline uint8_t bw_clipu8(
+	uint8_t x,
+	uint8_t m,
+	uint8_t M);
+/*! <<<```
+ *    Returns `x` unless it is smaller than `m`, in which case it returns `m`,
+ *    or bigger than `M`, in which case it returns `M`.
+ *
+ *    #### bw_signfilli16()
+ *  ```>>> */
+static inline int16_t bw_signfilli16(
+	int16_t x);
+/*! <<<```
+ *    Returns `~0` if `x` is negative, `0` otherwise.
+ *
+ *    #### bw_mini16()
+ *  ```>>> */
+static inline int16_t bw_mini16(
+	int16_t a,
+	int16_t b);
+/*! <<<```
+ *    Returns the minimum of `a` and `b`.
+ *
+ *    #### bw_maxi16()
+ *  ```>>> */
+static inline int16_t bw_maxi16(
+	int16_t a,
+	int16_t b);
+/*! <<<```
+ *    Returns the maximum of `a` and `b`.
+ *
+ *    #### bw_clipi16()
+ *  ```>>> */
+static inline int16_t bw_clipi16(
+	int16_t x,
+	int16_t m,
+	int16_t M);
+/*! <<<```
+ *    Returns `x` unless it is smaller than `m`, in which case it returns `m`,
+ *    or bigger than `M`, in which case it returns `M`.
+ *
+ *    #### bw_minu16()
+ *  ```>>> */
+static inline uint16_t bw_minu16(
+	uint16_t a,
+	uint16_t b);
+/*! <<<```
+ *    Returns the minimum of `a` and `b`.
+ *
+ *    #### bw_maxu16()
+ *  ```>>> */
+static inline uint16_t bw_maxu16(
+	uint16_t a,
+	uint16_t b);
+/*! <<<```
+ *    Returns the maximum of `a` and `b`.
+ *
+ *    #### bw_clipu16()
+ *  ```>>> */
+static inline uint16_t bw_clipu16(
+	uint16_t x,
+	uint16_t m,
+	uint16_t M);
+/*! <<<```
+ *    Returns `x` unless it is smaller than `m`, in which case it returns `m`,
+ *    or bigger than `M`, in which case it returns `M`.
+ *
  *    #### bw_signfilli32()
  *  ```>>> */
 static inline int32_t bw_signfilli32(
@@ -682,6 +804,92 @@ extern "C" {
 
 // I hope the target architecture and compiler will use conditional ops here
 
+static inline int8_t bw_signfilli8(
+		int8_t x) {
+	return x < 0 ? ~0 : 0;
+}
+
+static inline int8_t bw_mini8(
+		int8_t a,
+		int8_t b) {
+	return a < b ? a : b;
+}
+
+static inline int8_t bw_maxi8(
+		int8_t a,
+		int8_t b) {
+	return a > b ? a : b;
+}
+
+static inline int8_t bw_clipi8(
+		int8_t x,
+		int8_t m,
+		int8_t M) {
+	return x < m ? m : (x > M ? M : x);
+}
+
+static inline uint8_t bw_minu8(
+		uint8_t a,
+		uint8_t b) {
+	return a < b ? a : b;
+}
+
+static inline uint8_t bw_maxu8(
+		uint8_t a,
+		uint8_t b) {
+	return a > b ? a : b;
+}
+
+static inline uint8_t bw_clipu8(
+		uint8_t x,
+		uint8_t m,
+		uint8_t M) {
+	return x < m ? m : (x > M ? M : x);
+}
+
+static inline int16_t bw_signfilli16(
+		int16_t x) {
+	return x < 0 ? ~0 : 0;
+}
+
+static inline int16_t bw_mini16(
+		int16_t a,
+		int16_t b) {
+	return a < b ? a : b;
+}
+
+static inline int16_t bw_maxi16(
+		int16_t a,
+		int16_t b) {
+	return a > b ? a : b;
+}
+
+static inline int16_t bw_clipi16(
+		int16_t x,
+		int16_t m,
+		int16_t M) {
+	return x < m ? m : (x > M ? M : x);
+}
+
+static inline uint16_t bw_minu16(
+		uint16_t a,
+		uint16_t b) {
+	return a < b ? a : b;
+}
+
+static inline uint16_t bw_maxu16(
+		uint16_t a,
+		uint16_t b) {
+	return a > b ? a : b;
+}
+
+static inline uint16_t bw_clipu16(
+		uint16_t x,
+		uint16_t m,
+		uint16_t M) {
+	return x < m ? m : (x > M ? M : x);
+}
+
 static inline int32_t bw_signfilli32(
 		int32_t x) {
 	return x < 0 ? ~0 : 0;
@@ -1078,7 +1286,7 @@ static inline float bw_log2_1p2xf(
 static inline float bw_log_1pexpxf(
 		float x) {
 	BW_ASSERT(!bw_is_nan(x));
-	const float y = 0.693147180559945f * bw_log2_1p2xf(1.442695040888963f * x);
+	const float y = x >= 22.18070977791827f ? x : 0.693147180559945f * bw_log2f(1.f + bw_pow2f(1.442695040888963f * x));
 	BW_ASSERT(bw_is_finite(y));
 	return y;
 }
@@ -1086,7 +1294,7 @@ static inline float bw_log_1pexpxf(
 static inline float bw_log10_1p10xf(
 		float x) {
 	BW_ASSERT(!bw_is_nan(x));
-	const float y = 0.3010299956639811f * bw_log2_1p2xf(3.321928094887363f * x);
+	const float y = x >= 9.632959861247409f ? x : 0.3010299956639811f * bw_log2f(1.f + bw_pow2f(3.321928094887363f * x));
 	BW_ASSERT(bw_is_finite(y));
 	return y;
 }
