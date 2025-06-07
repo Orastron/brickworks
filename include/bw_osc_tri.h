@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Triangle oscillator waveshaper with variable slope (increasing time over
@@ -33,10 +33,24 @@
  *
  *    V. Valimaki and A. Huovilainen, "Antialiasing Oscillators in Subtractive
  *    Synthesis", IEEE Signal Processing Magazine, vol. 24, no. 2, pp. 116-125,
- *    March 2007.
+ *    March 2007,
+ *
+ *    with residual polynomials essentially corresponding to those in Table VII
+ *    in
+ *
+ *    V. Valimaki and J. Pekonen, "Perceptually Informed Synthesis of
+ *    Bandlimited Classical Waveforms Using Integrated Polynomial
+ *    Interpolation", Journal of the Acoustical Society of America, vol. 131,
+ *    no. 1, pp. 974-986, January 2012.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Added citation regarding BLEP residual polynomial in the module
+ *              description.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Fixed typo in Changelog.</li>

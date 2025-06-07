@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Sawtooth oscillator waveshaper with PolyBLEP antialiasing.
@@ -32,10 +32,24 @@
  *
  *    V. Valimaki and A. Huovilainen, "Antialiasing Oscillators in Subtractive
  *    Synthesis", IEEE Signal Processing Magazine, vol. 24, no. 2, pp. 116-125,
- *    March 2007.
+ *    March 2007,
+ *
+ *    with residual polynomials essentially corresponding to those in Table VII
+ *    in
+ *
+ *    V. Valimaki and J. Pekonen, "Perceptually Informed Synthesis of
+ *    Bandlimited Classical Waveforms Using Integrated Polynomial
+ *    Interpolation", Journal of the Acoustical Society of America, vol. 131,
+ *    no. 1, pp. 974-986, January 2012.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Added citation regarding BLEP residual polynomial in the module
+ *              description.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added support for <code>BW_INCLUDE_WITH_QUOTES</code>,
