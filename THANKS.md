@@ -1,5 +1,7 @@
 We wish to thank and give credit to:
 - the adopters of this software, of which at the moment we can publicly mention, in alphabetical order:
+  - [Acustica Audio](https://www.acustica-audio.com/);
+  - [Physical Audio](https://physicalaudio.co.uk/);
   - [Elk Audio](https://www.elk.audio/);
   - [Faselunare](http://faselunare.com/);
 - Kevin Molcard for finding compilation warnings that needed fixing in Brickworks 1.0.0;
@@ -10,6 +12,7 @@ We wish to thank and give credit to:
   - J. Dattorro, "Effect Design, Part 1: Reverberator and Other Filters", J. Audio Eng. Soc., vol. 45, no. 9, pp. 660-684, September 1997;
   - J. Dattorro, "Effect Design, Part 2: Delay-Line Modulation and Chorus", J. Audio Eng. Soc., vol. 45, no. 10, pp. 764-788, October 1997;
   - V. Valimaki and A. Huovilainen, "Antialiasing Oscillators in Subtractive Synthesis", IEEE Signal Processing Magazine, vol. 24, no. 2, pp. 116-125, March 2007;
+  - V. Valimaki and J. Pekonen, "Perceptually Informed Synthesis of Bandlimited Classical Waveforms Using Integrated Polynomial Interpolation", Journal of the Acoustical Society of America, vol. 131, no. 1, pp. 974-986, January 2012.
   - M. E. O'Neill, "PCG: A Family of Simple Fast Space-Efficient Statistically Good Algorithms for Random Number Generation", September 2014, available at <https://www.cs.hmc.edu/tr/hmc-cs-2014-0905.pdf>;
   - J. D. Parker, V. Zavalishin, and E. Le Bivic, "Reducing the Aliasing of Nonlinear Waveshaping Using Continuous-Time Convolution", Proc. 19th Intl. Conf. Digital Audio Effects (DAFx-16), pp. 137-144, Brno, Czech Republic, September 2016.
   - C. Wellons, "Finding the Best 64-bit Simulation PRNG", September 2017, available at <https://nullprogram.com/blog/2017/09/21/>;
