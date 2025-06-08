@@ -2,7 +2,7 @@
 
 TIBIA_DIR=../../../tibia
 
-VERSION=1.3.0
+VERSION=1.4.0
 BUILD_VERSION=1
 
 if [ -z "$1" -o "$1" = "common" ]; then
