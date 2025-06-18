@@ -42,6 +42,8 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Fixed bug which caused looping behavior when skip sustain was
+                active and gate was kept on.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -483,6 +485,7 @@ struct bw_env_gen_state {
 	bw_env_gen_phase	phase;
 	uint32_t		v;
 	bw_one_pole_state	smooth_state;
+	char			gate;
 };
 
 #define BW_ENV_GEN_PARAM_ATTACK		1
@@ -585,6 +588,7 @@ static inline float bw_env_gen_reset_state(
 		state->phase = bw_env_gen_phase_off;
 		state->v = 0;
 	}
+	state->gate = gate_0;
 	const float y = (1.f / (float)BW_ENV_GEN_V_MAX) * state->v;
 
 #ifdef BW_DEBUG_DEEP
@@ -659,13 +663,14 @@ static inline void bw_env_gen_process_ctrl(
 	BW_ASSERT(state != BW_NULL);
 	BW_ASSERT_DEEP(bw_env_gen_state_is_valid(coeffs, state));
 
-	if (gate) {
+	if (gate && !state->gate) {
 		if (state->phase == bw_env_gen_phase_off || state->phase == bw_env_gen_phase_release)
 			state->phase = bw_env_gen_phase_attack;
-	} else {
+	} else if (!gate) {
 		if (state->phase == bw_env_gen_phase_sustain || (state->phase != bw_env_gen_phase_off && !coeffs->always_reach_sustain))
 			state->phase = bw_env_gen_phase_release;
 	}
+	state->gate = gate;
 
 	BW_ASSERT_DEEP(bw_env_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_env_gen_coeffs_state_reset_coeffs);
