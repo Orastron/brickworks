@@ -35,6 +35,8 @@
  *    <ul>
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
+ *          <li>Fixed bug which resulted in bad coefficients in
+ *              <code>bw_iir1_coeffs_hp1()</code>.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -553,7 +555,7 @@ static inline void bw_iir1_coeffs_hp1(
 	BW_IIR1_ASSERT_VALID_COEFF_PTRS
 
 	BW_IIR1_COEFFS_COMMON
-	*b0 = d * (k - prewarp_freq);
+	*b0 = d * prewarp_freq;
 	*b1 = -*b0;
 
 	bw_iir1_assert_valid_coeffs(*b0, *b1, *a1);
