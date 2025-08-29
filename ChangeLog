@@ -9,6 +9,7 @@
  * Added missing dependency on bw_mm1 in the documentation of bw_drive.
  * Added citation to relevant scientific article in the documentation of bw_osc_{saw,pulse,tri}.
  * Fixed typos in the documentation of bw_slew_lim_set_max_rate() and bw_slew_lim_set_max_rate_down().
+ * Fixed typo in the module description of bw_src_int.
  * Fixed bw_comb's copyright header.
  * Updated THANKS.md.
 

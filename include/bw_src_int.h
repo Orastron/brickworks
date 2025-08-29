@@ -28,13 +28,14 @@
  *    The multi-rate filtering approach was inspired by
  *
  *    M. Holters and J. D. Parker, "A Combined Model for a Bucket Brigade Device
- *    and its Input and Output Filters", 21st Intl. Conf. Digital Audio Effects
- *    (DAFx-18), Aveiro, Portugal, September 2018.
+ *    and its Input and Output Filters", Proc. 21st Intl. Conf. Digital Audio
+ *    Effects (DAFx-18), Aveiro, Portugal, September 2018.
  *  }}}
  *  changelog {{{
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Fixed typo in module description.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
