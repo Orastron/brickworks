@@ -3,7 +3,8 @@ We wish to thank and give credit to:
   - [Acustica Audio](https://www.acustica-audio.com/);
   - [Physical Audio](https://physicalaudio.co.uk/);
   - [Elk Audio](https://www.elk.audio/);
-  - [Faselunare](http://faselunare.com/);
+  - [Faselunare](https://faselunare.com/);
+  - [Nothing Technology Limited](https://nothing.tech/);
 - Kevin Molcard for finding compilation warnings that needed fixing in Brickworks 1.0.0;
 - users participating to [this thread on the KVR Audio forum](https://www.kvraudio.com/forum/viewtopic.php?f=33&t=589519) for providing useful feedback;
 - [Mads Kjeldgaard](https://madskjeldgaard.dk/) for publishing [instructions to build for the Daisy Seed and uploading the firmware](https://madskjeldgaard.dk/posts/daisy-setup/);
