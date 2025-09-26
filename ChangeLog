@@ -2,6 +2,8 @@
 -----
  * Added new bw_sampler module and related new synth(pp)_sampler examples.
  * Added bw_{signfill,min,max,clip}{i,u}{8,16}() and bw_sechf() to bw_math.
+ * Fixed bug in bw_env_gen which caused looping behavior when skip sustain was active and gate was kept on.
+ * Fixed bug which resulted in bad coefficients in bw_iir1_coeffs_hp1().
  * Improved precision and performance of bw_log_1pexpxf() and bw_log10_1p10xf().
  * Small optimization in bw_svf.
  * Updated examples' build system to Tibia 0.2.0.
