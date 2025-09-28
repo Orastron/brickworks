@@ -83,7 +83,7 @@ void impl_reset(impl handle) {
 	const size_t sampleLength[1] = {instance->sampleLength};
 	instance->sampler.reset(sample, sampleLength);
 #else
-	instance->sampler.reset({instance->sample}, {instance->sampleLength}, 0.f, {BW_NULL});
+	instance->sampler.reset({instance->sample}, {instance->sampleLength});
 #endif
 	instance->gain.reset();
 	instance->ppm.reset();
@@ -130,7 +130,7 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 		instance->sampler.setRate((1.f / 440.f) * instance->masterTune * bw_pow2f(8.333333333333333e-2f * (instance->note - 69)));
 		instance->sampler.process({instance->sample}, {instance->sampleLength}, {outputs[0]}, n_samples);
 	} else
-		instance->sampler.reset({instance->sample}, {instance->sampleLength}, 0.f, {BW_NULL}); // sloppy but simple coding
+		instance->sampler.reset({instance->sample}, {instance->sampleLength}); // sloppy but simple coding
 #endif
 	instance->gain.process(outputs, outputs, n_samples);
 	instance->ppm.process(outputs, nullptr, n_samples);

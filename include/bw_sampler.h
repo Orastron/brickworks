@@ -707,8 +707,8 @@ public:
 	void reset(
 		std::array<const float * BW_RESTRICT, N_CHANNELS> sample,
 		std::array<size_t, N_CHANNELS>                    sampleLength,
-		float                                             pos0,
-		std::array<float, N_CHANNELS> * BW_RESTRICT       y0);
+		float                                             pos0 = 0.f,
+		std::array<float, N_CHANNELS> * BW_RESTRICT       y0 = BW_NULL);
 # endif
 
 	void reset(
