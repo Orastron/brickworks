@@ -2,7 +2,7 @@
 
 Brickworks is a music DSP toolkit that supplies you with the fundamental building blocks for creating and enhancing audio engines on any platform.
 
-You can find information and documentation [on the official web page](https://www.orastron.com/brickworks).
+You can find information and documentation [on the official web page](https://www.orastron.com/algorithms#brickworks).
 
 ## Subfolders
 
