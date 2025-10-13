@@ -37,6 +37,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Improved computation of internal mixing coefficients.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -503,20 +504,22 @@ static inline void bw_peak_set_sample_rate(
 static inline void bw_peak_update_mm2_params(
 		bw_peak_coeffs * BW_RESTRICT coeffs) {
 	if (coeffs->param_changed) {
+		if (coeffs->param_changed & BW_PEAK_PARAM_PEAK_GAIN) {
+			bw_mm2_set_coeff_x(&coeffs->mm2_coeffs, coeffs->peak_gain);
+			const float k = 1.f - coeffs->peak_gain;
+			bw_mm2_set_coeff_lp(&coeffs->mm2_coeffs, k);
+			bw_mm2_set_coeff_hp(&coeffs->mm2_coeffs, k);
+		}
 		if (coeffs->use_bandwidth) {
 			if (coeffs->param_changed & (BW_PEAK_PARAM_PEAK_GAIN | BW_PEAK_PARAM_BANDWIDTH)) {
 				if (coeffs->param_changed & BW_PEAK_PARAM_BANDWIDTH)
 					coeffs->bw_k = bw_pow2f(coeffs->bandwidth);
 				const float Q = bw_sqrtf(coeffs->bw_k * coeffs->peak_gain) * bw_rcpf(coeffs->bw_k - 1.f);
 				bw_mm2_set_Q(&coeffs->mm2_coeffs, Q);
-				bw_mm2_set_coeff_bp(&coeffs->mm2_coeffs, (coeffs->peak_gain - 1.f) * bw_rcpf(Q));
 			}
 		} else {
-			if (coeffs->param_changed & (BW_PEAK_PARAM_PEAK_GAIN | BW_PEAK_PARAM_Q)) {
-				if (coeffs->param_changed & BW_PEAK_PARAM_Q)
-					bw_mm2_set_Q(&coeffs->mm2_coeffs, coeffs->Q);
-				bw_mm2_set_coeff_bp(&coeffs->mm2_coeffs, (coeffs->peak_gain - 1.f) * bw_rcpf(coeffs->Q));
-			}
+			if (coeffs->param_changed & BW_PEAK_PARAM_Q)
+				bw_mm2_set_Q(&coeffs->mm2_coeffs, coeffs->Q);
 		}
 		coeffs->param_changed = 0;
 	}
