@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common bw_gain bw_math bw_one_pole }}}
  *  description {{{
  *    Stereo panner with -3 dB center pan law.
