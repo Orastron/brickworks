@@ -37,6 +37,8 @@
  *        <ul>
  *          <li>Fixed bug which resulted in bad coefficients in
  *              <code>bw_iir1_coeffs_hp1()</code>.</li>
+ *          <li>Fixed the documenation of <code>bw_iir1_coeffs_*()</code> w.r.t.
+ *              <code>prewarp_at_cutoff</code> and typos.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -170,10 +172,10 @@ static inline void bw_iir1_coeffs_ap1(
  *    prewarping.
  *
  *    It takes the `sample_rate` (Hz, must be finite and positive) and the
- *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`,
- *    then the prewarping frequency matches `cutoff`, otherwise the value
- *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
- *    limited to avoid instability) is used.
+ *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_at_cutoff` is
+ *    non-`0`, then the prewarping frequency matches `cutoff`, otherwise the
+ *    value specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however
+ *    internally limited to avoid instability) is used.
  *
  *    #### bw_iir1_coeffs_hp1()
  *  ```>>> */
@@ -192,10 +194,10 @@ static inline void bw_iir1_coeffs_hp1(
  *    with prewarping.
  *
  *    It takes the `sample_rate` (Hz, must be finite and positive) and the
- *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`,
- *    then the prewarping frequency matches `cutoff`, otherwise the value
- *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
- *    limited to avoid instability) is used.
+ *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_at_cutoff` is
+ *    non-`0`, then the prewarping frequency matches `cutoff`, otherwise the
+ *    value specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however
+ *    internally limited to avoid instability) is used.
  *
  *    #### bw_iir1_coeffs_hs1()
  *  ```>>> */
@@ -218,9 +220,10 @@ static inline void bw_iir1_coeffs_hs1(
  *    frequency (Hz, must be finite and positive), and the high-frequency gain
  *    `high_gain`, either as linear gain (in [`1e-30f`, `1e30f`]) if
  *    `high_gain_dB` is `0`, or otherwise in dB (in [`-600.f`, `600.f`]). If
- *    `prewarp_freq` is `0`, then the prewarping frequency matches `cutoff`,
- *    otherwise the value specified by `prewarp_freq` (Hz, in [`1e-6f`,
- *    `1e12f`], however interally limited to avoid instability) is used.
+ *    `prewarp_at_cutoff` is non-`0`, then the prewarping frequency matches
+ *    `cutoff`, otherwise the value specified by `prewarp_freq` (Hz, in
+ *    [`1e-6f`, `1e12f`], however internally limited to avoid instability) is
+ *    used.
  *
  *    `cutoff * bw_sqrtf(high_gain)` must be in [`1e-6f`, `1e12f`], where
  *    `high_gain` is expressed as linear gain.
@@ -241,10 +244,10 @@ static inline void bw_iir1_coeffs_lp1(
  *    bilinear transform with prewarping.
  *
  *    It takes the `sample_rate` (Hz, must be finite and positive) and the
- *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_freq` is `0`,
- *    then the prewarping frequency matches `cutoff`, otherwise the value
- *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally
- *    limited to avoid instability) is used.
+ *    `cutoff` frequency (Hz, in [`1e-6f`, `1e12f`]). If `prewarp_at_cutoff` is
+ *    non-`0`, then the prewarping frequency matches `cutoff`, otherwise the
+ *    value specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however
+ *    internally limited to avoid instability) is used.
  *
  *    #### bw_iir1_coeffs_ls1()
  *  ```>>> */
@@ -266,10 +269,10 @@ static inline void bw_iir1_coeffs_ls1(
  *    It takes the `sample_rate` (Hz, must be finite and  positive), the
  *    `cutoff` frequency (Hz, must be finite and positive), and the `dc_gain`,
  *    either as linear gain (in [`1e-30f`, `1e30f`]) if `dc_gain_dB` is `0`, or
- *    otherwise in dB (in [`-600.f`, `600.f`]). If `prewarp_freq` is `0`, then
- *    the prewarping frequency matches `cutoff`, otherwise the value specified
- *    by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
- *    avoid instability) is used.
+ *    otherwise in dB (in [`-600.f`, `600.f`]). If `prewarp_at_cutoff` is
+ *    non-`0`, then the prewarping frequency matches `cutoff`, otherwise the
+ *    value specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however
+ *    internally limited to avoid instability) is used.
  *
  *    `cutoff * bw_rcpf(bw_sqrtf(dc_gain))` must be in [`1e-6f`, `1e12f`], where
  *    `dc_gain` is expressed as linear gain.
@@ -298,10 +301,10 @@ static inline void bw_iir1_coeffs_mm1(
  *
  *    It takes the `sample_rate` (Hz, must be finite and positive), the `cutoff`
  *    frequency (Hz, in [`1e-6f`, `1e12f`]), and output coefficients `coeff_x`
- *    and `coeff_lp` (both must be finite). If `prewarp_freq` is `0`, then the
- *    prewarping frequency matches `cutoff`, otherwise the value specified by
- *    `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however interally limited to
- *    avoid instability) is used.
+ *    and `coeff_lp` (both must be finite). If `prewarp_at_cutoff` is non-`0`,
+ *    then the prewarping frequency matches `cutoff`, otherwise the value
+ *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however internally
+ *    limited to avoid instability) is used.
  *  }}} */
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
