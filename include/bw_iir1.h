@@ -35,6 +35,7 @@
  *    <ul>
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
+ *          <li>Added <code>bw_iir1_coeffs_is_valid()</code>.</li>
  *          <li>Fixed bug which resulted in bad coefficients in
  *              <code>bw_iir1_coeffs_hp1()</code>.</li>
  *          <li>Fixed the documenation of <code>bw_iir1_coeffs_*()</code> w.r.t.
@@ -305,6 +306,18 @@ static inline void bw_iir1_coeffs_mm1(
  *    then the prewarping frequency matches `cutoff`, otherwise the value
  *    specified by `prewarp_freq` (Hz, in [`1e-6f`, `1e12f`], however internally
  *    limited to avoid instability) is used.
+ *
+ *    #### bw_iir1_coeffs_is_valid()
+ *  ```>>> */
+static inline char bw_iir1_coeffs_is_valid(
+	float b0,
+	float b1,
+	float a1);
+/*! <<<```
+ *    Determines whether `b0`, `b1`, and `a1` are valid and describe a stable
+ *    or marginally stable filter.
+ *
+ *    It returns non-`0` if it is the case and `0` otherwise.
  *  }}} */
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
@@ -658,6 +671,16 @@ static inline void bw_iir1_coeffs_mm1(
 	*b1 = d * (k3 - k2);
 
 	bw_iir1_assert_valid_coeffs(*b0, *b1, *a1);
+}
+
+static inline char bw_iir1_coeffs_is_valid(
+		float b0,
+		float b1,
+		float a1) {
+	return bw_is_finite(b0)
+		&& bw_is_finite(b1)
+		&& bw_is_finite(a1)
+		&& (-1.f <= a1 && a1 <= 1.f);
 }
 
 #undef BW_IIR1_COEFFS_COMMON

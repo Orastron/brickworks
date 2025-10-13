@@ -35,6 +35,7 @@
  *    <ul>
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
+ *          <li>Added <code>bw_iir2_coeffs_is_valid()</code>.</li>
  *          <li>Fixed the documenation of <code>bw_iir2_coeffs_*()</code> w.r.t.
  *              <code>prewarp_at_cutoff</code> and typos.</li>
  *          <li>Updated dependencies.</li>
@@ -434,6 +435,20 @@ static inline void bw_iir2_coeffs_peak(
  *    If `use_bandwidth` is non-`0`, then `bw_sqrtf(bw_pow2f(Q_bandwidth) *
  *    peak_gain) * bw_rcpf(bw_pow2f(Q_bandwidth) - 1.f)` must be in [`1e-6f`,
  *    `1e6f`], where `peak_gain` is expressed as linear gain.
+ *
+ *    #### bw_iir2_coeffs_is_valid()
+ *  ```>>> */
+static inline char bw_iir2_coeffs_is_valid(
+	float b0,
+	float b1,
+	float b2,
+	float a1,
+	float a2);
+/*! <<<```
+ *    Determines whether `b0`, `b1`, `b2`, `a1`, and `a2` are valid and
+ *    describe a stable or marginally stable filter.
+ *
+ *    It returns non-`0` if it is the case and `0` otherwise.
  *  }}} */
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
@@ -1000,6 +1015,20 @@ static inline void bw_iir2_coeffs_peak(
 	*b2 = d * (k6 - k7);
 
 	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+}
+
+static inline char bw_iir2_coeffs_is_valid(
+		float b0,
+		float b1,
+		float b2,
+		float a1,
+		float a2) {
+	return bw_is_finite(b0)
+		&& bw_is_finite(b1)
+		&& bw_is_finite(b2)
+		&& bw_is_finite(a1)
+		&& bw_is_finite(a2)
+		&& (bw_absf(a1) <= 2.f && a2 >= bw_absf(a1) - 1.f && (a2 <= 0.25f * (a1 * a1) || 1.f - 0.25f * (a1 * a1) >= 4.f * (a2 - 0.25f * (a1 * a1)) * (a2 - 0.25f * (a1 * a1))));
 }
 
 #undef BW_IIR2_COEFFS_COMMON
