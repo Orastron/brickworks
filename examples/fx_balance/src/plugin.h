@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include <bw_balance.h>
 #include <bw_ppm.h>
 
-typedef struct plugin {
+typedef struct {
 	bw_balance_coeffs	balance_coeffs;
 	bw_ppm_coeffs		ppm_coeffs;
 	bw_ppm_state		ppm_l_state;

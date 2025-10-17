@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,23 +19,25 @@
  */
 
 #include "common.h"
-#include "impl.h"
+#include <bw_ap2.h>
 
-typedef struct plugin {
-	impl	handle;
+using namespace Brickworks;
+
+typedef struct {
+	AP2<> ap2;
 } plugin;
 
 static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
 	(void)cbs;
-	instance->handle = impl_new();
+	new(&instance->ap2) AP2<>();
 }
 
 static void plugin_fini(plugin *instance) {
-	impl_free(instance->handle);
+	(void)instance;
 }
 
 static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
-	impl_set_sample_rate(instance->handle, sample_rate);
+	instance->ap2.setSampleRate(sample_rate);
 }
 
 static size_t plugin_mem_req(plugin *instance) {
@@ -49,17 +51,26 @@ static void plugin_mem_set(plugin *instance, void *mem) {
 }
 
 static void plugin_reset(plugin *instance) {
-	impl_reset(instance->handle);
+	instance->ap2.reset();
 }
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
-	impl_set_parameter(instance->handle, index, value);
+	switch (index) {
+	case plugin_parameter_cutoff:
+		instance->ap2.setCutoff(value);
+		break;
+	case plugin_parameter_q:
+		instance->ap2.setQ(value);
+		break;
+	}
 }
 
 static float plugin_get_parameter(plugin *instance, size_t index) {
-	return impl_get_parameter(instance->handle, index);
+	(void)instance;
+	(void)index;
+	return 0.f;
 }
 
 static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
-	impl_process(instance->handle, inputs, outputs, n_samples);
+	instance->ap2.process(inputs, outputs, n_samples);
 }

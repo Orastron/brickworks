@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,58 +18,58 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_balance.h>
 #include <bw_ppm.h>
 
 using namespace Brickworks;
 
-class Engine {
-public:
-	Balance<1>	balance;
+typedef struct {
+	Balance<>	balance;
 	PPM<2>		ppm;
-};
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->balance) Balance<>();
+	new(&instance->ppm) PPM<2>();
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
 	instance->balance.setSampleRate(sample_rate);
 	instance->ppm.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
+}
+
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
 	instance->balance.reset();
 	instance->ppm.reset();
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	(void)index;
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 	instance->balance.setBalance(0.01f * value);
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	float v = instance->ppm.getYZ1(index - 1);
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	float v = instance->ppm.getYZ1(index == plugin_parameter_l_level ? 0 : 1);
 	return v < -60.f ? -60.f : (v > 0.f ? 0.f : v);
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
 #ifdef WASM
 	const float *xL[1] = {inputs[0]};
 	const float *xR[1] = {inputs[1]};
@@ -81,6 +81,4 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 	instance->balance.process({inputs[0]}, {inputs[1]}, {outputs[0]}, {outputs[1]}, n_samples);
 	instance->ppm.process({outputs[0], outputs[1]}, {nullptr, nullptr}, n_samples);
 #endif
-}
-
 }

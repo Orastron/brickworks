@@ -1,6 +1,5 @@
 {
 	"make": {
-		"mkincDir": "../../common/src",
-		"extra": "EXAMPLE_TYPE := c"
+		"mkincDir": "../../common/src"
 	}
 }

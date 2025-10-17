@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include "common.h"
 #include <bw_ls1.h>
 
-typedef struct plugin {
+typedef struct {
 	bw_ls1_coeffs	ls1_coeffs;
 	bw_ls1_state	ls1_state;
 } plugin;

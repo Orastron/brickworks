@@ -27,7 +27,7 @@
 
 #define SAMPLE_LENGTH	10 // seconds
 
-typedef struct plugin {
+typedef struct {
 	bw_sampler_coeffs	sampler_coeffs;
 	bw_sampler_state	sampler_state;
 	bw_gain_coeffs		gain_coeffs;

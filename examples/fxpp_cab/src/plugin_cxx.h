@@ -19,16 +19,17 @@
  */
 
 #include "common.h"
-#include <bw_hs1.h>
+#include <bw_cab.h>
+
+using namespace Brickworks;
 
 typedef struct {
-	bw_hs1_coeffs	hs1_coeffs;
-	bw_hs1_state	hs1_state;
+	Cab<> cab;
 } plugin;
 
 static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
 	(void)cbs;
-	bw_hs1_init(&instance->hs1_coeffs);
+	new(&instance->cab) Cab<>();
 }
 
 static void plugin_fini(plugin *instance) {
@@ -36,7 +37,7 @@ static void plugin_fini(plugin *instance) {
 }
 
 static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
-	bw_hs1_set_sample_rate(&instance->hs1_coeffs, sample_rate);
+	instance->cab.setSampleRate(sample_rate);
 }
 
 static size_t plugin_mem_req(plugin *instance) {
@@ -50,17 +51,19 @@ static void plugin_mem_set(plugin *instance, void *mem) {
 }
 
 static void plugin_reset(plugin *instance) {
-	bw_hs1_reset_coeffs(&instance->hs1_coeffs);
-	bw_hs1_reset_state(&instance->hs1_coeffs, &instance->hs1_state, 0.f);
+	instance->cab.reset();
 }
 
 static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
-	case plugin_parameter_cutoff:
-		bw_hs1_set_cutoff(&instance->hs1_coeffs, value);
+	case plugin_parameter_cutoff_low:
+		instance->cab.setCutoffLow(0.01f * value);
 		break;
-	case plugin_parameter_gain:
-		bw_hs1_set_high_gain_dB(&instance->hs1_coeffs, value);
+	case plugin_parameter_cutoff_high:
+		instance->cab.setCutoffHigh(0.01f * value);
+		break;
+	case plugin_parameter_tone:
+		instance->cab.setTone(0.01f * value);
 		break;
 	}
 }
@@ -72,5 +75,5 @@ static float plugin_get_parameter(plugin *instance, size_t index) {
 }
 
 static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
-	bw_hs1_process(&instance->hs1_coeffs, &instance->hs1_state, inputs[0], outputs[0], n_samples);
+	instance->cab.process(inputs, outputs, n_samples);
 }

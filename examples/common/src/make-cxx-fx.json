@@ -1,6 +1,0 @@
-{
-	"make": {
-		"mkincDir": "../../common/src",
-		"extra": "EXAMPLE_TYPE := cxx-fx"
-	}
-}

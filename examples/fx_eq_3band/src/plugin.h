@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include <bw_hs2.h>
 #include <bw_peak.h>
 
-typedef struct plugin {
+typedef struct {
 	bw_ls2_coeffs	ls2_coeffs;
 	bw_ls2_state	ls2_state;
 	bw_peak_coeffs	peak_coeffs;

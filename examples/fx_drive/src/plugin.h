@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 
 #define BUF_SIZE	32
 
-typedef struct plugin {
+typedef struct {
 	bw_drive_coeffs		drive_coeffs;
 	bw_drive_state		drive_state;
 	bw_src_int_coeffs	src_up_coeffs;

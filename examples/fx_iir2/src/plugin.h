@@ -21,7 +21,7 @@
 #include "common.h"
 #include <bw_iir2.h>
 
-typedef struct plugin {
+typedef struct {
 	float	sample_rate;
 	float	cutoff;
 	float	q;

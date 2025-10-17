@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 
 #define BUFFER_SIZE	128
 
-typedef struct plugin {
+typedef struct {
 	bw_phase_gen_coeffs	phase_gen_coeffs;
 	bw_phase_gen_state	phase_gen_state;
 	bw_osc_pulse_coeffs	osc_pulse_coeffs;

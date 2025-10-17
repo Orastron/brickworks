@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include "common.h"
 #include <bw_noise_gate.h>
 
-typedef struct plugin {
+typedef struct {
 	bw_noise_gate_coeffs	noise_gate_coeffs;
 	bw_noise_gate_state	noise_gate_state;
 	char			ext_sidechain;
