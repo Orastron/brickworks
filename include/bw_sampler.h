@@ -689,7 +689,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::Sampler
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class Sampler {
 public:
 	Sampler();

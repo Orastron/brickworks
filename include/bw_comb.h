@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.2 }}}
+ *  version {{{ 1.3.0 }}}
  *  requires {{{
  *    bw_buf bw_common bw_delay bw_gain bw_math bw_one_pole
  *  }}}
@@ -37,8 +37,10 @@
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.2.2</strong>:
+ *      <li>Version <strong>1.3.0</strong>:
  *        <ul>
+ *          <li>Added <code>memReq</code>/<code>memSet</code> to C++ API.</li>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -943,7 +945,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::Comb
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class Comb {
 public:
 	Comb(
@@ -952,7 +954,11 @@ public:
 	~Comb();
 
 	void setSampleRate(
-		float sampleRate);
+		float                sampleRate,
+		size_t * BW_RESTRICT memReq = BW_NULL);
+
+	void memSet(
+		void * BW_RESTRICT mem);
 
 	void reset(
 		float               x0 = 0.f,
@@ -1014,6 +1020,7 @@ private:
 	bw_comb_coeffs			coeffs;
 	bw_comb_state			states[N_CHANNELS];
 	bw_comb_state * BW_RESTRICT	statesP[N_CHANNELS];
+	bool				memAllocated;
 	void * BW_RESTRICT		mem;
 };
 
@@ -1023,24 +1030,43 @@ inline Comb<N_CHANNELS>::Comb(
 	bw_comb_init(&coeffs, maxDelay);
 	for (size_t i = 0; i < N_CHANNELS; i++)
 		statesP[i] = states + i;
+	memAllocated = false;
 	mem = BW_NULL;
 }
 
 template<size_t N_CHANNELS>
 inline Comb<N_CHANNELS>::~Comb() {
-	if (mem != BW_NULL)
+	if (memAllocated)
 		operator delete(mem);
 }
 
 template<size_t N_CHANNELS>
 inline void Comb<N_CHANNELS>::setSampleRate(
-		float sampleRate) {
+		float                sampleRate,
+		size_t * BW_RESTRICT memReq) {
 	bw_comb_set_sample_rate(&coeffs, sampleRate);
 	size_t req = bw_comb_mem_req(&coeffs);
-	if (mem != BW_NULL)
+	if (memAllocated) {
 		operator delete(mem);
-	mem = operator new(req * N_CHANNELS);
+		memAllocated = false;
+	}
+	if (memReq != BW_NULL) {
+		*memReq = req * N_CHANNELS;
+	} else {
+		mem = operator new(req * N_CHANNELS);
+		memAllocated = true;
+		void *m = mem;
+		for (size_t i = 0; i < N_CHANNELS; i++, m = static_cast<char *>(m) + req)
+			bw_comb_mem_set(&coeffs, states + i, m);
+	}
+}
+
+template<size_t N_CHANNELS>
+inline void Comb<N_CHANNELS>::memSet(
+		void * BW_RESTRICT mem) {
+	this->mem = mem;
 	void *m = mem;
+	size_t req = bw_comb_mem_req(&coeffs);
 	for (size_t i = 0; i < N_CHANNELS; i++, m = static_cast<char *>(m) + req)
 		bw_comb_mem_set(&coeffs, states + i, m);
 }

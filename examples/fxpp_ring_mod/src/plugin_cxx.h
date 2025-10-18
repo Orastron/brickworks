@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_ring_mod.h>
 #include <bw_phase_gen.h>
@@ -27,59 +25,60 @@
 
 using namespace Brickworks;
 
-class Engine {
-public:
-	PhaseGen<1>	phase_gen;
-	RingMod<1>	ring_mod;
-};
+typedef struct {
+	PhaseGen<>	phaseGen;
+	RingMod<>	ringMod;
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->phaseGen) PhaseGen<>();
+	new(&instance->ringMod) RingMod<>();
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	instance->phase_gen.setSampleRate(sample_rate);
-	instance->ring_mod.setSampleRate(sample_rate);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
+	instance->phaseGen.setSampleRate(sample_rate);
+	instance->ringMod.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	instance->phase_gen.reset();
-	instance->ring_mod.reset();
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
+	instance->phaseGen.reset();
+	instance->ringMod.reset();
+}
+
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_frequency:
-		instance->phase_gen.setFrequency(value);
+		instance->phaseGen.setFrequency(value);
 		break;
 	case plugin_parameter_amount:
-		instance->ring_mod.setAmount(0.01f * value);
+		instance->ringMod.setAmount(0.01f * value);
 		break;
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	instance->phase_gen.process(nullptr, outputs, nullptr, n_samples);
-	oscSinProcess<1>(outputs, outputs, n_samples);
-	instance->ring_mod.process(inputs, outputs, outputs, n_samples);
-}
-
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+	instance->phaseGen.process(nullptr, outputs, nullptr, n_samples);
+	oscSinProcess<>(outputs, outputs, n_samples);
+	instance->ringMod.process(inputs, outputs, outputs, n_samples);
 }

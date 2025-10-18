@@ -37,6 +37,8 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Added <code>memReq</code>/<code>memSet</code> to C++ API.</li>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -1274,7 +1276,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::Reverb
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class Reverb {
 public:
 	Reverb();
@@ -1282,7 +1284,11 @@ public:
 	~Reverb();
 
 	void setSampleRate(
-		float sampleRate);
+		float                sampleRate,
+		size_t * BW_RESTRICT memReq = BW_NULL);
+
+	void memSet(
+		void * BW_RESTRICT mem);
 
 	void reset(
 		float               xL0 = 0.f,
@@ -1356,6 +1362,7 @@ private:
 	bw_reverb_coeffs		coeffs;
 	bw_reverb_state			states[N_CHANNELS];
 	bw_reverb_state * BW_RESTRICT	statesP[N_CHANNELS];
+	bool				memAllocated;
 	void * BW_RESTRICT		mem;
 };
 
@@ -1364,24 +1371,43 @@ inline Reverb<N_CHANNELS>::Reverb() {
 	bw_reverb_init(&coeffs);
 	for (size_t i = 0; i < N_CHANNELS; i++)
 		statesP[i] = states + i;
+	memAllocated = false;
 	mem = BW_NULL;
 }
 
 template<size_t N_CHANNELS>
 inline Reverb<N_CHANNELS>::~Reverb() {
-	if (mem != BW_NULL)
+	if (memAllocated)
 		operator delete(mem);
 }
 
 template<size_t N_CHANNELS>
 inline void Reverb<N_CHANNELS>::setSampleRate(
-		float sampleRate) {
+		float                sampleRate,
+		size_t * BW_RESTRICT memReq) {
 	bw_reverb_set_sample_rate(&coeffs, sampleRate);
 	size_t req = bw_reverb_mem_req(&coeffs);
-	if (mem != BW_NULL)
+	if (memAllocated) {
 		operator delete(mem);
-	mem = operator new(req * N_CHANNELS);
+		memAllocated = false;
+	}
+	if (memReq != BW_NULL) {
+		*memReq = req * N_CHANNELS;
+	} else {
+		mem = operator new(req * N_CHANNELS);
+		memAllocated = true;
+		void *m = mem;
+		for (size_t i = 0; i < N_CHANNELS; i++, m = static_cast<char *>(m) + req)
+			bw_reverb_mem_set(&coeffs, states + i, m);
+	}
+}
+
+template<size_t N_CHANNELS>
+inline void Reverb<N_CHANNELS>::memSet(
+		void * BW_RESTRICT mem) {
+	this->mem = mem;
 	void *m = mem;
+	size_t req = bw_reverb_mem_req(&coeffs);
 	for (size_t i = 0; i < N_CHANNELS; i++, m = static_cast<char *>(m) + req)
 		bw_reverb_mem_set(&coeffs, states + i, m);
 }

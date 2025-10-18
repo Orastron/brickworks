@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
 
 #include "common.h"
 #include <bw_ls2.h>
@@ -27,41 +26,46 @@
 
 using namespace Brickworks;
 
-class Engine {
-public:
-	LS2<1>	ls2;
-	Peak<1>	peak;
-	HS2<1>	hs2;
-};
+typedef struct {
+	LS2<>	ls2;
+	Peak<>	peak;
+	HS2<>	hs2;
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->ls2) LS2<>();
+	new(&instance->peak) Peak<>();
+	new(&instance->hs2) HS2<>();
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
 	instance->ls2.setSampleRate(sample_rate);
 	instance->peak.setSampleRate(sample_rate);
 	instance->hs2.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
+}
+
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
 	instance->ls2.reset();
 	instance->peak.reset();
 	instance->hs2.reset();
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_ls_cutoff:
 		instance->ls2.setCutoff(value);
@@ -93,17 +97,14 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
 	instance->ls2.process(inputs, outputs, n_samples);
 	instance->peak.process(outputs, outputs, n_samples);
 	instance->hs2.process(outputs, outputs, n_samples);
-}
-
 }

@@ -42,6 +42,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Fixed bug which caused looping behavior when skip sustain was
                 active and gate was kept on.</li>
  *          <li>Updated dependencies.</li>
@@ -996,7 +997,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::EnvGen
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class EnvGen {
 public:
 	EnvGen();

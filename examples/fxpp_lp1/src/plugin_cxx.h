@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,50 +18,53 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_lp1.h>
 
 using namespace Brickworks;
 
-extern "C" {
+typedef struct {
+	LP1<> lp1;
+} plugin;
 
-impl impl_new(void) {
-	LP1<1> *instance = new LP1<1>();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->lp1) LP1<>();
 }
 
-void impl_free(impl handle) {
-	LP1<1> *instance = reinterpret_cast<LP1<1> *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	LP1<1> *instance = reinterpret_cast<LP1<1> *>(handle);
-	instance->setSampleRate(sample_rate);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
+	instance->lp1.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	LP1<1> *instance = reinterpret_cast<LP1<1> *>(handle);
-	instance->reset();
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
+	instance->lp1.reset();
+}
+
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	(void)index;
-	LP1<1> *instance = reinterpret_cast<LP1<1> *>(handle);
-	instance->setCutoff(value);
+	instance->lp1.setCutoff(value);
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	LP1<1> *instance = reinterpret_cast<LP1<1> *>(handle);
-	instance->process(inputs, outputs, n_samples);
-}
-
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+	instance->lp1.process(inputs, outputs, n_samples);
 }

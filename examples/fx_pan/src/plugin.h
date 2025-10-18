@@ -67,15 +67,7 @@ static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 }
 
 static float plugin_get_parameter(plugin *instance, size_t index) {
-	float v = 0.f;
-	switch (index) {
-	case plugin_parameter_l_level:
-		v = bw_ppm_get_y_z1(&instance->ppm_l_state);
-		break;
-	case plugin_parameter_r_level:
-		v = bw_ppm_get_y_z1(&instance->ppm_r_state);
-		break;
-	}
+	float v = bw_ppm_get_y_z1(index == plugin_parameter_l_level ? &instance->ppm_l_state : &instance->ppm_r_state);
 	return bw_clipf(v, -60.f, 0.f);
 }
 

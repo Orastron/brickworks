@@ -25,13 +25,13 @@
 using namespace Brickworks;
 
 typedef struct {
-	SRReduce<1>	sr;
-	BDReduce<1>	bd;
+	SRReduce<>	sr;
+	BDReduce<2>	bd;
 } plugin;
 
 static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
 	(void)cbs;
-	new(&instance->sr) SRReduce<1>();
+	new(&instance->sr) SRReduce<>();
 	new(&instance->bd) BDReduce<2>();
 }
 

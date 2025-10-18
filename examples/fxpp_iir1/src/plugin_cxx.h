@@ -18,16 +18,12 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_iir1.h>
 
 using namespace Brickworks;
 
-extern "C" {
-
-typedef struct plugin {
+typedef struct {
 	float	sample_rate;
 	float	cutoff;
 	float	coeff_x;
@@ -36,59 +32,64 @@ typedef struct plugin {
 	float	b0;
 	float	b1;
 	float	a1;
-	char	to_reset;
+	bool	to_reset;
 } plugin;
 
-impl impl_new(void) {
-	return reinterpret_cast<impl>(new plugin);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)instance;
+	(void)cbs;
 }
 
-void impl_free(impl handle) {
-	delete reinterpret_cast<plugin *>(handle);
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	plugin *instance = reinterpret_cast<plugin *>(handle);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
 	instance->sample_rate = sample_rate;
 }
 
-void impl_reset(impl handle) {
-	plugin *instance = reinterpret_cast<plugin *>(handle);
-	bw_iir1_coeffs_mm1(instance->sample_rate, instance->cutoff, 1, instance->cutoff, instance->coeff_x, instance->coeff_lp, &instance->b0, &instance->b1, &instance->a1);
-	float x0[1] = { 0.f };
-	iir1Reset<1>(x0, BW_NULL, &instance->s, instance->b0, instance->b1, instance->a1);
-	instance->to_reset = 0;
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	plugin *instance = reinterpret_cast<plugin *>(handle);
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
+	bw_iir1_coeffs_mm1(instance->sample_rate, instance->cutoff, 1, instance->cutoff, instance->coeff_x, instance->coeff_lp, &instance->b0, &instance->b1, &instance->a1);
+	float x0[1] = { 0.f };
+	iir1Reset<>(x0, BW_NULL, &instance->s, instance->b0, instance->b1, instance->a1);
+	instance->to_reset = false;
+}
+
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_cutoff:
 		instance->cutoff = value;
-		instance->to_reset = 1;
+		instance->to_reset = true;
 		break;
 	case plugin_parameter_in:
 		instance->coeff_x = value;
-		instance->to_reset = 1;
+		instance->to_reset = true;
 		break;
 	case plugin_parameter_lp:
 		instance->coeff_lp = value;
-		instance->to_reset = 1;
+		instance->to_reset = true;
 		break;
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	plugin *instance = reinterpret_cast<plugin *>(handle);
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
 	if (instance->to_reset)
-		impl_reset(instance);
-	iir1Process<1>(inputs, outputs, &instance->s, instance->b0, instance->b1, instance->a1, n_samples);
-}
-
+		plugin_reset(instance);
+	iir1Process<>(inputs, outputs, &instance->s, instance->b0, instance->b1, instance->a1, n_samples);
 }

@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,68 +18,71 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_mm2.h>
 
 using namespace Brickworks;
 
-extern "C" {
+typedef struct {
+	MM2<> mm2;
+} plugin;
 
-impl impl_new(void) {
-	MM2<1> *instance = new MM2<1>();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->mm2) MM2<>();
 }
 
-void impl_free(impl handle) {
-	MM2<1> *instance = reinterpret_cast<MM2<1> *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	MM2<1> *instance = reinterpret_cast<MM2<1> *>(handle);
-	instance->setSampleRate(sample_rate);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
+	instance->mm2.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	MM2<1> *instance = reinterpret_cast<MM2<1> *>(handle);
-	instance->reset();
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	MM2<1> *instance = reinterpret_cast<MM2<1> *>(handle);
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
+	instance->mm2.reset();
+}
+
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_cutoff:
-		instance->setCutoff(value);
+		instance->mm2.setCutoff(value);
 		break;
 	case plugin_parameter_q:
-		instance->setQ(value);
+		instance->mm2.setQ(value);
 		break;
 	case plugin_parameter_in:
-		instance->setCoeffX(value);
+		instance->mm2.setCoeffX(value);
 		break;
 	case plugin_parameter_lp:
-		instance->setCoeffLp(value);
+		instance->mm2.setCoeffLp(value);
 		break;
 	case plugin_parameter_bp:
-		instance->setCoeffBp(value);
+		instance->mm2.setCoeffBp(value);
 		break;
 	case plugin_parameter_hp:
-		instance->setCoeffHp(value);
+		instance->mm2.setCoeffHp(value);
 		break;
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	MM2<1> *instance = reinterpret_cast<MM2<1> *>(handle);
-	instance->process(inputs, outputs, n_samples);
-}
-
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+	instance->mm2.process(inputs, outputs, n_samples);
 }

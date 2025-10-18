@@ -47,6 +47,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Added citation regarding BLEP residual polynomial in the module
  *              description.</li>
  *          <li>Updated dependencies.</li>
@@ -632,7 +633,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::OscTri
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class OscTri {
 public:
 	OscTri();

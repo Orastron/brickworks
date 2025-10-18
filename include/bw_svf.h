@@ -30,6 +30,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Small implementation optimization.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
@@ -1123,7 +1124,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::SVF
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class SVF {
 public:
 	SVF();

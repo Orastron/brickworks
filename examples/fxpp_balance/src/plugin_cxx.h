@@ -66,11 +66,11 @@ static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 
 static float plugin_get_parameter(plugin *instance, size_t index) {
 	float v = instance->ppm.getYZ1(index == plugin_parameter_l_level ? 0 : 1);
-	return v < -60.f ? -60.f : (v > 0.f ? 0.f : v);
+	return bw_clipf(v, -60.f, 0.f);
 }
 
 static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
-#ifdef WASM
+#ifdef BW_CXX_NO_ARRAY
 	const float *xL[1] = {inputs[0]};
 	const float *xR[1] = {inputs[1]};
 	float *yL[1] = {outputs[0]};

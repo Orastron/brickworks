@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,51 +18,49 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_chorus.h>
 
 using namespace Brickworks;
 
-class Engine {
-public:
-	Engine() : chorus(0.04f) {} // = 2 semitones * 2 @ 1hz, rounded up
-
-	Chorus<1>	chorus;
+typedef struct {
+	Chorus<>	chorus;
+	size_t		memSize;
 	float		rateK;
 	float		amountK;
-};
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->chorus) Chorus<>(0.04f); // = 2 semitones * 2 @ 1hz, rounded
 	instance->chorus.setCoeffX(0.f);
 	instance->chorus.setCoeffMod(1.f);
 	// for the first plugin_set_parameter()
 	instance->rateK = 1.f / 6.283185307179586f;
 	instance->amountK = 0.f;
-	return reinterpret_cast<impl>(instance);
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	instance->chorus.~Chorus();
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	instance->chorus.setSampleRate(sample_rate);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
+	instance->chorus.setSampleRate(sample_rate, &instance->memSize);
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static size_t plugin_mem_req(plugin *instance) {
+	return instance->memSize;
+}
+
+static void plugin_mem_set(plugin *instance, void *mem) {
+	instance->chorus.memSet(mem);
+}
+
+static void plugin_reset(plugin *instance) {
 	instance->chorus.reset();
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_rate:
 		instance->chorus.setRate(value);
@@ -77,15 +75,12 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 	instance->chorus.setAmount(v);
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
 	instance->chorus.process(inputs, outputs, n_samples);
-}
-
 }

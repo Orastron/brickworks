@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,57 +18,58 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_noise_gate.h>
 
 using namespace Brickworks;
 
-class Engine {
-public:
-	NoiseGate<1>	noise_gate;
+typedef struct {
+	NoiseGate<>	noiseGate;
 	bool		extSidechain;
-};
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->noiseGate) NoiseGate<>();
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	instance->noise_gate.setSampleRate(sample_rate);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
+	instance->noiseGate.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	instance->noise_gate.reset();
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
+	instance->noiseGate.reset();
+}
+
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_threshold:
-		instance->noise_gate.setThreshDBFS(value);
+		instance->noiseGate.setThreshDBFS(value);
 		break;
 	case plugin_parameter_ratio:
-		instance->noise_gate.setRatio(value);
+		instance->noiseGate.setRatio(value);
 		break;
 	case plugin_parameter_attack:
 		// using rise time 10% -> 90%: tau = rise time / log(9)
-		instance->noise_gate.setAttackTau((0.001f * 0.4551196133134186f) * value);
+		instance->noiseGate.setAttackTau((0.001f * 0.4551196133134186f) * value);
 		break;
 	case plugin_parameter_release:
 		// as before
-		instance->noise_gate.setReleaseTau((0.001f * 0.4551196133134186f) * value);
+		instance->noiseGate.setReleaseTau((0.001f * 0.4551196133134186f) * value);
 		break;
 	case plugin_parameter_ext_sidechain:
 		instance->extSidechain = value >= 0.5f;
@@ -76,22 +77,19 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-#ifdef WASM
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+#ifdef BW_CXX_NO_ARRAY
 	const float *x[1] = {inputs[0]};
 	const float *xSc[1] = {instance->extSidechain ? inputs[1] : inputs[0]};
 	float *y[1] = {outputs[0]};
-	instance->noise_gate.process(x, xSc, y, n_samples);
+	instance->noiseGate.process(x, xSc, y, n_samples);
 #else
-	instance->noise_gate.process({inputs[0]}, {instance->extSidechain ? inputs[1] : inputs[0]}, {outputs[0]}, n_samples);
+	instance->noiseGate.process({inputs[0]}, {instance->extSidechain ? inputs[1] : inputs[0]}, {outputs[0]}, n_samples);
 #endif
-}
-
 }

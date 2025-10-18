@@ -36,6 +36,7 @@
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
  *          <li>Added <code>bw_iir1_coeffs_is_valid()</code>.</li>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Fixed bug which resulted in bad coefficients in
  *              <code>bw_iir1_coeffs_hp1()</code>.</li>
  *          <li>Fixed the documenation of <code>bw_iir1_coeffs_*()</code> w.r.t.
@@ -703,7 +704,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::iir1Reset
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 void iir1Reset(
 	const float *       x0,
 	float *             y0,
@@ -713,7 +714,7 @@ void iir1Reset(
 	float               a1);
 
 # ifndef BW_CXX_NO_ARRAY
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 void iir1Reset(
 	std::array<float, N_CHANNELS>               x0,
 	std::array<float, N_CHANNELS> * BW_RESTRICT y0,
@@ -723,7 +724,7 @@ void iir1Reset(
 	float                                       a1);
 # endif
 
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 void iir1Process(
 	const float * const * x,
 	float * const *       y,
@@ -734,7 +735,7 @@ void iir1Process(
 	size_t                nSamples);
 
 # ifndef BW_CXX_NO_ARRAY
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 void iir1Process(
 	std::array<const float *, N_CHANNELS>       x,
 	std::array<float *, N_CHANNELS>             y,

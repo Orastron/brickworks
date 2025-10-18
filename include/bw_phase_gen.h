@@ -31,6 +31,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -1071,7 +1072,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::PhaseGen
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class PhaseGen {
 public:
 	PhaseGen();

@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,53 +18,53 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_drive.h>
 #include <bw_src_int.h>
 
 using namespace Brickworks;
 
-#define BUF_SIZE	32
+#define BUF_SIZE 32
 
-class Engine {
-public:
-	Engine() : srcUp(2), srcDown(-2)  {}
-
-	Drive<1>	drive;
-	SRCInt<1>	srcUp;
-	SRCInt<1>	srcDown;
-
+typedef struct {
+	Drive<>		drive;
+	SRCInt<>	srcUp;
+	SRCInt<>	srcDown;
 	float		buf[BUF_SIZE];
-};
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->drive) Drive<>();
+	new(&instance->srcUp) SRCInt<>(2);
+	new(&instance->srcDown) SRCInt<>(-2);
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
 	instance->drive.setSampleRate(2.f * sample_rate);
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
+}
+
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
 	instance->drive.reset();
 	instance->srcUp.reset();
 	instance->srcDown.reset();
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_drive:
 		instance->drive.setDrive(0.01f * value);
@@ -78,18 +78,17 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	size_t i = 0;
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+		size_t i = 0;
 	while (i < n_samples) {
 		int n = bw_mini32(n_samples - i, BUF_SIZE >> 1);
-#ifdef WASM
+#ifdef BW_CXX_NO_ARRAY
 		const float *x[1] = {inputs[0] + i};
 		float *y[1] = {outputs[0] + i};
 		float *b[1] = {instance->buf};
@@ -103,6 +102,4 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 #endif
 		i += n;
 	}
-}
-
 }

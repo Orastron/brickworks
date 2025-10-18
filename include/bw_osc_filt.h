@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.1 }}}
+ *  version {{{ 1.2.2 }}}
  *  requires {{{ bw_common }}}
  *  description {{{
  *    Post-filter to decolorate oscillator waveshapers when antialiasing is on.
@@ -33,6 +33,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.2</strong>:
+ *        <ul>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.1</strong>:
  *        <ul>
  *          <li>Now using <code>BW_NULL</code> in the C++ API and
@@ -351,7 +356,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::OscFilt
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class OscFilt {
 public:
 	OscFilt();

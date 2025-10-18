@@ -29,6 +29,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Fixed typos in the documentation of
  *              <code>bw_slew_lim_set_max_rate()</code> and
  *              <code>bw_slew_lim_set_max_rate_down()</code>.</li>
@@ -936,7 +937,7 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::SlewLim
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 class SlewLim {
 public:
 	SlewLim();

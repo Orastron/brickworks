@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,65 +18,67 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_comb.h>
 
 using namespace Brickworks;
 
-extern "C" {
+typedef struct {
+	Comb<>	comb;
+	size_t	memSize;
+} plugin;
 
-impl impl_new(void) {
-	Comb<1> *instance = new Comb<1>(1.f);
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->comb) Comb<>(1.f);
 }
 
-void impl_free(impl handle) {
-	Comb<1> *instance = reinterpret_cast<Comb<1> *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	instance->comb.~Comb();
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Comb<1> *instance = reinterpret_cast<Comb<1> *>(handle);
-	instance->setSampleRate(sample_rate);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
+	instance->comb.setSampleRate(sample_rate, &instance->memSize);
 }
 
-void impl_reset(impl handle) {
-	Comb<1> *instance = reinterpret_cast<Comb<1> *>(handle);
-	instance->reset();
+static size_t plugin_mem_req(plugin *instance) {
+	return instance->memSize;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Comb<1> *instance = reinterpret_cast<Comb<1> *>(handle);
+static void plugin_mem_set(plugin *instance, void *mem) {
+	instance->comb.memSet(mem);
+}
+
+static void plugin_reset(plugin *instance) {
+	instance->comb.reset();
+}
+
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_ff_delay:
-		instance->setDelayFF(0.001f * value);
+		instance->comb.setDelayFF(0.001f * value);
 		break;
 	case plugin_parameter_fb_delay:
-		instance->setDelayFB(0.001f * value);
+		instance->comb.setDelayFB(0.001f * value);
 		break;
 	case plugin_parameter_blend:
-		instance->setCoeffBlend(value);
+		instance->comb.setCoeffBlend(value);
 		break;
 	case plugin_parameter_ff:
-		instance->setCoeffFF(value);
+		instance->comb.setCoeffFF(value);
 		break;
 	case plugin_parameter_fb:
-		instance->setCoeffFB(value);
+		instance->comb.setCoeffFB(value);
 		break;
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Comb<1> *instance = reinterpret_cast<Comb<1> *>(handle);
-	instance->process(inputs, outputs, n_samples);
-}
-
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+	instance->comb.process(inputs, outputs, n_samples);
 }

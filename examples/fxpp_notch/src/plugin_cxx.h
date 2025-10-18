@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,56 +18,59 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_notch.h>
 
 using namespace Brickworks;
 
-extern "C" {
+typedef struct {
+	Notch<> notch;
+} plugin;
 
-impl impl_new(void) {
-	Notch<1> *instance = new Notch<1>();
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->notch) Notch<>();
 }
 
-void impl_free(impl handle) {
-	Notch<1> *instance = reinterpret_cast<Notch<1> *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Notch<1> *instance = reinterpret_cast<Notch<1> *>(handle);
-	instance->setSampleRate(sample_rate);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
+	instance->notch.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	Notch<1> *instance = reinterpret_cast<Notch<1> *>(handle);
-	instance->reset();
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Notch<1> *instance = reinterpret_cast<Notch<1> *>(handle);
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
+	instance->notch.reset();
+}
+
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_cutoff:
-		instance->setCutoff(value);
+		instance->notch.setCutoff(value);
 		break;
 	case plugin_parameter_q:
-		instance->setQ(value);
+		instance->notch.setQ(value);
 		break;
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
-	(void)handle;
+static float plugin_get_parameter(plugin *instance, size_t index) {
+	(void)instance;
 	(void)index;
 	return 0.f;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	Notch<1> *instance = reinterpret_cast<Notch<1> *>(handle);
-	instance->process(inputs, outputs, n_samples);
-}
-
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+	instance->notch.process(inputs, outputs, n_samples);
 }

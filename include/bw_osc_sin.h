@@ -32,6 +32,7 @@
  *    <ul>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
+ *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
  *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
@@ -233,14 +234,14 @@ namespace Brickworks {
 /*! api_cpp {{{
  *    ##### Brickworks::oscSinProcess
  *  ```>>> */
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 void oscSinProcess(
 	const float * const * x,
 	float * const *       y,
 	size_t                nSamples);
 
 # ifndef BW_CXX_NO_ARRAY
-template<size_t N_CHANNELS>
+template<size_t N_CHANNELS = 1>
 void oscSinProcess(
 	std::array<const float *, N_CHANNELS> x,
 	std::array<float *, N_CHANNELS>       y,
