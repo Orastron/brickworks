@@ -17,6 +17,7 @@ endif
 ifeq ($(TEMPLATE), vst3)
 	COMMON_DIR := ../../common/vst3
 	CFLAGS_EXTRA := $(CFLAGS_EXTRA) -I../../../../vst3_c_api
+	CXXFLAGS_EXTRA := $(CXXFLAGS_EXTRA) -I../../../../vst3_c_api
 endif
 
 ifeq ($(TEMPLATE), web)
