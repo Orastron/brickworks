@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_phase_gen.h>
 #include <bw_osc_pulse.h>
@@ -30,41 +28,41 @@
 #include <bw_ppm.h>
 #include <bw_buf.h>
 
-#define BUFFER_SIZE	128
-
 using namespace Brickworks;
 
-class Engine {
-public:
-	PhaseGen<1>	phaseGen;
-	OscPulse<1>	oscPulse;
-	OscFilt<1>	oscFilt;
-	SVF<1>		svf;
-	EnvGen<1>	envGen;
-	Gain<1>		gain;
-	PPM<1>		ppm;
+#define BUFFER_SIZE 128
+
+typedef struct {
+	PhaseGen<>	phaseGen;
+	OscPulse<>	oscPulse;
+	OscFilt<>	oscFilt;
+	SVF<>		svf;
+	EnvGen<>	envGen;
+	Gain<>		gain;
+	PPM<>		ppm;
 
 	float		masterTune;
 	int		note;
 
 	float		buf[BUFFER_SIZE];
-};
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
-	instance->oscPulse.setAntialiasing(true);
-	return reinterpret_cast<impl>(instance);
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->phaseGen) PhaseGen<>();
+	new(&instance->oscPulse) OscPulse<>();
+	new(&instance->oscFilt) OscFilt<>();
+	new(&instance->svf) SVF<>();
+	new(&instance->envGen) EnvGen<>();
+	new(&instance->gain) Gain<>();
+	new(&instance->ppm) PPM<>();
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
 	instance->phaseGen.setSampleRate(sample_rate);
 	instance->oscPulse.setSampleRate(sample_rate);
 	instance->svf.setSampleRate(sample_rate);
@@ -73,8 +71,17 @@ void impl_set_sample_rate(impl handle, float sample_rate) {
 	instance->ppm.setSampleRate(sample_rate);
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
+}
+
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
 	instance->phaseGen.reset();
 	instance->oscPulse.reset();
 	instance->oscFilt.reset();
@@ -85,8 +92,7 @@ void impl_reset(impl handle) {
 	instance->note = -1;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_volume:
 	{
@@ -125,16 +131,13 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
+static float plugin_get_parameter(plugin *instance, size_t index) {
 	(void)index;
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 	return bw_clipf(instance->ppm.getYZ1(0), -60.f, 0.f);
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
 	(void)inputs;
-
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 
 	if (instance->note >= 0)
 		instance->phaseGen.setFrequency(instance->masterTune * bw_pow2f(8.333333333333333e-2f * (instance->note - 69)));
@@ -144,7 +147,7 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 		size_t ni = n_samples - i;
 		size_t n = ni < BUFFER_SIZE ? ni : BUFFER_SIZE;
 
-#ifdef WASM
+#ifdef BW_CXX_NO_ARRAY
 		float *y[1] = {out};
 		float *b[1] = {instance->buf};
 		char gate[1] = {instance->note >= 0};
@@ -169,9 +172,8 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 	}
 }
 
-void impl_midi_msg_in(impl handle, size_t index, const uint8_t * data) {
+static void plugin_midi_msg_in(plugin *instance, size_t index, const uint8_t * data) {
 	(void)index;
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (data[0] & 0xf0) {
 	case 0x90: // note on
 		if (data[2] == 0) { // no, note off actually
@@ -185,6 +187,4 @@ void impl_midi_msg_in(impl handle, size_t index, const uint8_t * data) {
 			instance->note = -1;
 		break;
 	}
-}
-
 }

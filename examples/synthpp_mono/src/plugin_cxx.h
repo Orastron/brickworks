@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
  * File author: Stefano D'Angelo
  */
 
-#include "impl.h"
-
 #include "common.h"
 #include <bw_phase_gen.h>
 #include <bw_osc_saw.h>
@@ -35,40 +33,37 @@
 #include <bw_ppm.h>
 #include <bw_buf.h>
 
+using namespace Brickworks;
+
 #define BUFFER_SIZE	128
 #define SYNC_RATE	1e-3f	// synchronous control rate, seconds
 
-using namespace Brickworks;
-
-class Engine {
-public:
-	Engine() : noiseGen(&randState) {}
-	
-	PhaseGen<1>	vco1PhaseGen;
-	OscSaw<1>	vco1OscSaw;
-	OscPulse<1>	vco1OscPulse;
-	OscTri<1>	vco1OscTri;
-	Gain<1>		vco1Gain;
-	PhaseGen<1>	vco2PhaseGen;
-	OscSaw<1>	vco2OscSaw;
-	OscPulse<1>	vco2OscPulse;
-	OscTri<1>	vco2OscTri;
-	Gain<1>		vco2Gain;
-	PhaseGen<1>	vco3PhaseGen;
-	OscSaw<1>	vco3OscSaw;
-	OscPulse<1>	vco3OscPulse;
-	OscTri<1>	vco3OscTri;
-	Gain<1>		vco3Gain;
-	OscFilt<1>	oscFilt;
-	NoiseGen<1>	noiseGen;
-	PinkFilt<1>	pinkFilt;
-	Gain<1>		noiseGain;
-	EnvGen<1>	vcfEnvGen;
-	SVF<1>		vcf;
-	EnvGen<1>	vcaEnvGen;
-	PhaseGen<1>	a440PhaseGen;
-	Gain<1>		gain;
-	PPM<1>		ppm;
+typedef struct {
+	PhaseGen<>	vco1PhaseGen;
+	OscSaw<>	vco1OscSaw;
+	OscPulse<>	vco1OscPulse;
+	OscTri<>	vco1OscTri;
+	Gain<>		vco1Gain;
+	PhaseGen<>	vco2PhaseGen;
+	OscSaw<>	vco2OscSaw;
+	OscPulse<>	vco2OscPulse;
+	OscTri<>	vco2OscTri;
+	Gain<>		vco2Gain;
+	PhaseGen<>	vco3PhaseGen;
+	OscSaw<>	vco3OscSaw;
+	OscPulse<>	vco3OscPulse;
+	OscTri<>	vco3OscTri;
+	Gain<>		vco3Gain;
+	OscFilt<>	oscFilt;
+	NoiseGen<>	noiseGen;
+	PinkFilt<>	pinkFilt;
+	Gain<>		noiseGain;
+	EnvGen<>	vcfEnvGen;
+	SVF<>		vcf;
+	EnvGen<>	vcaEnvGen;
+	PhaseGen<>	a440PhaseGen;
+	Gain<>		gain;
+	PPM<>		ppm;
 
 	size_t		syncCount;
 	float		noiseKV[2];
@@ -108,12 +103,35 @@ public:
 	float		vcfEnvK;
 
 	float		buf[4][BUFFER_SIZE];
-};
+} plugin;
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->vco1PhaseGen) PhaseGen<>();
+	new(&instance->vco1OscSaw) OscSaw<>();
+	new(&instance->vco1OscPulse) OscPulse<>();
+	new(&instance->vco1OscTri) OscTri<>();
+	new(&instance->vco1Gain) Gain<>();
+	new(&instance->vco2PhaseGen) PhaseGen<>();
+	new(&instance->vco2OscSaw) OscSaw<>();
+	new(&instance->vco2OscPulse) OscPulse<>();
+	new(&instance->vco2OscTri) OscTri<>();
+	new(&instance->vco2Gain) Gain<>();
+	new(&instance->vco3PhaseGen) PhaseGen<>();
+	new(&instance->vco3OscSaw) OscSaw<>();
+	new(&instance->vco3OscPulse) OscPulse<>();
+	new(&instance->vco3OscTri) OscTri<>();
+	new(&instance->vco3Gain) Gain<>();
+	new(&instance->oscFilt) OscFilt<>();
+	new(&instance->noiseGen) NoiseGen<>(&instance->randState);
+	new(&instance->pinkFilt) PinkFilt<>();
+	new(&instance->noiseGain) Gain<>();
+	new(&instance->vcfEnvGen) EnvGen<>();
+	new(&instance->vcf) SVF<>();
+	new(&instance->vcaEnvGen) EnvGen<>();
+	new(&instance->a440PhaseGen) PhaseGen<>();
+	new(&instance->gain) Gain<>();
+	new(&instance->ppm) PPM<>();
 
 	instance->vco1OscSaw.setAntialiasing(true);
 	instance->vco1OscPulse.setAntialiasing(true);
@@ -127,18 +145,13 @@ impl impl_new(void) {
 	instance->a440PhaseGen.setFrequency(440.f);
 
 	instance->randState = 0xbaddecaf600dfeed;
-
-	return reinterpret_cast<impl>(instance);
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
 	instance->vco1PhaseGen.setSampleRate(sample_rate);
 	instance->vco1OscSaw.setSampleRate(sample_rate);
 	instance->vco1OscPulse.setSampleRate(sample_rate);
@@ -170,9 +183,17 @@ void impl_set_sample_rate(impl handle, float sample_rate) {
 	instance->noiseKV[1] = 6.f * instance->noiseGen.getScalingK() * instance->pinkFilt.getScalingK();
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
+}
 
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
 	instance->vcf.setCutoff(instance->vcfCutoff);
 
 	instance->vco1PhaseGen.reset();
@@ -212,8 +233,7 @@ void impl_reset(impl handle) {
 	instance->vco2WaveformCur = instance->vco2Waveform;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_volume:
 	{
@@ -365,18 +385,15 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
+static float plugin_get_parameter(plugin *instance, size_t index) {
 	(void)index;
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 	return bw_clipf(instance->ppm.getYZ1(0), -60.f, 0.f);
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	// here is a WASM-compatible version only as it'd be too cumbersome to maintain two versions
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
+	// here is a version without C++ arrays only as it'd be too cumbersome to maintain two versions
 
 	(void)inputs;
-
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 
 	// asynchronous control-rate operations
 
@@ -459,7 +476,7 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 		float *y[1] = {out};
 
 		// vco 3
-		
+
 		instance->vco3PhaseGen.process(nullptr, y, b0, n);
 		switch (instance->vco3WaveformCur) {
 		case 1:
@@ -574,7 +591,7 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 	}
 }
 
-static void updateNoteGate(Engine *instance) {
+static void updateNoteGate(plugin *instance) {
 	for (int i = 0; i < 128; i++)
 		if (instance->notesPressed[i]) {
 			instance->note = i;
@@ -584,21 +601,20 @@ static void updateNoteGate(Engine *instance) {
 	instance->gate = 0;
 }
 
-static void noteOn(Engine *instance, char note) {
+static void noteOn(plugin *instance, char note) {
 	instance->notesPressed[(int)note] = 1;
 	updateNoteGate(instance);
 }
 
-static void noteOff(Engine *instance, char note) {
+static void noteOff(plugin *instance, char note) {
 	if (instance->notesPressed[(int)note]) {
 		instance->notesPressed[(int)note] = 0;
 		updateNoteGate(instance);
 	}
 }
 
-void impl_midi_msg_in(impl handle, size_t index, const uint8_t * data) {
+static void plugin_midi_msg_in(plugin *instance, size_t index, const uint8_t * data) {
 	(void)index;
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (data[0] & 0xf0) {
 	case 0x90: // note on
 		if (data[2] == 0) // no, note off actually
@@ -620,6 +636,4 @@ void impl_midi_msg_in(impl handle, size_t index, const uint8_t * data) {
 			instance->modWheel = (1.f / 127.f) * data[2];
 		break;
 	}
-}
-
 }

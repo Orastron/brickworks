@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2025 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
  *
  * File author: Stefano D'Angelo
  */
-
-#include "impl.h"
 
 #include "common.h"
 #include <bw_note_queue.h>
@@ -37,36 +35,32 @@
 #include <bw_buf.h>
 #include <bw_voice_alloc.h>
 
+using namespace Brickworks;
+
 #define BUFFER_SIZE	128
 #define SYNC_RATE	1e-3f	// synchronous control rate, seconds
 #define N_VOICES	8
 
-using namespace Brickworks;
+typedef struct plugin plugin;
 
-class Engine;
-
-class Voice {
-public:
-	PhaseGen<1>		vco1PhaseGen;
-	PhaseGen<1>		vco2PhaseGen;
-	PhaseGen<1>		vco3PhaseGen;
-	SVF<1>			vcf;
+struct Voice {
+	PhaseGen<>		vco1PhaseGen;
+	PhaseGen<>		vco2PhaseGen;
+	PhaseGen<>		vco3PhaseGen;
+	SVF<>			vcf;
 
 	unsigned char		note;
 	char			gate;
 	float			modK;
 	float			vcfEnvK;
-	
+
 	float			buf[5][BUFFER_SIZE];
 
-	Engine *		instance;
+	plugin *		instance;
 	int			index;
 };
 
-class Engine {
-public:
-	Engine() : noiseGen(&randState) {}
-	
+struct plugin {
 	NoteQueue		noteQueue;
 	OscSaw<N_VOICES>	vco1OscSaw;
 	OscPulse<N_VOICES>	vco1OscPulse;
@@ -86,9 +80,9 @@ public:
 	Gain<N_VOICES>		noiseGain;
 	EnvGen<N_VOICES>	vcfEnvGen;
 	EnvGen<N_VOICES>	vcaEnvGen;
-	PhaseGen<1>		a440PhaseGen;
-	Gain<1>			gain;
-	PPM<1>			ppm;
+	PhaseGen<>		a440PhaseGen;
+	Gain<>			gain;
+	PPM<>			ppm;
 
 	Voice			voices[N_VOICES];
 
@@ -133,10 +127,30 @@ public:
 	float *			b4[N_VOICES];
 };
 
-extern "C" {
-
-impl impl_new(void) {
-	Engine *instance = new Engine();
+static void plugin_init(plugin *instance, plugin_callbacks *cbs) {
+	(void)cbs;
+	new(&instance->noteQueue) NoteQueue();
+	new(&instance->vco1OscSaw) OscSaw<N_VOICES>();
+	new(&instance->vco1OscPulse) OscPulse<N_VOICES>();
+	new(&instance->vco1OscTri) OscTri<N_VOICES>();
+	new(&instance->vco1Gain) Gain<N_VOICES>();
+	new(&instance->vco2OscSaw) OscSaw<N_VOICES>();
+	new(&instance->vco2OscPulse) OscPulse<N_VOICES>();
+	new(&instance->vco2OscTri) OscTri<N_VOICES>();
+	new(&instance->vco2Gain) Gain<N_VOICES>();
+	new(&instance->vco3OscSaw) OscSaw<N_VOICES>();
+	new(&instance->vco3OscPulse) OscPulse<N_VOICES>();
+	new(&instance->vco3OscTri) OscTri<N_VOICES>();
+	new(&instance->vco3Gain) Gain<N_VOICES>();
+	new(&instance->oscFilt) OscFilt<N_VOICES>();
+	new(&instance->noiseGen) NoiseGen<N_VOICES>(&instance->randState);
+	new(&instance->pinkFilt) PinkFilt<N_VOICES>();
+	new(&instance->noiseGain) Gain<N_VOICES>();
+	new(&instance->vcfEnvGen) EnvGen<N_VOICES>();
+	new(&instance->vcaEnvGen) EnvGen<N_VOICES>();
+	new(&instance->a440PhaseGen) PhaseGen<>();
+	new(&instance->gain) Gain<>();
+	new(&instance->ppm) PPM<>();
 
 	instance->vco1OscSaw.setAntialiasing(true);
 	instance->vco1OscPulse.setAntialiasing(true);
@@ -152,6 +166,11 @@ impl impl_new(void) {
 	instance->randState = 0xbaddecaf600dfeed;
 
 	for (int i = 0; i < N_VOICES; i++) {
+		new(&instance->voices[i].vco1PhaseGen) PhaseGen<>();
+		new(&instance->voices[i].vco2PhaseGen) PhaseGen<>();
+		new(&instance->voices[i].vco3PhaseGen) PhaseGen<>();
+		new(&instance->voices[i].vcf) SVF<>();
+
 		instance->voices[i].instance = instance;
 		instance->voices[i].index = i;
 		instance->b0[i] = instance->voices[i].buf[0];
@@ -160,18 +179,13 @@ impl impl_new(void) {
 		instance->b3[i] = instance->voices[i].buf[3];
 		instance->b4[i] = instance->voices[i].buf[4];
 	}
-
-	return reinterpret_cast<impl>(instance);
 }
 
-void impl_free(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-	delete instance;
+static void plugin_fini(plugin *instance) {
+	(void)instance;
 }
 
-void impl_set_sample_rate(impl handle, float sample_rate) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-
+static void plugin_set_sample_rate(plugin *instance, float sample_rate) {
 	instance->vco1OscSaw.setSampleRate(sample_rate);
 	instance->vco1OscPulse.setSampleRate(sample_rate);
 	instance->vco1OscTri.setSampleRate(sample_rate);
@@ -206,9 +220,17 @@ void impl_set_sample_rate(impl handle, float sample_rate) {
 	instance->noiseKV[1] = 6.f * instance->noiseGen.getScalingK() * instance->pinkFilt.getScalingK();
 }
 
-void impl_reset(impl handle) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static size_t plugin_mem_req(plugin *instance) {
+	(void)instance;
+	return 0;
+}
 
+static void plugin_mem_set(plugin *instance, void *mem) {
+	(void)instance;
+	(void)mem;
+}
+
+static void plugin_reset(plugin *instance) {
 	for (int i = 0; i < N_VOICES; i++)
 		instance->voices[i].vcf.setCutoff(instance->vcfCutoff);
 
@@ -251,8 +273,7 @@ void impl_reset(impl handle) {
 	instance->vco2WaveformCur = instance->vco2Waveform;
 }
 
-void impl_set_parameter(impl handle, size_t index, float value) {
-	Engine *instance = reinterpret_cast<Engine *>(handle);
+static void plugin_set_parameter(plugin *instance, size_t index, float value) {
 	switch (index) {
 	case plugin_parameter_volume:
 	{
@@ -410,9 +431,8 @@ void impl_set_parameter(impl handle, size_t index, float value) {
 	}
 }
 
-float impl_get_parameter(impl handle, size_t index) {
+static float plugin_get_parameter(plugin *instance, size_t index) {
 	(void)index;
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 	return bw_clipf(instance->ppm.getYZ1(0), -60.f, 0.f);
 }
 
@@ -440,15 +460,11 @@ static char isFree(const void *BW_RESTRICT handle) {
 	return !v->gate && phase == bw_env_gen_phase_off;
 }
 
-void impl_process(impl handle, const float **inputs, float **outputs, size_t n_samples) {
-	// here is a WASM-compatible version only as it'd be too cumbersome to maintain two versions
-
+static void plugin_process(plugin *instance, const float **inputs, float **outputs, size_t n_samples) {
 	(void)inputs;
 
-	Engine *instance = reinterpret_cast<Engine *>(handle);
-
 	// voice allocation
-	
+
 	static bw_voice_alloc_opts alloc_opts = { bw_voice_alloc_priority_low, noteOn, noteOff, getNote, isFree };
 	void *voices[N_VOICES];
 	for (int i = 0; i < N_VOICES; i++)
@@ -534,7 +550,7 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 		float *y[1] = {out};
 
 		// vco 3
-		
+
 		for (int j = 0; j < N_VOICES; j++) {
 			float *vb0[1] = {instance->voices[j].buf[0]};
 			float *vb1[1] = {instance->voices[j].buf[1]};
@@ -678,9 +694,8 @@ void impl_process(impl handle, const float **inputs, float **outputs, size_t n_s
 	}
 }
 
-void impl_midi_msg_in(impl handle, size_t index, const uint8_t * data) {
+static void plugin_midi_msg_in(plugin *instance, size_t index, const uint8_t * data) {
 	(void)index;
-	Engine *instance = reinterpret_cast<Engine *>(handle);
 	switch (data[0] & 0xf0) {
 	case 0x90: // note on
 		instance->noteQueue.add(data[1], data[2] != 0, (1.f / 127.f) * data[2], false);
@@ -699,6 +714,4 @@ void impl_midi_msg_in(impl handle, size_t index, const uint8_t * data) {
 			instance->modWheel = (1.f / 127.f) * data[2];
 		break;
 	}
-}
-
 }

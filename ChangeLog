@@ -3,12 +3,14 @@
  * Added new bw_sampler module and related new synth(pp)_sampler examples.
  * Added bw_{signfill,min,max,clip}{i,u}{8,16}() and bw_sechf() to bw_math.
  * Added bw_iir1_coeffs_is_valid() and bw_iir2_coeffs_is_valid().
+ * Added default value for N_CHANNELS in C++ APIs.
+ * Added memReq/memSet to C++ APIs of bw_chorus, bw_comb, bw_delay, and bw_reverb.
  * Fixed bug in bw_env_gen which caused looping behavior when skip sustain was active and gate was kept on.
  * Fixed bug which resulted in bad coefficients in bw_iir1_coeffs_hp1().
  * Improved precision and performance of bw_log_1pexpxf() and bw_log10_1p10xf().
  * Improved computation of internal mixing coefficients in bw_peak.
  * Small optimization in bw_svf.
- * Updated examples' build system to Tibia 0.2.0.
+ * Updated examples' build system to Tibia 0.3.0 and refreshed all examples, C++ ones in particular.
  * Added missing and new math tests.
  * Added missing dependency on bw_mm1 in the documentation of bw_drive.
  * Added citation to relevant scientific article in the documentation of bw_osc_{saw,pulse,tri}.
