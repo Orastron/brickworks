@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.2 }}}
+ *  version {{{ 1.2.3 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    State variable filter (2nd order, 12 dB/oct) model with separated lowpass,
@@ -28,6 +28,12 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.3</strong>:
+ *        <ul>
+ *          <li>Loosened validity checks for certain internal coefficients to
+ *              allow valid extreme values.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
  *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
@@ -1057,9 +1063,9 @@ static inline char bw_svf_coeffs_is_valid(
 	}
 
 	if (coeffs->state >= bw_svf_coeffs_state_reset_coeffs) {
-		if (!bw_is_finite(coeffs->kf) || coeffs->kf <= 0.f)
+		if (!bw_is_finite(coeffs->kf) || coeffs->kf < 0.f)
 			return 0;
-		if (!bw_is_finite(coeffs->kbl) || coeffs->kbl <= 0.f)
+		if (!bw_is_finite(coeffs->kbl) || coeffs->kbl < 0.f)
 			return 0;
 		if (!bw_is_finite(coeffs->k) || coeffs->k <= 0.f)
 			return 0;
