@@ -1,3 +1,7 @@
+1.4.1
+-----
+ * Loosened validity checks for certain internal coefficients to allow valid extreme values in bw_svf.
+
 1.4.0
 -----
  * Added new bw_sampler module and related new synth(pp)_sampler examples.
