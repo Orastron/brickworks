@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.2 }}}
+ *  version {{{ 1.2.3 }}}
  *  requires {{{
  *    bw_common bw_gain bw_hp1 bw_lp1 bw_math bw_mm2 bw_one_pole bw_peak
  *    bw_satur bw_svf
@@ -32,6 +32,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.3</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
  *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>

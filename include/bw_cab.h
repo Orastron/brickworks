@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.2 }}}
+ *  version {{{ 1.1.3 }}}
  *  requires {{{ bw_common bw_gain bw_math bw_one_pole bw_svf }}}
  *  description {{{
  *    Cab simulator effect.
@@ -30,6 +30,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.3</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.1.2</strong>:
  *        <ul>
  *          <li>Added default value for <code>N_CHANNELS</code> in C++ API.</li>
