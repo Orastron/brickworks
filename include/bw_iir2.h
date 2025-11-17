@@ -37,6 +37,7 @@
  *        <ul>
  *          <li>Fixed coefficients' validity checks in
  *              <code>bw_iir2_coeffs_is_valid()</code> and elsewhere.</li>
+ *          <li>Rationalized debugging checks for coefficient validity.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.0.1</strong>:
@@ -477,28 +478,6 @@ static inline char bw_iir2_coeffs_is_valid(
 extern "C" {
 #endif
 
-static inline void bw_iir2_assert_valid_coeffs(
-		float b0,
-		float b1,
-		float b2,
-		float a1,
-		float a2) {
-#ifndef BW_NO_DEBUG
-	BW_ASSERT(bw_is_finite(b0));
-	BW_ASSERT(bw_is_finite(b1));
-	BW_ASSERT(bw_is_finite(b2));
-	BW_ASSERT(bw_is_finite(a1));
-	BW_ASSERT(bw_is_finite(a2));
-	BW_ASSERT_DEEP(bw_absf(a1) <= 2.f && a2 >= bw_absf(a1) - 1.f && a2 <= 1.f);
-#else
-	(void)b0;
-	(void)b1;
-	(void)b2;
-	(void)a1;
-	(void)a2;
-#endif
-}
-
 static inline void bw_iir2_reset(
 		float               x_0,
 		float * BW_RESTRICT y_0,
@@ -516,7 +495,7 @@ static inline void bw_iir2_reset(
 	BW_ASSERT(y_0 != s1_0);
 	BW_ASSERT(y_0 != s2_0);
 	BW_ASSERT(s1_0 != s2_0);
-	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(b0, b1, b2, a1, a2));
 
 	if (a1 + a2 == -1.f) {
 		*y_0 = 0.f;
@@ -553,7 +532,7 @@ static inline void bw_iir2_reset_multi(
 	BW_ASSERT(s2_0 == BW_NULL || x_0 != s2_0);
 	BW_ASSERT(y_0 == BW_NULL || s2_0 == BW_NULL || y_0 != s2_0);
 	BW_ASSERT(s1_0 == BW_NULL || s2_0 == BW_NULL || s1_0 != s2_0);
-	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(b0, b1, b2, a1, a2));
 
 	if (y_0 != BW_NULL) {
 		if (s1_0 != BW_NULL) {
@@ -624,7 +603,7 @@ static inline void bw_iir2_process1(
 	BW_ASSERT(s1 != s2);
 	BW_ASSERT(bw_is_finite(*s1));
 	BW_ASSERT(bw_is_finite(*s2));
-	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(b0, b1, b2, a1, a2));
 
 	*y = b0 * x + *s1;
 	*s1 = b1 * x - a1 * *y + *s2;
@@ -658,7 +637,7 @@ static inline void bw_iir2_process(
 	BW_ASSERT(s1 != s2);
 	BW_ASSERT(bw_is_finite(*s1));
 	BW_ASSERT(bw_is_finite(*s2));
-	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(b0, b1, b2, a1, a2));
 
 	for (size_t i = 0; i < n_samples; i++)
 		bw_iir2_process1(x[i], y + i, s1, s2, b0, b1, b2, a1, a2);
@@ -702,7 +681,7 @@ static inline void bw_iir2_process_multi(
 		BW_ASSERT(bw_is_finite(s2[i]));
 	}
 #endif
-	bw_iir2_assert_valid_coeffs(b0, b1, b2, a1, a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(b0, b1, b2, a1, a2));
 
 	for (size_t j = 0; j < n_channels; j++)
 		for (size_t i = 0; i < n_samples; i++)
@@ -790,7 +769,7 @@ static inline void bw_iir2_coeffs_ap2(
 	*b1 = *a1;
 	*b2 = 1.f;
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_bp2(
@@ -812,7 +791,7 @@ static inline void bw_iir2_coeffs_bp2(
 	*b1 = 0.f;
 	*b2 = -*b0;
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_hp2(
@@ -834,7 +813,7 @@ static inline void bw_iir2_coeffs_hp2(
 	*b1 = -(*b0 + *b0);
 	*b2 = *b0;
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_hs2(
@@ -871,7 +850,7 @@ static inline void bw_iir2_coeffs_hs2(
 	*b1 = d * (Q + Q) * (k7 - k6);
 	*b2 = d * (k8 - k9);
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_lp2(
@@ -893,7 +872,7 @@ static inline void bw_iir2_coeffs_lp2(
 	*b1 = *b0 + *b0;
 	*b2 = *b0;
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_ls2(
@@ -929,7 +908,7 @@ static inline void bw_iir2_coeffs_ls2(
 	*b1 = d * (Q + Q) * (k6 - k1);
 	*b2 = d * (k7 - k8);
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_mm2(
@@ -959,7 +938,7 @@ static inline void bw_iir2_coeffs_mm2(
 	*b1 = d * (Q + Q) * (k6 - k7);
 	*b2 = d * (k9 - k8);
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_notch(
@@ -981,7 +960,7 @@ static inline void bw_iir2_coeffs_notch(
 	*b1 = *a1;
 	*b2 = *b0;
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline void bw_iir2_coeffs_peak(
@@ -1021,7 +1000,7 @@ static inline void bw_iir2_coeffs_peak(
 	*b1 = *a1;
 	*b2 = d * (k6 - k7);
 
-	bw_iir2_assert_valid_coeffs(*b0, *b1, *b2, *a1, *a2);
+	BW_ASSERT(bw_iir2_coeffs_is_valid(*b0, *b1, *b2, *a1, *a2));
 }
 
 static inline char bw_iir2_coeffs_is_valid(
