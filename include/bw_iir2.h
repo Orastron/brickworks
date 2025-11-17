@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.0.1 }}}
+ *  version {{{ 1.0.2 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Lightweight and fast second-order IIR filter (biquad) in TDF-II form.
@@ -33,6 +33,12 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.0.2</strong>:
+ *        <ul>
+ *          <li>Fixed coefficients' validity checks in
+ *              <code>bw_iir2_coeffs_is_valid()</code> and elsewhere.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
  *          <li>Added <code>bw_iir2_coeffs_is_valid()</code>.</li>
@@ -483,7 +489,7 @@ static inline void bw_iir2_assert_valid_coeffs(
 	BW_ASSERT(bw_is_finite(b2));
 	BW_ASSERT(bw_is_finite(a1));
 	BW_ASSERT(bw_is_finite(a2));
-	BW_ASSERT_DEEP(bw_absf(a1) <= 2.f && a2 >= bw_absf(a1) - 1.f && (a2 <= 0.25f * (a1 * a1) || 1.f - 0.25f * (a1 * a1) >= 4.f * (a2 - 0.25f * (a1 * a1)) * (a2 - 0.25f * (a1 * a1))));
+	BW_ASSERT_DEEP(bw_absf(a1) <= 2.f && a2 >= bw_absf(a1) - 1.f && a2 <= 1.f);
 #else
 	(void)b0;
 	(void)b1;
@@ -1029,7 +1035,7 @@ static inline char bw_iir2_coeffs_is_valid(
 		&& bw_is_finite(b2)
 		&& bw_is_finite(a1)
 		&& bw_is_finite(a2)
-		&& (bw_absf(a1) <= 2.f && a2 >= bw_absf(a1) - 1.f && (a2 <= 0.25f * (a1 * a1) || 1.f - 0.25f * (a1 * a1) >= 4.f * (a2 - 0.25f * (a1 * a1)) * (a2 - 0.25f * (a1 * a1))));
+		&& (bw_absf(a1) <= 2.f && a2 >= bw_absf(a1) - 1.f && a2 <= 1.f);
 }
 
 #undef BW_IIR2_COEFFS_COMMON
