@@ -300,8 +300,8 @@ static inline char bw_has_inf(
 	const float * BW_RESTRICT x,
 	size_t                    n_elems);
 /*! <<<```
- *    Scans the fist `n_elems` in buffer `x` and returns non-`0` if it contains
- *    at least one positive or negative inifinity value, `0` otherwise.
+ *    Scans the first `n_elems` in buffer `x` and returns non-`0` if it contains
+ *    at least one positive or negative infinity value, `0` otherwise.
  *
  *    #### bw_has_nan()
  *  ```>>> */
@@ -309,7 +309,7 @@ static inline char bw_has_nan(
 	const float * BW_RESTRICT x,
 	size_t                    n_elems);
 /*! <<<```
- *    Scans the fist `n_elems` in buffer `x` and returns non-`0` if it contains
+ *    Scans the first `n_elems` in buffer `x` and returns non-`0` if it contains
  *    at least one NaN value, `0` otherwise.
  *
  *    #### bw_has_only_finite()
@@ -318,7 +318,7 @@ static inline char bw_has_only_finite(
 	const float * BW_RESTRICT x,
 	size_t                    n_elems);
 /*! <<<```
- *    Scans the fist `n_elems` in buffer `x` and returns non-`0` if it only
+ *    Scans the first `n_elems` in buffer `x` and returns non-`0` if it only
  *    finds finite values (neither NaN nor positive or negative infinity), `0`
  *    otherwise.
  *
