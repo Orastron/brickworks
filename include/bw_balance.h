@@ -427,7 +427,7 @@ static inline void bw_balance_process_multi(
 		BW_ASSERT_DEEP(bw_has_only_finite(x_r[i], n_samples));
 		BW_ASSERT(y_l[i] != BW_NULL);
 		BW_ASSERT(y_r[i] != BW_NULL);
-		BW_ASSERT(y_l[i] != y_r);
+		BW_ASSERT(y_l[i] != y_r[i]);
 	}
 	for (size_t i = 0; i < n_channels; i++)
 		for (size_t j = i + 1; j < n_channels; j++) {
