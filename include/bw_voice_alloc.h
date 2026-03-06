@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023, 2024 Orastron Srl unipersonale
+ * Copyright (C) 2023, 2024, 2026 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,18 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.1.0 }}}
+ *  version {{{ 1.1.1 }}}
  *  requires {{{ bw_common bw_note_queue }}}
  *  description {{{
  *    Basic voice allocator with low/high note priority.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.1.1</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
  *          <li>Added <code>static inline</code> to

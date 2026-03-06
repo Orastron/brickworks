@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2021-2025 Orastron Srl unipersonale
+ * Copyright (C) 2021-2026 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  requires {{{ bw_common }}}
  *  description {{{
  *    A collection of mathematical routines that strive to be better suited to
@@ -44,6 +44,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added <code>bw_sechf()</code>.</li>

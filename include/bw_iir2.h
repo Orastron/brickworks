@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2025 Orastron Srl unipersonale
+ * Copyright (C) 2025, 2026 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@
  *          <li>Fixed coefficients' validity checks in
  *              <code>bw_iir2_coeffs_is_valid()</code> and elsewhere.</li>
  *          <li>Rationalized debugging checks for coefficient validity.</li>
+ *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.0.1</strong>:

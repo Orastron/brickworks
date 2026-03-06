@@ -24,6 +24,9 @@ ifeq ($(TEMPLATE), web)
 	COMMON_DIR := ../../common/web
 	CFLAGS_EXTRA := $(CFLAGS_EXTRA) -DWASM
 	CXXFLAGS_EXTRA := $(CXXFLAGS_EXTRA) -DWASM -std=c++11
+	CFLAGS_POST := -fno-finite-math-only
+	CXXFLAGS_POST := -fno-finite-math-only
+	LDFLAGS_EXTRA := -Wno-unused-command-line-argument
 endif
 
 ifeq ($(TEMPLATE), daisy-seed)

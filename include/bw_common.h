@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2022-2024 Orastron Srl unipersonale
+ * Copyright (C) 2022-2024, 2026 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,20 @@
 
 /*!
  *  module_type {{{ foundation }}}
- *  version {{{ 1.2.0 }}}
+ *  version {{{ 1.2.1 }}}
  *  description {{{
  *    A common header to make sure that a bunch of basic definitions are
  *    available and consistent for all modules.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.1</strong>:
+ *        <ul>
+ *          <li>Fixed typos in the documentation of <code>bw_has_inf()</code>,
+ *              <code>bw_has_nan()</code>, and
+ *              <code>bw_has_only_finite()</code>.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.0</strong>:
  *        <ul>
  *          <li>Added <code>BW_INCLUDE_WITH_QUOTES</code>,
@@ -36,6 +43,7 @@
  *          <li>Accomodate MSVC reporting incorrect C++ standard support.</li>
  *          <li>Removed "Brickworks" references in the documentation.</li>
  *        </ul>
+ *      </li>
  *      <li>Version <strong>1.1.0</strong>:
  *        <ul>
  *          <li>Added <code>BW_NULL</code> and relaxed <code>NULL</code>

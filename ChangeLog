@@ -1,3 +1,10 @@
+1.4.2
+-----
+ * Fixed and rationalized coefficients' validity checks in bw_iir2.
+ * Fixed debugging check in bw_balance_process_multi().
+ * Fixed typos in the documentation of bw_has_inf(), bw_has_nan(), and bw_has_only_finite().
+ * Updated examples' build system to Tibia 0.3.1.
+
 1.4.1
 -----
  * Loosened validity checks for certain internal coefficients to allow valid extreme values in bw_svf.

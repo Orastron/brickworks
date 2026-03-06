@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2025 Orastron Srl unipersonale
+ * Copyright (C) 2025, 2026 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ utility }}}
- *  version {{{ 1.0.1 }}}
+ *  version {{{ 1.0.2 }}}
  *  requires {{{ bw_common bw_math }}}
  *  description {{{
  *    Lightweight and fast first-order IIR filter in TDF-II form.
@@ -33,6 +33,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.0.2</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.0.1</strong>:
  *        <ul>
  *          <li>Added <code>bw_iir1_coeffs_is_valid()</code>.</li>

@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2023-2025 Orastron Srl unipersonale
+ * Copyright (C) 2023-2026 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.2 }}}
+ *  version {{{ 1.2.3 }}}
  *  requires {{{
  *    bw_buf bw_common bw_delay bw_dry_wet bw_gain bw_lp1 bw_math bw_one_pole
  *    bw_osc_sin bw_phase_gen
@@ -35,6 +35,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.3</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
  *          <li>Added <code>memReq</code>/<code>memSet</code> to C++ API.</li>

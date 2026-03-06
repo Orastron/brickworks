@@ -1,7 +1,7 @@
 /*
  * Brickworks
  *
- * Copyright (C) 2025 Orastron Srl unipersonale
+ * Copyright (C) 2025, 2026 Orastron Srl unipersonale
  *
  * Brickworks is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,18 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.0.0 }}}
+ *  version {{{ 1.0.1 }}}
  *  requires {{{ bw_common }}}
  *  description {{{
  *    Very basic sampler with variable playback speed.
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.0.1</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.0.0</strong>:
  *        <ul>
  *          <li>First release.</li>
