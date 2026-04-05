@@ -33,7 +33,9 @@
  *    <ul>
  *      <li>Version <strong>1.3.1</strong>:
  *        <ul>
- *          <li>Updated dependencies.</li>
+ *          <li>More robust input delay range definition for
+ *              <code>bw_delay_read()</code> and corresponding debugging
+ *              checks.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.3.0</strong>:
@@ -226,8 +228,8 @@ static float bw_delay_read(
  *    Returns the interpolated value read from the delay line identified by
  *    `coeffs` and `state` by applying a delay of `di` + `df` samples.
  *
- *    `df` must be in [`0.f`, `1.f`) and `di` + `df` must not exceed the delay
- *    line length (`max_delay * sample_rate`).
+ *    `df` must be in [`0.f`, `1.f`) and `di` must not exceed the delay line
+ *    length (`max_delay * sample_rate`).
  *
  *    #### bw_delay_write()
  *  ```>>> */
@@ -577,7 +579,7 @@ static float bw_delay_read(
 	BW_ASSERT_DEEP(state->state >= bw_delay_state_state_reset_state);
 	BW_ASSERT(bw_is_finite(df));
 	BW_ASSERT(df >= 0.f && df < 1.f);
-	BW_ASSERT(di + df <= coeffs->len);
+	BW_ASSERT(di < coeffs->len);
 
 	const size_t n = (state->idx + (state->idx >= di ? 0 : coeffs->len)) - di;
 	const size_t p = (n ? n : coeffs->len) - 1;
