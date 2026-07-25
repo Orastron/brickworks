@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.3.1 }}}
+ *  version {{{ 1.3.2 }}}
  *  requires {{{ bw_buf bw_common bw_math }}}
  *  description {{{
  *    Interpolated delay line, not smoothed.
@@ -31,11 +31,16 @@
  *  }}}
  *  changelog {{{
  *    <ul>
- *      <li>Version <strong>1.3.1</strong>:
+ *      <li>Version <strong>1.3.2</strong>:
  *        <ul>
  *          <li>More robust input delay range definition for
  *              <code>bw_delay_read()</code> and corresponding debugging
  *              checks.</li>
+ *        </ul>
+ *      </li>
+ *      <li>Version <strong>1.3.1</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
  *        </ul>
  *      </li>
  *      <li>Version <strong>1.3.0</strong>:
