@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.3 }}}
+ *  version {{{ 1.2.4 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Linear ADSR envelope generator.
@@ -40,6 +40,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.4</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.3</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -463,7 +468,7 @@ struct bw_env_gen_coeffs {
 
 	// Sub-components
 	bw_one_pole_coeffs		smooth_coeffs;
-	
+
 	// Coefficients
 	float				T;
 
@@ -513,7 +518,7 @@ static inline void bw_env_gen_init(
 	coeffs->release = 0.f;
 	coeffs->skip_sustain = 0;
 	coeffs->always_reach_sustain = 0;
-	
+
 	coeffs->param_changed = ~0; // useless, just to make compilers happy about uninitialized variables
 
 #ifdef BW_DEBUG_DEEP
@@ -726,7 +731,7 @@ static inline float bw_env_gen_process1(
 	}
 	state->v = v;
 	const float y = (1.f / (float)BW_ENV_GEN_V_MAX) * v;
-	
+
 	BW_ASSERT_DEEP(bw_env_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_env_gen_coeffs_state_reset_coeffs);
 	BW_ASSERT_DEEP(bw_env_gen_state_is_valid(coeffs, state));

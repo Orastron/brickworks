@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.3 }}}
+ *  version {{{ 1.2.4 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Triangle oscillator waveshaper with variable slope (increasing time over
@@ -45,6 +45,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.4</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.3</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -642,7 +647,7 @@ template<size_t N_CHANNELS = 1>
 class OscTri {
 public:
 	OscTri();
-	
+
 	void setSampleRate(
 		float sampleRate);
 
@@ -661,7 +666,7 @@ public:
 		std::array<float *, N_CHANNELS>       y,
 		size_t                                nSamples);
 # endif
-	
+
 	void setAntialiasing(
 		bool value);
 

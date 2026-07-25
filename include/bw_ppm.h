@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.3 }}}
+ *  version {{{ 1.2.4 }}}
  *  requires {{{ bw_common bw_env_follow bw_math bw_one_pole }}}
  *  description {{{
  *    Digital peak programme meter with adjustable integration time constant.
@@ -30,6 +30,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.4</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.3</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>

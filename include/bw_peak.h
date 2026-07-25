@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.4 }}}
+ *  version {{{ 1.2.5 }}}
  *  requires {{{ bw_common bw_gain bw_math bw_mm2 bw_one_pole bw_svf }}}
  *  description {{{
  *    Second-order peak filter with unitary gain at DC and asymptotically
@@ -35,6 +35,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.5</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.4</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -483,7 +488,7 @@ static inline void bw_peak_init(
 	coeffs->peak_gain = 1.f;
 	coeffs->bandwidth = 2.543106606327224f;
 	coeffs->use_bandwidth = 1;
-	
+
 	coeffs->param_changed = ~0; // useless, just to make compilers happy about uninitialized variables
 
 #ifdef BW_DEBUG_DEEP

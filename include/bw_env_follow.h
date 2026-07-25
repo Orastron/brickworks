@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.3 }}}
+ *  version {{{ 1.2.4 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Envelope follower made of a full-wave rectifier followed by
@@ -28,6 +28,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.4</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.3</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -312,7 +317,7 @@ static inline char bw_env_follow_state_is_valid(
  *    `state` must at least point to a readable memory block of size greater
  *    than or equal to that of `bw_env_follow_state`.
  *  }}} */
- 
+
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
 }
 #endif

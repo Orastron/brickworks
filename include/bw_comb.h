@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.3.1 }}}
+ *  version {{{ 1.3.2 }}}
  *  requires {{{
  *    bw_buf bw_common bw_delay bw_gain bw_math bw_one_pole
  *  }}}
@@ -37,6 +37,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.3.2</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.3.1</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>

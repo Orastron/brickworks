@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.3 }}}
+ *  version {{{ 1.2.4 }}}
  *  requires {{{
  *    bw_common bw_env_follow bw_gain bw_math bw_one_pole
  *  }}}
@@ -29,6 +29,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.4</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.3</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -430,7 +435,7 @@ struct bw_comp_coeffs {
 	bw_one_pole_coeffs		smooth_coeffs;
 	bw_one_pole_state		smooth_thresh_state;
 	bw_one_pole_state		smooth_ratio_state;
-	
+
 	// Coefficients
 	float				kc;
 	float				lt;

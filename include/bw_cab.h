@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.1.4 }}}
+ *  version {{{ 1.1.5 }}}
  *  requires {{{ bw_common bw_gain bw_math bw_one_pole bw_svf }}}
  *  description {{{
  *    Cab simulator effect.
@@ -30,6 +30,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.1.5</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.1.4</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>

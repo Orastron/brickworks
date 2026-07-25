@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.4 }}}
+ *  version {{{ 1.2.5 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    State variable filter (2nd order, 12 dB/oct) model with separated lowpass,
@@ -28,6 +28,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.5</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.4</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -267,7 +272,7 @@ static inline void bw_svf_process(
  *    first `n_samples` of the output buffers `y_lp` (lowpass), `y_bp`
  *    (bandpass), and `y_hp` (highpass), if they are not `BW_NULL`, while using
  *    and updating both `coeffs` and `state` (control and audio rate).
- * 
+ *
  *    #### bw_svf_process_multi()
  *  ```>>> */
 static inline void bw_svf_process_multi(
@@ -285,7 +290,7 @@ static inline void bw_svf_process_multi(
  *    (lowpass), `y_bp` (bandpass), and `y_hp` (highpass), while using and
  *    updating both the common `coeffs` and each of the `n_channels` `state`s
  *    (control and audio rate).
- * 
+ *
  *    `y_lp`, `y_bp`, and `y_hp`, or any of their elements may be `BW_NULL`.
  *
  *    #### bw_svf_set_cutoff()
@@ -311,7 +316,7 @@ static inline void bw_svf_set_Q(
  *    Valid range: [`1e-6f`, `1e6f`].
  *
  *    Default value: `0.5f`.
- * 
+ *
  *    #### bw_svf_set_prewarp_at_cutoff()
  *  ```>>> */
 static inline void bw_svf_set_prewarp_at_cutoff(
@@ -409,7 +414,7 @@ struct bw_svf_coeffs {
 	bw_one_pole_state		smooth_cutoff_state;
 	bw_one_pole_state		smooth_Q_state;
 	bw_one_pole_state		smooth_prewarp_freq_state;
-	
+
 	// Coefficients
 	float				t_k;
 	float				prewarp_freq_max;

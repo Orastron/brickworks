@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.2 }}}
+ *  version {{{ 1.2.3 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Pulse oscillator waveshaper with variable pulse width (actually, duty
@@ -45,6 +45,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.3</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.2</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -630,7 +635,7 @@ template<size_t N_CHANNELS = 1>
 class OscPulse {
 public:
 	OscPulse();
-	
+
 	void setSampleRate(
 		float sampleRate);
 
@@ -649,7 +654,7 @@ public:
 		std::array<float *, N_CHANNELS>       y,
 		size_t                                nSamples);
 # endif
-	
+
 	void setAntialiasing(
 		bool value);
 

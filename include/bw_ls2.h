@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.4 }}}
+ *  version {{{ 1.2.5 }}}
  *  requires {{{ bw_common bw_gain bw_math bw_mm2 bw_one_pole bw_svf }}}
  *  description {{{
  *    Second-order low shelf filter (12 dB/oct) with gain asymptotically
@@ -28,6 +28,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.5</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.4</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -453,7 +458,7 @@ static inline void bw_ls2_init(
 	coeffs->prewarp_k = 1.f;
 	coeffs->prewarp_freq = 1.f;
 	coeffs->dc_gain = 1.f;
-	
+
 	coeffs->param_changed = ~0; // useless, just to make compilers happy about uninitialized variables
 
 #ifdef BW_DEBUG_DEEP

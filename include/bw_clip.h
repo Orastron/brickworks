@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.3 }}}
+ *  version {{{ 1.2.4 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Antialiased hard clipper with parametric bias and gain
@@ -35,7 +35,7 @@
  *    As a side effect, antialiasing causes attenuation at higher frequencies
  *    (about 3 dB at 0.5 × Nyquist frequency and rapidly increasing at higher
  *    frequencies).
- * 
+ *
  *    The antialiasing technique used here is described in
  *
  *    J. D. Parker, V. Zavalishin, and E. Le Bivic, "Reducing the Aliasing of
@@ -45,6 +45,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.4</strong>:
+ *        <ul>
+ *          <li>Updated dependencies.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.3</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -364,7 +369,7 @@ struct bw_clip_coeffs {
 	bw_one_pole_coeffs		smooth_coeffs;
 	bw_one_pole_state		smooth_bias_state;
 	bw_one_pole_state		smooth_gain_state;
-	
+
 	// Coefficients
 	float				bias_dc;
 	float				inv_gain;
