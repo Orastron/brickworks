@@ -1,13 +1,22 @@
+1.4.3
+-----
+ * More robust input delay range definition for bw_delay_read() and
+   corresponding debugging checks.
+ * Fixed typo in the changelog of bw_one_pole.
+ * Update examples' build system to Tibia 0.5.2.
+
 1.4.2
 -----
  * Fixed and rationalized coefficients' validity checks in bw_iir2.
  * Fixed debugging check in bw_balance_process_multi().
- * Fixed typos in the documentation of bw_has_inf(), bw_has_nan(), and bw_has_only_finite().
+ * Fixed typos in the documentation of bw_has_inf(), bw_has_nan(), and
+   bw_has_only_finite().
  * Updated examples' build system to Tibia 0.3.1.
 
 1.4.1
 -----
- * Loosened validity checks for certain internal coefficients to allow valid extreme values in bw_svf.
+ * Loosened validity checks for certain internal coefficients to allow valid
+   extreme values in bw_svf.
 
 1.4.0
 -----
@@ -15,18 +24,24 @@
  * Added bw_{signfill,min,max,clip}{i,u}{8,16}() and bw_sechf() to bw_math.
  * Added bw_iir1_coeffs_is_valid() and bw_iir2_coeffs_is_valid().
  * Added default value for N_CHANNELS in C++ APIs.
- * Added memReq/memSet to C++ APIs of bw_chorus, bw_comb, bw_delay, and bw_reverb.
- * Fixed bug in bw_env_gen which caused looping behavior when skip sustain was active and gate was kept on.
+ * Added memReq/memSet to C++ APIs of bw_chorus, bw_comb, bw_delay, and
+   bw_reverb.
+ * Fixed bug in bw_env_gen which caused looping behavior when skip sustain was
+   active and gate was kept on.
  * Fixed bug which resulted in bad coefficients in bw_iir1_coeffs_hp1().
  * Improved precision and performance of bw_log_1pexpxf() and bw_log10_1p10xf().
  * Improved computation of internal mixing coefficients in bw_peak.
  * Small optimization in bw_svf.
- * Updated examples' build system to Tibia 0.3.0 and refreshed all examples, C++ ones in particular.
+ * Updated examples' build system to Tibia 0.3.0 and refreshed all examples, C++
+   ones in particular.
  * Added missing and new math tests.
  * Added missing dependency on bw_mm1 in the documentation of bw_drive.
- * Added citation to relevant scientific article in the documentation of bw_osc_{saw,pulse,tri}.
- * Fixed typos in the documentation of bw_iir1_coeffs_*() and bw_iir2_coeffs_*().
- * Fixed typos in the documentation of bw_slew_lim_set_max_rate() and bw_slew_lim_set_max_rate_down().
+ * Added citation to relevant scientific article in the documentation of
+   bw_osc_{saw,pulse,tri}.
+ * Fixed typos in the documentation of bw_iir1_coeffs_*() and
+   bw_iir2_coeffs_*().
+ * Fixed typos in the documentation of bw_slew_lim_set_max_rate() and
+   bw_slew_lim_set_max_rate_down().
  * Fixed typo in the module description of bw_src_int.
  * Fixed bw_comb's copyright header.
  * Updated THANKS.md.
@@ -35,29 +50,42 @@
 -----
  * Added new bw_iir{1,2} modules and related new fx(pp)_iir{1,2} examples.
  * Now using BW_NULL instead of nullptr in C++ API/implementations.
- * Improved build system for examples and updated to Tibia 0.1.0 and latest Android SDK.
+ * Improved build system for examples and updated to Tibia 0.1.0 and latest
+   Android SDK.
  * Updated example building instructions (examples/README.md).
- * Fixed doc typos in bw_one_pole, bw_gain's ChangeLog, and fixed asterisk-escaping typos everywhere.
+ * Fixed doc typos in bw_one_pole, bw_gain's ChangeLog, and fixed
+   asterisk-escaping typos everywhere.
 
 1.2.0
 -----
- * Added BW_INCLUDE_WITH_QUOTES, BW_NO_CXX, and BW_CXX_NO_EXTERN_C to bw_common and used them everywhere.
+ * Added BW_INCLUDE_WITH_QUOTES, BW_NO_CXX, and BW_CXX_NO_EXTERN_C to bw_common
+   and used them everywhere.
  * Added optional sticky gain-reach threshold and related API to bw_gain.
  * Added gate parameter to bw_bd_reduce and fx_bitcrush example.
- * Added phase_inc_min and phase_inc_max parameters and related debugging checks to bw_phase_gen.
- * Added bw_dry_wet_get_wet() and bw_dry_wet_get_wet_cur() and corresponding C++ API.
- * Added bw_signfilli64(), bw_mini64(), bw_maxi64(), bw_clipi64(), bw_minu64(), bw_maxu64(), bw_clipu64(), bw_log2_1p2xf(), bw_log_1pexpxf(), and bw_log10_1p10xf() to bw_math.
+ * Added phase_inc_min and phase_inc_max parameters and related debugging checks
+   to bw_phase_gen.
+ * Added bw_dry_wet_get_wet() and bw_dry_wet_get_wet_cur() and corresponding C++
+   API.
+ * Added bw_signfilli64(), bw_mini64(), bw_maxi64(), bw_clipi64(), bw_minu64(),
+   bw_maxu64(), bw_clipu64(), bw_log2_1p2xf(), bw_log_1pexpxf(), and
+   bw_log10_1p10xf() to bw_math.
  * Added bw_buf_copy() and bw_buf_copy_multi() to bw_buf.
  * Added bw_note_queue_all_notes_off() to bw_note_queue.
- * Strengthened bw_env_gen implementation and fixed bw_env_reset_state() and bw_env_reset_state_multi() to take into account skip_sustain parameter value.
+ * Strengthened bw_env_gen implementation and fixed bw_env_reset_state() and
+   bw_env_reset_state_multi() to take into account skip_sustain parameter value.
  * Fixed rounding bug in bw_phase_gen when frequency is tiny.
- * Fixed bug in bw_note_queue_is_valid() by which the 128th event or note pressed was incorrectly considered invalid.
+ * Fixed bug in bw_note_queue_is_valid() by which the 128th event or note
+   pressed was incorrectly considered invalid.
  * Accomodated MSVC reporting incorrect C++ standard support in bw_common.
- * Added more checks in bw_osc_pulse_coeffs_is_valid() and bw_osc_tri_coeffs_is_valid().
+ * Added more checks in bw_osc_pulse_coeffs_is_valid() and
+   bw_osc_tri_coeffs_is_valid().
  * Revised debugging checks in *process_multi() in all modules.
- * Added debugging checks on combined parameter limits in *reset_state() in bw_hs1, bw_hs2, bw_ls1, bw_ls2, bw_peak, bw_phaser.
- * Added debugging check in bw_phase_reset_state() to ensure phase_0 is in valid range and documented valid range.
- * Added debugging check in bw_env_gen_process1() to ensure that output is in valid range.
+ * Added debugging checks on combined parameter limits in *reset_state() in
+   bw_hs1, bw_hs2, bw_ls1, bw_ls2, bw_peak, bw_phaser.
+ * Added debugging check in bw_phase_reset_state() to ensure phase_0 is in valid
+   range and documented valid range.
+ * Added debugging check in bw_env_gen_process1() to ensure that output is in
+   valid range.
  * Added missing static inline to bw_voice_alloc().
  * Added missing BW_RESTRICT to the output arguments of bw_reverb_process1().
  * Fixed buffering issue in fx_bitcrush example.
@@ -66,7 +94,8 @@
  * Fixed fx_bitcrush on Daisy Seed.
  * Adapted all examples to Tibia 0.0.4.
  * All iOS examples now target iOS 14.0.
- * Clarified which transfer functions are implemented in the documentation of bw_mm1 and bw_mm2.
+ * Clarified which transfer functions are implemented in the documentation of
+   bw_mm1 and bw_mm2.
  * Fixed documentation typo in bw_phase_gen's module description.
  * Removed spurious sentence from the documentation of bw_reverb_reset_state().
  * Fixed typos in the documentation of bw_note_queue_reset().
@@ -92,7 +121,7 @@
   * Fixed smoothing of decay parameter in bw_reverb.
   * Fixed computation of initial states in bw_mm1 and bw_mm2.
   * Fixed sign-related issues in bw_hash_sdbm(), bw_truncf(), bw_roundf(), and
-    bw_sqrtf() (thanks Kevin Molcard). 
+    bw_sqrtf() (thanks Kevin Molcard).
   * Replace GCC pragmas to suppress uninitalized variable warnings with
     useless harmless statements in bw_env_gen, bw_hs2, bw_ls2, bw_one_pole, and
     bw_peak.
@@ -267,7 +296,7 @@
     bw_hs1, bw_hs2, bw_lp1, bw_ls1, bw_ls2, bw_mm1, bw_mm2, bw_notch,
     bw_noise_gate, bw_pan, bw_peak, bw_ppm, and bw_sr_reduce modules.
   * Added new fx_ap1, fx_ap2, fx_balance, fx_bitcrush, fx_comp, fx_eq_3band,
-    fx_hp1, fx_hs1, fx_ls1, fx_mm1, fx_mm2, fx_noise_gate, fx_notch, fx_pan 
+    fx_hp1, fx_hs1, fx_ls1, fx_mm1, fx_mm2, fx_noise_gate, fx_notch, fx_pan
     examples.
   * Added support and examples for the Daisy Seed platform.
   * Strengthened bw_svf algorithm for modulation and added prewarp_at_cutoff
