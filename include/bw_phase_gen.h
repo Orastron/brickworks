@@ -20,7 +20,7 @@
 
 /*!
  *  module_type {{{ dsp }}}
- *  version {{{ 1.2.4 }}}
+ *  version {{{ 1.2.5 }}}
  *  requires {{{ bw_common bw_math bw_one_pole }}}
  *  description {{{
  *    Phase generator with portamento and exponential frequency modulation.
@@ -29,6 +29,11 @@
  *  }}}
  *  changelog {{{
  *    <ul>
+ *      <li>Version <strong>1.2.5</strong>:
+ *        <ul>
+ *          <li>Improved implementation accuracy.</li>
+ *        </ul>
+ *      </li>
  *      <li>Version <strong>1.2.4</strong>:
  *        <ul>
  *          <li>Updated dependencies.</li>
@@ -463,7 +468,7 @@ struct bw_phase_gen_state {
 #endif
 
 	// States
-	float		phase;
+	uint64_t	phase; // 0...2^63-1 (sacrificing 1 bit for fast phase wrap and other numerical reasons)
 };
 
 static inline void bw_phase_gen_init(
@@ -548,9 +553,8 @@ static inline void bw_phase_gen_reset_state(
 	BW_ASSERT(y_inc_0 != BW_NULL);
 	BW_ASSERT(y_0 != y_inc_0);
 
-	state->phase = phase_0;
+	state->phase = (uint64_t)(((uint64_t)0x8000000000000000ULL) * phase_0); // max 0x7fffff8000000000
 	*y_inc_0 = bw_clipf(bw_one_pole_get_y_z1(&coeffs->portamento_state), coeffs->phase_inc_min, coeffs->phase_inc_max);
-	*y_inc_0 = bw_absf(*y_inc_0) < 6e-8f ? 0.f : *y_inc_0; // suppress troublesome tiny frequencies (< 0.06 Hz @ fs = 1 MHz, < 0.003 Hz at @ fs = 44.1 kHz)
 	*y_0 = phase_0;
 
 #ifdef BW_DEBUG_DEEP
@@ -642,11 +646,10 @@ static inline void bw_phase_gen_update_coeffs_audio(
 
 static inline float bw_phase_gen_update_phase(
 		bw_phase_gen_state * BW_RESTRICT state,
-		float *                          inc) {
-	*inc = bw_absf(*inc) < 6e-8f ? 0.f : *inc; // suppress troublesome tiny frequencies (< 0.06 Hz @ fs = 1 MHz, < 0.003 Hz at @ fs = 44.1 kHz)
-	state->phase += *inc;
-	state->phase -= bw_floorf(state->phase);
-	return state->phase;
+		float                            inc) {
+	state->phase += ((uint64_t)0x8000000000000000ULL) * inc;
+	state->phase &= (uint64_t)0x7fffffffffffffffULL; // phase wrap
+	return bw_minf((1.f / ((uint64_t)0x8000000000000000ULL)) * state->phase, 0.999999940395355224609375f); // just before 1.f
 }
 
 static inline void bw_phase_gen_process1(
@@ -665,7 +668,7 @@ static inline void bw_phase_gen_process1(
 	BW_ASSERT(y != y_inc);
 
 	*y_inc = bw_clipf(bw_one_pole_get_y_z1(&coeffs->portamento_state), coeffs->phase_inc_min, coeffs->phase_inc_max);
-	*y = bw_phase_gen_update_phase(state, y_inc);
+	*y = bw_phase_gen_update_phase(state, *y_inc);
 
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
@@ -693,7 +696,7 @@ static inline void bw_phase_gen_process1_mod(
 	BW_ASSERT(y != y_inc);
 
 	*y_inc = bw_clipf(bw_one_pole_get_y_z1(&coeffs->portamento_state) * bw_pow2f(x_mod), coeffs->phase_inc_min, coeffs->phase_inc_max);
-	*y = bw_phase_gen_update_phase(state, y_inc);
+	*y = bw_phase_gen_update_phase(state, *y_inc);
 
 	BW_ASSERT_DEEP(bw_phase_gen_coeffs_is_valid(coeffs));
 	BW_ASSERT_DEEP(coeffs->state >= bw_phase_gen_coeffs_state_reset_coeffs);
@@ -1062,7 +1065,7 @@ static inline char bw_phase_gen_state_is_valid(
 
 	(void)coeffs;
 
-	return bw_is_finite(state->phase) && state->phase >= 0.f && state->phase < 1.f;
+	return (state->phase & ((uint64_t)0x8000000000000000ULL)) == 0;
 }
 
 #if !defined(BW_CXX_NO_EXTERN_C) && defined(__cplusplus)
