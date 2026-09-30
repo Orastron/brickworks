@@ -647,7 +647,7 @@ static inline void bw_phase_gen_update_coeffs_audio(
 static inline float bw_phase_gen_update_phase(
 		bw_phase_gen_state * BW_RESTRICT state,
 		float                            inc) {
-	state->phase += ((uint64_t)0x8000000000000000ULL) * inc;
+	state->phase += (uint64_t)(((uint64_t)0x8000000000000000ULL) * inc);
 	state->phase &= (uint64_t)0x7fffffffffffffffULL; // phase wrap
 	return bw_minf((1.f / ((uint64_t)0x8000000000000000ULL)) * state->phase, 0.999999940395355224609375f); // just before 1.f
 }
