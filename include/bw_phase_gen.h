@@ -345,10 +345,7 @@ static inline void bw_phase_gen_set_phase_inc_min(
 /*! <<<```
  *    Sets the minimum phase increment `value` in `coeffs`.
  *
- *    The algorithm will limit the actual phase increment accordingly, yet if
- *    the magnitude of the resulting phase increment is less than `6e-8f`, it
- *    will be rounded to `0.f` and such value will be reported by processing
- *    functions.
+ *    The algorithm will limit the actual phase increment accordingly.
  *
  *    Valid range: [`-INFINITY`, `INFINITY`).
  *
@@ -366,10 +363,7 @@ static inline void bw_phase_gen_set_phase_inc_max(
 /*! <<<```
  *    Sets the maximum phase increment `value` in `coeffs`.
  *
- *    The algorithm will limit the actual phase increment accordingly, yet if
- *    the magnitude of the resulting phase increment is less than `6e-8f`, it
- *    will be rounded to `0.f` and such value will be reported by processing
- *    functions.
+ *    The algorithm will limit the actual phase increment accordingly.
  *
  *    Valid range: (`-INFINITY`, `INFINITY`].
  *
@@ -647,7 +641,7 @@ static inline void bw_phase_gen_update_coeffs_audio(
 static inline float bw_phase_gen_update_phase(
 		bw_phase_gen_state * BW_RESTRICT state,
 		float                            inc) {
-	state->phase += (uint64_t)(((uint64_t)0x8000000000000000ULL) * inc);
+	state->phase += (uint64_t)(((uint64_t)0x8000000000000000ULL) * (inc - bw_truncf(inc)));
 	state->phase &= (uint64_t)0x7fffffffffffffffULL; // phase wrap
 	return bw_minf((1.f / ((uint64_t)0x8000000000000000ULL)) * state->phase, 0.999999940395355224609375f); // just before 1.f
 }
